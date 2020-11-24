@@ -54,19 +54,19 @@ public class Executor
 		 */
 		
 		/*
-		//run a game in synchronous mode: game waits until controllers respond.
-		int delay=5;
-		boolean visual=true;
-		exec.runGame(new RandomPacMan(),new RandomGhosts(),visual,delay);
   		 */
+		//run a game in synchronous mode: game waits until controllers respond.
+		int delay = 15;
+		boolean visual=true;
+		exec.runGame(new InfluenceMapPacman(), new DummyGhosts(),visual,delay);
 		
 		///*
 		//run the game in asynchronous mode.
-		boolean visual=true;
+		//boolean visual=true;
 //		exec.runGameTimed(new NearestPillPacMan(),new AggressiveGhosts(),visual);
 //		exec.runGameTimed(new StarterPacMan(),new StarterGhosts(),visual);
 //		exec.runGameTimed(new StarterPacMan(),new DummyGhosts(),visual);
-		exec.runGameTimed(new InfluenceMapPacman(),new RandomGhosts(),visual);
+//		exec.runGameTimed(new InfluenceMapPacman(),new RandomGhosts(),visual);
 //		exec.runGameTimed(new HumanController(new KeyBoardInput()),new StarterGhosts(),visual);	
 		//*/
 		

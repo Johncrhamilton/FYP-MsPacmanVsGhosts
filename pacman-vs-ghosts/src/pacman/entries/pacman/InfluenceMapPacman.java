@@ -12,14 +12,11 @@ import pacman.influencemap.InfluenceMap;
  */
 public class InfluenceMapPacman extends Controller<MOVE>
 {
-	private InfluenceMap influenceMap;
-
 	public MOVE getMove(Game game, long timeDue) 
-	{		
-		influenceMap = new InfluenceMap(game);
+	{
+		InfluenceMap.getInstance(game);		
+		InfluenceMap.generateMsPacmanInfluenceMap(game);
 		
-		int currentPacmanIndex = game.getPacmanCurrentNodeIndex();
-		
-		return influenceMap.getBestMoveMsPacman(currentPacmanIndex);
+		return InfluenceMap.getBestMoveMsPacman(game.getPacmanCurrentNodeIndex());
 	}
 }
