@@ -3,7 +3,6 @@ package pacman.influencemap;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
@@ -11,7 +10,6 @@ import pacman.game.internal.Node;
 
 public class InfluenceNode {
 
-	private Game game;
 	private Node mazeNode;
 	private double influenceOfPills;
 	private double influenceOfGhosts;
@@ -19,9 +17,8 @@ public class InfluenceNode {
 	private double influenceOfPowerPill;
 	private double influenceOfFreedomOfChoice;
 
-	public InfluenceNode(Game game, Node mazeNode)
+	public InfluenceNode(Node mazeNode)
 	{
-		this.game = game;
 		this.mazeNode = mazeNode;
 		influenceOfPills = 0.0;
 		influenceOfGhosts = 0.0;
@@ -30,43 +27,53 @@ public class InfluenceNode {
 		influenceOfFreedomOfChoice = 0.0;
 	}
 
-	public void updatePillInfluence(HashMap<Integer, InfluenceNode> influenceNodes, int originIndex) 
+	/**
+	 * Update Pill Influence
+	 * @param game
+	 * @param influenceNodes
+	 * @param originIndex
+	 */
+	public void updatePillInfluence(Game game, HashMap<Integer, InfluenceNode> influenceNodes, int originIndex) 
 	{
-		double distanceFromCurrentToOrigin = game.getDistance(mazeNode.nodeIndex, originIndex, DM.PATH);
-		double pillInfluenceValue = IMapConstants.INFLUENCE_OF_PILL * Math.pow(IMapConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin);
+		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, originIndex);
+		double pillInfluenceValue = IMConstants.INFLUENCE_OF_PILL * Math.pow(IMConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin);
 
 		//Limit Influence and only the most positive pill influence is considered
-		if(pillInfluenceValue >= IMapConstants.INFLUENCE_OF_PILL / 10 && pillInfluenceValue > influenceOfPills)
+		if(pillInfluenceValue >= IMConstants.INFLUENCE_OF_PILL / 100 && pillInfluenceValue > influenceOfPills)
 		{
 			influenceOfPills = pillInfluenceValue;
 
 			//Propagate the influence to this InfluenceNode's neighbours
 			for(InfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
 			{
-				double distanceFromNodeToOrigin = game.getDistance(influenceNode.getNodeIndex(), originIndex, DM.PATH);
-
-				//If the node is further away from origin than this node then propagate influence
-				if(distanceFromNodeToOrigin > distanceFromCurrentToOrigin) 
+				//If the node neighbour is further away from origin than this node then propagate influence
+				if(game.getShortestPathDistance(influenceNode.getNodeIndex(), originIndex) > distanceFromCurrentToOrigin) 
 				{
-					influenceNode.updatePillInfluence(influenceNodes, originIndex);
+					influenceNode.updatePillInfluence(game, influenceNodes, originIndex);
 				}
 			}
 		}
 	}
 
-	public void updateGhostInfluence(HashMap<Integer, InfluenceNode> influenceNodes, GHOST ghost) 
+	/**
+	 * Update Ghost Influence
+	 * @param game
+	 * @param influenceNodes
+	 * @param ghost
+	 */
+	public void updateGhostInfluence(Game game, HashMap<Integer, InfluenceNode> influenceNodes, GHOST ghost) 
 	{
-		double distanceFromCurrentToOrigin = game.getDistance(mazeNode.nodeIndex, game.getGhostCurrentNodeIndex(ghost), DM.PATH);
-		double ghostInfluenceValue = IMapConstants.INFLUENCE_OF_GHOST * Math.pow(IMapConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin);
+		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, game.getGhostCurrentNodeIndex(ghost));
+		double ghostInfluenceValue = IMConstants.INFLUENCE_OF_GHOST * Math.pow(IMConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin);
 
 		//Limit Influence and only the most negative ghost influence is considered
-		if(ghostInfluenceValue <= IMapConstants.INFLUENCE_OF_GHOST / 10 && ghostInfluenceValue < influenceOfGhosts)
+		if(ghostInfluenceValue <= IMConstants.INFLUENCE_OF_GHOST / 10 && ghostInfluenceValue < influenceOfGhosts)
 		{
 			influenceOfGhosts = ghostInfluenceValue;
 
-			//Propagate the influence to this InfluenceNode's neighbours
 			ArrayList<InfluenceNode> neighbours;
-			if(distanceFromCurrentToOrigin == 0.0) 
+			//Only consider neighbours in front of ghost initially
+			if(distanceFromCurrentToOrigin == 0.0)
 			{
 				neighbours = getAppropriateNeighbours(influenceNodes, game.getGhostLastMoveMade(ghost));
 			}
@@ -75,116 +82,125 @@ public class InfluenceNode {
 				neighbours = getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL);					
 			}
 
+			//Propagate the influence to this InfluenceNode's neighbours
 			for(InfluenceNode influenceNode : neighbours) 
 			{
-				double distanceFromNodeToOrigin = game.getDistance(influenceNode.getNodeIndex(), game.getGhostCurrentNodeIndex(ghost), DM.PATH);
-
-				//If the node is further away from origin than this node then propagate influence
-				if(distanceFromNodeToOrigin > distanceFromCurrentToOrigin) 
+				//If the node neighbour is further away from origin than this node then propagate influence
+				if(game.getShortestPathDistance(influenceNode.getNodeIndex(), game.getGhostCurrentNodeIndex(ghost)) > distanceFromCurrentToOrigin) 
 				{
-					influenceNode.updateGhostInfluence(influenceNodes, ghost);
+					influenceNode.updateGhostInfluence(game, influenceNodes, ghost);
 				}
 			}
 		}
 	}
 
-	public void updateEdibleGhostInfluence(HashMap<Integer, InfluenceNode> influenceNodes, int originIndex) 
+	/**
+	 * Update Edible Ghost Influence
+	 * @param game
+	 * @param influenceNodes
+	 * @param ghost
+	 */
+	public void updateEdibleGhostInfluence(Game game, HashMap<Integer, InfluenceNode> influenceNodes, GHOST ghost) 
 	{
-		double distanceFromCurrentToOrigin = game.getDistance(mazeNode.nodeIndex, originIndex, DM.PATH);
-		double edibleGhostInfluenceValue = IMapConstants.INFLUENCE_OF_EDIBLE_GHOST * Math.pow(IMapConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin);
+		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, game.getGhostCurrentNodeIndex(ghost));
+		double edibleGhostInfluenceValue = IMConstants.INFLUENCE_OF_EDIBLE_GHOST * Math.pow(IMConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin);
 
 		//Limit Influence and only the most positive edible ghost influence is considered
-		if(edibleGhostInfluenceValue >= IMapConstants.INFLUENCE_OF_EDIBLE_GHOST / 10 && edibleGhostInfluenceValue > influenceOfGhosts) 
+		if(edibleGhostInfluenceValue >= IMConstants.INFLUENCE_OF_EDIBLE_GHOST / 10 && edibleGhostInfluenceValue > influenceOfEdibleGhosts) 
 		{
 			influenceOfEdibleGhosts = edibleGhostInfluenceValue;
 
 			//Propagate the influence to this InfluenceNode's neighbours
 			for(InfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
 			{
-				double distanceFromNodeToOrigin = game.getDistance(influenceNode.getNodeIndex(), originIndex, DM.PATH);
-
-				//If the node is further away from origin than this node then propagate influence
-				if(distanceFromNodeToOrigin > distanceFromCurrentToOrigin) 
+				//If the node neighbour is further away from origin than this node then propagate influence
+				if(game.getShortestPathDistance(influenceNode.getNodeIndex(), game.getGhostCurrentNodeIndex(ghost)) > distanceFromCurrentToOrigin) 
 				{
-					influenceNode.updateEdibleGhostInfluence(influenceNodes, originIndex);
+					influenceNode.updateEdibleGhostInfluence(game, influenceNodes, ghost);
 				}
 			}
 		}
 	}
 
-	public void updatePowerPillInfluence(HashMap<Integer, InfluenceNode> influenceNodes, int originIndex, boolean attractivePowerPill) 
+	/**
+	 * Update Power Pill Influence
+	 * @param game
+	 * @param influenceNodes
+	 * @param originIndex
+	 */
+	public void updatePowerPillInfluence(Game game, HashMap<Integer, InfluenceNode> influenceNodes, int originIndex) 
 	{
-		double distanceFromCurrentToOrigin = game.getDistance(mazeNode.nodeIndex, originIndex, DM.PATH);
-		double powerPillInfluenceValue;
-		
-		if(attractivePowerPill) 
+		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, originIndex);
+		if(isPowerPillAttractive(game, originIndex)) 
 		{
-			powerPillInfluenceValue = IMapConstants.INFLUENCE_OF_POWERPILL * Math.pow(IMapConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin);
+			double powerPillInfluenceValue = IMConstants.INFLUENCE_OF_POWERPILL * Math.pow(IMConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin);
 
 			//Limit Influence and only the most positive power pill influence is considered
-			if(powerPillInfluenceValue >= IMapConstants.INFLUENCE_OF_POWERPILL / 10 && powerPillInfluenceValue > influenceOfPowerPill) 
+			if(powerPillInfluenceValue >= IMConstants.INFLUENCE_OF_POWERPILL / 10 && powerPillInfluenceValue > influenceOfPowerPill) 
 			{
 				influenceOfPowerPill = powerPillInfluenceValue;
 
 				//Propagate the influence to this InfluenceNode's neighbours
 				for(InfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
 				{
-					double distanceFromNodeToOrigin = game.getDistance(influenceNode.getNodeIndex(), originIndex, DM.PATH);
-
-					//If the node is further away from origin than this node then propagate influence
-					if(distanceFromNodeToOrigin > distanceFromCurrentToOrigin) 
+					//If the node neighbour is further away from origin than this node then propagate influence
+					if(game.getShortestPathDistance(influenceNode.getNodeIndex(), originIndex) > distanceFromCurrentToOrigin) 
 					{
-						influenceNode.updatePowerPillInfluence(influenceNodes, originIndex, attractivePowerPill);
+						influenceNode.updatePowerPillInfluence(game, influenceNodes, originIndex);
 					}
 				}
 			}
 		}
 		else
 		{
-			powerPillInfluenceValue = IMapConstants.INFLUENCE_OF_POWERPILL * -(Math.pow(IMapConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin));
+			double powerPillInfluenceValue = -IMConstants.INFLUENCE_OF_POWERPILL * Math.pow(IMConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin);
 
 			//Limit Influence and only the most negative power pill influence is considered
-			if(powerPillInfluenceValue <= -IMapConstants.INFLUENCE_OF_POWERPILL / 10 && powerPillInfluenceValue < influenceOfPowerPill) 
+			if(powerPillInfluenceValue <= -(IMConstants.INFLUENCE_OF_POWERPILL / 10) && powerPillInfluenceValue < influenceOfPowerPill) 
 			{
 				influenceOfPowerPill = powerPillInfluenceValue;
 
 				//Propagate the influence to this InfluenceNode's neighbours
 				for(InfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
 				{
-					double distanceFromNodeToOrigin = game.getDistance(influenceNode.getNodeIndex(), originIndex, DM.PATH);
-
-					//If the node is further away from origin than this node then propagate influence
-					if(distanceFromNodeToOrigin > distanceFromCurrentToOrigin) 
+					//If the node neighbour is further away from origin than this node then propagate influence
+					if(game.getShortestPathDistance(influenceNode.getNodeIndex(), originIndex) > distanceFromCurrentToOrigin) 
 					{
-						influenceNode.updatePowerPillInfluence(influenceNodes, originIndex, attractivePowerPill);
+						influenceNode.updatePowerPillInfluence(game, influenceNodes, originIndex);
 					}
-				}				
-			}
-		}
-	}
-	
-	public void updateFreedomOfChoiceInfluence(HashMap<Integer, InfluenceNode> influenceNodes, int originIndex) 
-	{
-		double distanceFromCurrentToOrigin = game.getDistance(mazeNode.nodeIndex, originIndex, DM.PATH);
-		double freedomOfChoiceInfluenceValue = IMapConstants.INFLUENCE_OF_FREEDOM_OF_CHOICE * Math.pow(IMapConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin);
-		
-		//Limit Influence and only the most positive power pill influence is considered
-		if(freedomOfChoiceInfluenceValue <= IMapConstants.INFLUENCE_OF_FREEDOM_OF_CHOICE / 10 && freedomOfChoiceInfluenceValue < influenceOfFreedomOfChoice) 
-		{
-			//Propagate the influence to this InfluenceNode's neighbours
-			for(InfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
-			{
-				double distanceFromNodeToOrigin = game.getDistance(influenceNode.getNodeIndex(), originIndex, DM.PATH);
-
-				//If the node is further away from origin than this node then propagate influence
-				if(distanceFromNodeToOrigin > distanceFromCurrentToOrigin) 
-				{
-					influenceNode.updateFreedomOfChoiceInfluence(influenceNodes, originIndex);
 				}
 			}
 		}
 	}
-	
+
+	/**
+	 * Update Freedom Of Choice Influence
+	 * @param game
+	 * @param influenceNodes
+	 * @param originIndex
+	 */
+	public void updateFreedomOfChoiceInfluence(Game game, HashMap<Integer, InfluenceNode> influenceNodes, int originIndex) 
+	{
+		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, originIndex);
+		double freedomOfChoiceInfluenceValue = IMConstants.INFLUENCE_OF_FREEDOM_OF_CHOICE * Math.pow(IMConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin);
+
+		//Limit Influence and only the most positive power pill influence is considered
+		if(freedomOfChoiceInfluenceValue >= 0 && freedomOfChoiceInfluenceValue > influenceOfFreedomOfChoice) 
+		{
+			influenceOfFreedomOfChoice = freedomOfChoiceInfluenceValue;
+
+			//Propagate the influence to this InfluenceNode's neighbours
+			for(InfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
+			{				
+				//If the node neighbour is further away from origin than this node then propagate influence
+				if(game.getShortestPathDistance(influenceNode.getNodeIndex(), originIndex) > distanceFromCurrentToOrigin) 
+				{
+					influenceNode.updateFreedomOfChoiceInfluence(game, influenceNodes, originIndex);
+				}
+			}
+		}
+	}
+
 	/**
 	 * Get Appropriate InfluenceNode Neighbours
 	 * @param appropriateNeighbours
@@ -201,6 +217,38 @@ public class InfluenceNode {
 		}
 
 		return appropriateNeighbours;
+	}
+
+	/**
+	 * Determine whether a power pill is attractive to Ms. Pacman considering ghost distances to power pill
+	 * @param powerPillIndex
+	 * @return boolean
+	 */
+	private static boolean isPowerPillAttractive(Game game, int powerPillIndex) 
+	{
+		double allGhostDistancesToPowerPill = 0.0;
+
+		int activeGhosts = 0;
+
+		for(GHOST ghost : GHOST.values()) 
+		{
+			if(game.getGhostLairTime(ghost) == 0) 
+			{
+				allGhostDistancesToPowerPill += game.getShortestPathDistance(powerPillIndex, game.getGhostCurrentNodeIndex(ghost));
+				activeGhosts++;
+			}
+		}
+
+		//If the sum of all ghost distances are within threshold this power pill is Attractive
+		if(activeGhosts > 0) 
+		{
+			if(allGhostDistancesToPowerPill < IMConstants.POWERPILL_DISTANCE_THRESHOLD_PER_GHOST * activeGhosts) 
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	/**
@@ -229,7 +277,7 @@ public class InfluenceNode {
 	{
 		return mazeNode;
 	}
-	
+
 	/**
 	 * Clear influences on node
 	 */

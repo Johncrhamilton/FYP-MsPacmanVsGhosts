@@ -3,6 +3,7 @@ package pacman.entries.pacman;
 import pacman.controllers.Controller;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
+import pacman.influencemap.IMConstants;
 import pacman.influencemap.InfluenceMap;
 
 /*
@@ -12,11 +13,16 @@ import pacman.influencemap.InfluenceMap;
  */
 public class InfluenceMapPacman extends Controller<MOVE>
 {
+	private MOVE move;	
+	
 	public MOVE getMove(Game game, long timeDue) 
 	{
-		InfluenceMap.getInstance(game);		
+		InfluenceMap.getInstance(game);
 		InfluenceMap.generateMsPacmanInfluenceMap(game);
 		
-		return InfluenceMap.getBestMoveMsPacman(game.getPacmanCurrentNodeIndex());
+		move = InfluenceMap.getBestMoveMsPacman(game);		
+		InfluenceMap.clearInfluences();
+		
+		return move;
 	}
 }
