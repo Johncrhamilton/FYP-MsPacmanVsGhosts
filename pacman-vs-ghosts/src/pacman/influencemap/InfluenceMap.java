@@ -13,6 +13,8 @@ public class InfluenceMap {
 	private static InfluenceMap INSTANCE;
 	private static HashMap<Integer, InfluenceNode> influenceNodes;
 	private static Node[] graph;
+	
+	private static int forceDirectionCount = 0;
 
 	private InfluenceMap(Game game)
 	{	
@@ -70,7 +72,7 @@ public class InfluenceMap {
 				{
 					influenceNodes.get(game.getGhostCurrentNodeIndex(ghost)).updateGhostInfluence(game, influenceNodes, ghost);
 				}
-				else 
+				else
 				{	
 					influenceNodes.get(game.getGhostCurrentNodeIndex(ghost)).updateEdibleGhostInfluence(game, influenceNodes, ghost);
 				}
@@ -115,21 +117,30 @@ public class InfluenceMap {
 		MOVE move = MOVE.NEUTRAL;
 
 		double highestNodeInfluence = -Double.MAX_VALUE;
-		
+
 		//Check each node's influence around Ms. Pacman's current node index
 		for(Entry<MOVE,Integer> entry : influenceNodes.get(game.getPacmanCurrentNodeIndex()).getMazeNode().neighbourhood.entrySet()) 
 		{
-			if(entry.getKey() == game.getPacmanLastMoveMade().opposite()) 
+			if(forceDirectionCount > 0 && entry.getKey() == game.getPacmanLastMoveMade().opposite()) 
 			{
 				continue;
 			}
-			
+
 			double nodeInfluence = getInfluenceOfNode(entry.getValue());
 			if(nodeInfluence > highestNodeInfluence)
 			{
 				highestNodeInfluence = nodeInfluence;
 				move = entry.getKey();
 			}
+		}
+		
+		if(forceDirectionCount > 0) 
+		{
+			forceDirectionCount--;
+		} 
+		else if(move == game.getPacmanLastMoveMade().opposite()) 
+		{
+			forceDirectionCount = IMConstants.FORCE_DIRECTION_COUNT;
 		}
 
 		return move;

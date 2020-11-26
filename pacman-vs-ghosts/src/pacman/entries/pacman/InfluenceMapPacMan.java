@@ -11,7 +11,7 @@ import pacman.influencemap.InfluenceMap;
  * fill in the getAction() method. Any additional classes you write should either
  * be placed in this package or sub-packages (e.g., game.entries.pacman.mypackage).
  */
-public class InfluenceMapPacman extends Controller<MOVE>
+public class InfluenceMapPacMan extends Controller<MOVE>
 {
 	private MOVE move;	
 	

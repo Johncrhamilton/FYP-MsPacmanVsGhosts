@@ -39,7 +39,7 @@ public class InfluenceNode {
 		double pillInfluenceValue = IMConstants.INFLUENCE_OF_PILL * Math.pow(IMConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin);
 
 		//Limit Influence and only the most positive pill influence is considered
-		if(pillInfluenceValue >= IMConstants.INFLUENCE_OF_PILL / 100 && pillInfluenceValue > influenceOfPills)
+		if(pillInfluenceValue >= IMConstants.INFLUENCE_OF_PILL_LIMIT && pillInfluenceValue > influenceOfPills)
 		{
 			influenceOfPills = pillInfluenceValue;
 
@@ -67,7 +67,7 @@ public class InfluenceNode {
 		double ghostInfluenceValue = IMConstants.INFLUENCE_OF_GHOST * Math.pow(IMConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin);
 
 		//Limit Influence and only the most negative ghost influence is considered
-		if(ghostInfluenceValue <= IMConstants.INFLUENCE_OF_GHOST / 10 && ghostInfluenceValue < influenceOfGhosts)
+		if(ghostInfluenceValue <= IMConstants.INFLUENCE_OF_GHOST_LIMIT && ghostInfluenceValue < influenceOfGhosts)
 		{
 			influenceOfGhosts = ghostInfluenceValue;
 
@@ -106,7 +106,7 @@ public class InfluenceNode {
 		double edibleGhostInfluenceValue = IMConstants.INFLUENCE_OF_EDIBLE_GHOST * Math.pow(IMConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin);
 
 		//Limit Influence and only the most positive edible ghost influence is considered
-		if(edibleGhostInfluenceValue >= IMConstants.INFLUENCE_OF_EDIBLE_GHOST / 10 && edibleGhostInfluenceValue > influenceOfEdibleGhosts) 
+		if(edibleGhostInfluenceValue >= IMConstants.INFLUENCE_OF_EDIBLE_GHOST_LIMIT && edibleGhostInfluenceValue > influenceOfEdibleGhosts) 
 		{
 			influenceOfEdibleGhosts = edibleGhostInfluenceValue;
 
@@ -131,12 +131,13 @@ public class InfluenceNode {
 	public void updatePowerPillInfluence(Game game, HashMap<Integer, InfluenceNode> influenceNodes, int originIndex) 
 	{
 		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, originIndex);
+		
 		if(isPowerPillAttractive(game, originIndex)) 
 		{
 			double powerPillInfluenceValue = IMConstants.INFLUENCE_OF_POWERPILL * Math.pow(IMConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin);
 
 			//Limit Influence and only the most positive power pill influence is considered
-			if(powerPillInfluenceValue >= IMConstants.INFLUENCE_OF_POWERPILL / 10 && powerPillInfluenceValue > influenceOfPowerPill) 
+			if(powerPillInfluenceValue >= IMConstants.INFLUENCE_OF_POWERPILL_POSITIVE_LIMIT) 
 			{
 				influenceOfPowerPill = powerPillInfluenceValue;
 
@@ -156,7 +157,7 @@ public class InfluenceNode {
 			double powerPillInfluenceValue = -IMConstants.INFLUENCE_OF_POWERPILL * Math.pow(IMConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin);
 
 			//Limit Influence and only the most negative power pill influence is considered
-			if(powerPillInfluenceValue <= -(IMConstants.INFLUENCE_OF_POWERPILL / 10) && powerPillInfluenceValue < influenceOfPowerPill) 
+			if(powerPillInfluenceValue <= IMConstants.INFLUENCE_OF_POWERPILL_NEGATIVE_LIMIT) 
 			{
 				influenceOfPowerPill = powerPillInfluenceValue;
 
@@ -185,7 +186,7 @@ public class InfluenceNode {
 		double freedomOfChoiceInfluenceValue = IMConstants.INFLUENCE_OF_FREEDOM_OF_CHOICE * Math.pow(IMConstants.INFLUENCE_FACTOR, distanceFromCurrentToOrigin);
 
 		//Limit Influence and only the most positive power pill influence is considered
-		if(freedomOfChoiceInfluenceValue >= 0 && freedomOfChoiceInfluenceValue > influenceOfFreedomOfChoice) 
+		if(freedomOfChoiceInfluenceValue >= IMConstants.INFLUENCE_OF_FREEDOM_OF_CHOICE_LIMIT) 
 		{
 			influenceOfFreedomOfChoice = freedomOfChoiceInfluenceValue;
 
@@ -226,23 +227,23 @@ public class InfluenceNode {
 	 */
 	private static boolean isPowerPillAttractive(Game game, int powerPillIndex) 
 	{
-		double allGhostDistancesToPowerPill = 0.0;
+		double sumOfGhostDistancesToPowerPill = 0.0;
 
 		int activeGhosts = 0;
 
 		for(GHOST ghost : GHOST.values()) 
 		{
-			if(game.getGhostLairTime(ghost) == 0) 
+			if(game.getGhostLairTime(ghost) == 0 && !game.isGhostEdible(ghost)) 
 			{
-				allGhostDistancesToPowerPill += game.getShortestPathDistance(powerPillIndex, game.getGhostCurrentNodeIndex(ghost));
+				sumOfGhostDistancesToPowerPill += game.getShortestPathDistance(powerPillIndex, game.getGhostCurrentNodeIndex(ghost));
 				activeGhosts++;
 			}
 		}
 
 		//If the sum of all ghost distances are within threshold this power pill is Attractive
-		if(activeGhosts > 0) 
+		if(activeGhosts >= 3)
 		{
-			if(allGhostDistancesToPowerPill < IMConstants.POWERPILL_DISTANCE_THRESHOLD_PER_GHOST * activeGhosts) 
+			if(sumOfGhostDistancesToPowerPill < IMConstants.POWERPILL_DISTANCE_THRESHOLD_PER_GHOST * activeGhosts) 
 			{
 				return true;
 			}

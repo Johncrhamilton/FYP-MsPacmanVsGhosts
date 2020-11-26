@@ -23,7 +23,7 @@ import pacman.controllers.examples.RandomPacMan;
 import pacman.controllers.examples.StarterGhosts;
 import pacman.controllers.examples.StarterPacMan;
 import pacman.entries.ghosts.DummyGhosts;
-import pacman.entries.pacman.InfluenceMapPacman;
+import pacman.entries.pacman.InfluenceMapPacMan;
 import pacman.game.Game;
 import pacman.game.GameView;
 
@@ -56,9 +56,9 @@ public class Executor
 		/*
   		 */
 		//run a game in synchronous mode: game waits until controllers respond.
-		int delay = 10;
+		int delay = 15;
 		boolean visual=true;
-		exec.runGame(new InfluenceMapPacman(), new DummyGhosts(),visual,delay);
+		exec.runGame(new InfluenceMapPacMan(), new DummyGhosts(),visual,delay);
 		
 		///*
 		//run the game in asynchronous mode.
