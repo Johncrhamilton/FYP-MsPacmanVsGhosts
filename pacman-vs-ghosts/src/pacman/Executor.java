@@ -58,8 +58,9 @@ public class Executor
 		//run a game in synchronous mode: game waits until controllers respond.
 		int delay = 15;
 		boolean visual=true;
-		exec.runGame(new InfluenceMapPacMan(), new DummyGhosts(),visual,delay);
-		
+		//exec.runGame(new InfluenceMapPacMan(), new StarterGhosts(),visual,delay);
+		exec.runExperiment(new InfluenceMapPacMan(), new StarterGhosts(), 20);
+		 
 		///*
 		//run the game in asynchronous mode.
 		//boolean visual=true;
