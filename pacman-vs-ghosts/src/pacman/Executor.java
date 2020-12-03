@@ -59,7 +59,7 @@ public class Executor
 		int delay = 15;
 		boolean visual=true;
 		//exec.runGame(new InfluenceMapPacMan(), new StarterGhosts(),visual,delay);
-		exec.runExperiment(new InfluenceMapPacMan(), new StarterGhosts(), 20);
+		exec.runExperiment(new InfluenceMapPacMan(), new StarterGhosts(), 30);
 		 
 		///*
 		//run the game in asynchronous mode.
