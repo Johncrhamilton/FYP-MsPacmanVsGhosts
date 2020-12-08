@@ -3,23 +3,27 @@ package pacman.influencemap;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import pacman.entries.pacman.InfluenceMapPacMan;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 import pacman.game.internal.Node;
 
-public class InfluenceNode {
+public class PacmanInfluenceNode {
 
 	private Node mazeNode;
+
+	//Influences for Ms. Pacman
 	private double influenceOfPills;
 	private double influenceOfGhosts;
 	private double influenceOfEdibleGhosts;
 	private double influenceOfPowerPill;
 	private double influenceOfFreedomOfChoice;
 
-	public InfluenceNode(Node mazeNode)
+	public PacmanInfluenceNode(Node mazeNode)
 	{
 		this.mazeNode = mazeNode;
+
 		influenceOfPills = 0.0;
 		influenceOfGhosts = 0.0;
 		influenceOfEdibleGhosts = 0.0;
@@ -33,7 +37,7 @@ public class InfluenceNode {
 	 * @param influenceNodes
 	 * @param originIndex
 	 */
-	public void updatePillInfluence(Game game, HashMap<Integer, InfluenceNode> influenceNodes, int originIndex) 
+	public void updatePillInfluence(Game game, HashMap<Integer, PacmanInfluenceNode> influenceNodes, int originIndex) 
 	{
 		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, originIndex);
 		double pillInfluenceValue = IMConstants.INFLUENCE_OF_PILL * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_PILL, distanceFromCurrentToOrigin);
@@ -44,7 +48,7 @@ public class InfluenceNode {
 			influenceOfPills = pillInfluenceValue;
 
 			//Propagate the influence to this InfluenceNode's neighbours
-			for(InfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
+			for(PacmanInfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
 			{
 				//If the node neighbour is further away from origin than this node then propagate influence
 				if(game.getShortestPathDistance(influenceNode.getNodeIndex(), originIndex) > distanceFromCurrentToOrigin) 
@@ -61,7 +65,7 @@ public class InfluenceNode {
 	 * @param influenceNodes
 	 * @param ghost
 	 */
-	public void updateGhostInfluence(Game game, HashMap<Integer, InfluenceNode> influenceNodes, GHOST ghost) 
+	public void updateGhostInfluence(Game game, HashMap<Integer, PacmanInfluenceNode> influenceNodes, GHOST ghost) 
 	{
 		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, game.getGhostCurrentNodeIndex(ghost));
 		double ghostInfluenceValue = IMConstants.INFLUENCE_OF_GHOST * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_GHOST, distanceFromCurrentToOrigin);
@@ -71,7 +75,7 @@ public class InfluenceNode {
 		{
 			influenceOfGhosts = ghostInfluenceValue;
 
-			ArrayList<InfluenceNode> neighbours;
+			ArrayList<PacmanInfluenceNode> neighbours;
 			//Only consider neighbours in front of ghost initially
 			if(distanceFromCurrentToOrigin == 0.0)
 			{
@@ -83,7 +87,7 @@ public class InfluenceNode {
 			}
 
 			//Propagate the influence to this InfluenceNode's neighbours
-			for(InfluenceNode influenceNode : neighbours) 
+			for(PacmanInfluenceNode influenceNode : neighbours) 
 			{
 				//If the node neighbour is further away from origin than this node then propagate influence
 				if(game.getShortestPathDistance(influenceNode.getNodeIndex(), game.getGhostCurrentNodeIndex(ghost)) > distanceFromCurrentToOrigin) 
@@ -100,7 +104,7 @@ public class InfluenceNode {
 	 * @param influenceNodes
 	 * @param ghost
 	 */
-	public void updateEdibleGhostInfluence(Game game, HashMap<Integer, InfluenceNode> influenceNodes, GHOST ghost) 
+	public void updateEdibleGhostInfluence(Game game, HashMap<Integer, PacmanInfluenceNode> influenceNodes, GHOST ghost) 
 	{
 		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, game.getGhostCurrentNodeIndex(ghost));
 		double edibleGhostInfluenceValue = IMConstants.INFLUENCE_OF_EDIBLE_GHOST * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_EDIBLE_GHOST, distanceFromCurrentToOrigin);
@@ -111,7 +115,7 @@ public class InfluenceNode {
 			influenceOfEdibleGhosts = edibleGhostInfluenceValue;
 
 			//Propagate the influence to this InfluenceNode's neighbours
-			for(InfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
+			for(PacmanInfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
 			{
 				//If the node neighbour is further away from origin than this node then propagate influence
 				if(game.getShortestPathDistance(influenceNode.getNodeIndex(), game.getGhostCurrentNodeIndex(ghost)) > distanceFromCurrentToOrigin) 
@@ -128,11 +132,11 @@ public class InfluenceNode {
 	 * @param influenceNodes
 	 * @param originIndex
 	 */
-	public void updatePowerPillInfluence(Game game, HashMap<Integer, InfluenceNode> influenceNodes, int originIndex, boolean isPowerPillAttractive) 
+	public void updatePowerPillInfluence(Game game, HashMap<Integer, PacmanInfluenceNode> influenceNodes, int originIndex) 
 	{
 		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, originIndex);
-		
-		if(isPowerPillAttractive)
+
+		if(InfluenceMapPacMan.isPowerPillAttractive(game, originIndex))
 		{
 			double powerPillInfluenceValue = IMConstants.INFLUENCE_OF_POWERPILL * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_POWERPILL, distanceFromCurrentToOrigin);
 
@@ -142,12 +146,12 @@ public class InfluenceNode {
 				influenceOfPowerPill = powerPillInfluenceValue;
 
 				//Propagate the influence to this InfluenceNode's neighbours
-				for(InfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
+				for(PacmanInfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
 				{
 					//If the node neighbour is further away from origin than this node then propagate influence
 					if(game.getShortestPathDistance(influenceNode.getNodeIndex(), originIndex) > distanceFromCurrentToOrigin) 
 					{
-						influenceNode.updatePowerPillInfluence(game, influenceNodes, originIndex, isPowerPillAttractive);
+						influenceNode.updatePowerPillInfluence(game, influenceNodes, originIndex);
 					}
 				}
 			}
@@ -162,12 +166,12 @@ public class InfluenceNode {
 				influenceOfPowerPill = powerPillInfluenceValue;
 
 				//Propagate the influence to this InfluenceNode's neighbours
-				for(InfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
+				for(PacmanInfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
 				{
 					//If the node neighbour is further away from origin than this node then propagate influence
 					if(game.getShortestPathDistance(influenceNode.getNodeIndex(), originIndex) > distanceFromCurrentToOrigin) 
 					{
-						influenceNode.updatePowerPillInfluence(game, influenceNodes, originIndex, isPowerPillAttractive);
+						influenceNode.updatePowerPillInfluence(game, influenceNodes, originIndex);
 					}
 				}
 			}
@@ -180,7 +184,7 @@ public class InfluenceNode {
 	 * @param influenceNodes
 	 * @param originIndex
 	 */
-	public void updateFreedomOfChoiceInfluence(Game game, HashMap<Integer, InfluenceNode> influenceNodes, int originIndex) 
+	public void updateFreedomOfChoiceInfluence(Game game, HashMap<Integer, PacmanInfluenceNode> influenceNodes, int originIndex) 
 	{
 		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, originIndex);
 		double freedomOfChoiceInfluenceValue = IMConstants.INFLUENCE_OF_FREEDOM_OF_CHOICE * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_FREEDOM_OF_CHOICE, distanceFromCurrentToOrigin);
@@ -191,7 +195,7 @@ public class InfluenceNode {
 			influenceOfFreedomOfChoice = freedomOfChoiceInfluenceValue;
 
 			//Propagate the influence to this InfluenceNode's neighbours
-			for(InfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
+			for(PacmanInfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
 			{				
 				//If the node neighbour is further away from origin than this node then propagate influence
 				if(game.getShortestPathDistance(influenceNode.getNodeIndex(), originIndex) > distanceFromCurrentToOrigin) 
@@ -206,9 +210,9 @@ public class InfluenceNode {
 	 * Get Appropriate InfluenceNode Neighbours
 	 * @param appropriateNeighbours
 	 */
-	private ArrayList<InfluenceNode> getAppropriateNeighbours(HashMap<Integer, InfluenceNode> influenceNodes, MOVE move) 
+	private ArrayList<PacmanInfluenceNode> getAppropriateNeighbours(HashMap<Integer, PacmanInfluenceNode> influenceNodes, MOVE move) 
 	{
-		ArrayList<InfluenceNode> appropriateNeighbours = new ArrayList<InfluenceNode>();
+		ArrayList<PacmanInfluenceNode> appropriateNeighbours = new ArrayList<PacmanInfluenceNode>();
 
 		int[] allNeighbouringNodeIndexes = mazeNode.allNeighbouringNodes.get(move);
 

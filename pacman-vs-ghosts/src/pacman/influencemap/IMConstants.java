@@ -28,4 +28,10 @@ public class IMConstants {
 	
 	public static final int FORCE_DIRECTION_COUNT = 62;
 	
+	//Constants for Ghosts
+	public static final int INFLUENCE_OF_PACMAN = 120;
+	public static final int INFLUENCE_GHOST_WEIGHT = -60;
+	public static final int POWER_PILL_DISTANCE_FACTOR = 12;
+	public static final double POWER_PILL_THRESHOLD = 0.85;
+	
 }

@@ -1,8 +1,13 @@
 package pacman.entries.pacman;
 
+import java.util.Map.Entry;
+
 import pacman.controllers.Controller;
+import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
+import pacman.game.internal.Node;
+
 import pacman.influencemap.IMConstants;
 import pacman.influencemap.InfluenceMap;
 
@@ -13,7 +18,6 @@ import pacman.influencemap.InfluenceMap;
  */
 public class InfluenceMapPacMan extends Controller<MOVE>
 {
-	private MOVE move;	
 	private int forceDirectionCount = 0;
 	
 	public MOVE getMove(Game game, long timeDue) 
@@ -21,8 +25,7 @@ public class InfluenceMapPacMan extends Controller<MOVE>
 		InfluenceMap.getInstance(game);
 		InfluenceMap.generateMsPacmanInfluenceMap(game);
 		
-		move = InfluenceMap.getBestMoveMsPacman(game, forceDirectionCount);		
-		InfluenceMap.clearInfluences();
+		MOVE move = getBestMove(game);
 		
 		if(forceDirectionCount > 0)
 		{
@@ -34,5 +37,68 @@ public class InfluenceMapPacMan extends Controller<MOVE>
 		}
 		
 		return move;
+	}
+	
+	/**
+	 * Return Move for Ms. Pacman that leads to the node with the highest influence
+	 * @param game
+	 * @return Move
+	 */
+	private MOVE getBestMove(Game game) 
+	{		
+		MOVE move = MOVE.NEUTRAL;
+		double highestNodeInfluence = -Double.MAX_VALUE;
+		
+		Node currentPacmanMazeNode = game.getCurrentMaze().graph[game.getPacmanCurrentNodeIndex()];
+		
+		//Check each node's influence around Ms. Pacman's current node index
+		for(Entry<MOVE,Integer> entry : currentPacmanMazeNode.neighbourhood.entrySet()) 
+		{
+			if(forceDirectionCount > 0 && entry.getKey() == game.getPacmanLastMoveMade().opposite()) 
+			{
+				continue;
+			}
+			
+			double nodeInfluence = InfluenceMap.getPacmanInfluenceNodes().get(entry.getValue()).getInfluence();
+			
+			if(nodeInfluence > highestNodeInfluence)
+			{
+				highestNodeInfluence = nodeInfluence;
+				move = entry.getKey();
+			}
+		}
+
+		return move;
+	}
+
+	/**
+	 * Determine whether a power pill is attractive to Ms. Pacman considering ghost distances to power pill
+	 * @param powerPillIndex
+	 * @return boolean
+	 */
+	public static boolean isPowerPillAttractive(Game game, int powerPillIndex) 
+	{
+		double sumOfGhostDistancesToPowerPill = 0.0;
+		int activeGhosts = 0;
+
+		for(GHOST ghost : GHOST.values()) 
+		{
+			if(game.getGhostLairTime(ghost) == 0 && !game.isGhostEdible(ghost)) 
+			{
+				sumOfGhostDistancesToPowerPill += game.getShortestPathDistance(powerPillIndex, game.getGhostCurrentNodeIndex(ghost));
+				activeGhosts++;
+			}
+		}
+
+		//If the sum of all ghost distances are within threshold this power pill is Attractive
+		if(activeGhosts >= 3)
+		{
+			if(sumOfGhostDistancesToPowerPill < IMConstants.POWERPILL_DISTANCE_THRESHOLD_PER_GHOST * activeGhosts) 
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

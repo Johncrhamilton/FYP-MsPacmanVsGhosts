@@ -1,7 +1,6 @@
 package pacman.influencemap;
 
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import pacman.game.Game;
 import pacman.game.Constants.GHOST;
@@ -11,19 +10,22 @@ import pacman.game.internal.Node;
 public class InfluenceMap {
 
 	private static InfluenceMap INSTANCE;
-	private static HashMap<Integer, InfluenceNode> influenceNodes;
+	private static HashMap<Integer, PacmanInfluenceNode> pacmanInfluenceNodes;
+	private static HashMap<Integer, GhostInfluenceNode> ghostInfluenceNodes;
 	private static Node[] graph;
 
 	private InfluenceMap(Game game)
 	{	
 		graph = game.getCurrentMaze().graph;
 
-		influenceNodes = new HashMap<Integer, InfluenceNode>(graph.length);
+		pacmanInfluenceNodes = new HashMap<Integer, PacmanInfluenceNode>(graph.length);
+		ghostInfluenceNodes = new HashMap<Integer, GhostInfluenceNode>(graph.length);
 
 		//Create the mapping of NodeIndexes to InfluenceNodes
 		for(int i = 0; i < graph.length; i++) 
 		{
-			influenceNodes.put(graph[i].nodeIndex, new InfluenceNode(graph[i]));
+			pacmanInfluenceNodes.put(graph[i].nodeIndex, new PacmanInfluenceNode(graph[i]));
+			ghostInfluenceNodes.put(graph[i].nodeIndex, new GhostInfluenceNode(graph[i]));
 		}
 	}
 
@@ -52,12 +54,18 @@ public class InfluenceMap {
 	 * @param game
 	 */
 	public static void generateMsPacmanInfluenceMap(Game game) 
-	{	
+	{
+		//Clear old influences
+		for(PacmanInfluenceNode influenceNode : pacmanInfluenceNodes.values()) 
+		{
+			influenceNode.clearInfluence();
+		}	
+		
 		//Calculate Influence of InfluenceNodes that have Pills
 		int[] activePillsIndices = game.getActivePillsIndices();
 		for(int i = 0; i < activePillsIndices.length; i++)
 		{
-			influenceNodes.get(activePillsIndices[i]).updatePillInfluence(game, influenceNodes, activePillsIndices[i]);
+			pacmanInfluenceNodes.get(activePillsIndices[i]).updatePillInfluence(game, pacmanInfluenceNodes, activePillsIndices[i]);
 		}
 
 		//Calculate Influence of InfluenceNodes that have ghosts
@@ -68,11 +76,11 @@ public class InfluenceMap {
 			{
 				if(!game.isGhostEdible(ghost))
 				{
-					influenceNodes.get(game.getGhostCurrentNodeIndex(ghost)).updateGhostInfluence(game, influenceNodes, ghost);
+					pacmanInfluenceNodes.get(game.getGhostCurrentNodeIndex(ghost)).updateGhostInfluence(game, pacmanInfluenceNodes, ghost);
 				}
 				else
 				{	
-					influenceNodes.get(game.getGhostCurrentNodeIndex(ghost)).updateEdibleGhostInfluence(game, influenceNodes, ghost);
+					pacmanInfluenceNodes.get(game.getGhostCurrentNodeIndex(ghost)).updateEdibleGhostInfluence(game, pacmanInfluenceNodes, ghost);
 				}
 			}
 		}
@@ -81,16 +89,16 @@ public class InfluenceMap {
 		int closestPowerPillIndex = closestPowerPillIndexToMsPacman(game);
 		if(closestPowerPillIndex != -1)
 		{
-			influenceNodes.get(closestPowerPillIndex).updatePowerPillInfluence(game, influenceNodes, closestPowerPillIndex, isPowerPillAttractive(game, closestPowerPillIndex));
+			pacmanInfluenceNodes.get(closestPowerPillIndex).updatePowerPillInfluence(game, pacmanInfluenceNodes, closestPowerPillIndex);
 		}
 
-		//Calculate Influence of the InfluenceNode that has the closest Junction under the right conditions
-		int[] allNeighbouringNodeIndexes = influenceNodes.get(game.getPacmanCurrentNodeIndex()).getMazeNode().allNeighbouringNodes.get(MOVE.NEUTRAL);
+		//Calculate Influence of the InfluenceNode that has the closest Junction under the right conditions (Influence of Freedom of Choice)
+		int[] allNeighbouringNodeIndexes = pacmanInfluenceNodes.get(game.getPacmanCurrentNodeIndex()).getMazeNode().allNeighbouringNodes.get(MOVE.NEUTRAL);
 
 		//If in corridor
 		if(allNeighbouringNodeIndexes.length == 2) 
 		{
-			double summedInfluence = influenceNodes.get(allNeighbouringNodeIndexes[0]).getInfluence() + influenceNodes.get(allNeighbouringNodeIndexes[0]).getInfluence();
+			double summedInfluence = pacmanInfluenceNodes.get(allNeighbouringNodeIndexes[0]).getInfluence() + pacmanInfluenceNodes.get(allNeighbouringNodeIndexes[0]).getInfluence();
 
 			//If summed influence of the way forward and back is below threshold
 			if(summedInfluence < IMConstants.INFLUENCE_OF_FREEDOM_OF_CHOICE_THRESHOLD)
@@ -99,40 +107,25 @@ public class InfluenceMap {
 				
 				if(closestJunctionIndex != -1 && closestJunctionIndex != game.getPacmanCurrentNodeIndex()) 
 				{
-					influenceNodes.get(closestJunctionIndex).updateFreedomOfChoiceInfluence(game, influenceNodes, closestJunctionIndex);
+					pacmanInfluenceNodes.get(closestJunctionIndex).updateFreedomOfChoiceInfluence(game, pacmanInfluenceNodes, closestJunctionIndex);
 				}
 			}
 		}
 	}
 
 	/**
-	 * Return Move that leads to node with the highest influence
-	 * @param currentPacmanIndex
-	 * @return Move
+	 * Generate the Ghosts' Influence map
+	 * @param game
 	 */
-	public static MOVE getBestMoveMsPacman(Game game, int forceDirectionCount) 
-	{		
-		MOVE move = MOVE.NEUTRAL;
-		double highestNodeInfluence = -Double.MAX_VALUE;
-		
-		//Check each node's influence around Ms. Pacman's current node index
-		for(Entry<MOVE,Integer> entry : influenceNodes.get(game.getPacmanCurrentNodeIndex()).getMazeNode().neighbourhood.entrySet()) 
+	public static void generateGhostsInfluenceMap(Game game) 
+	{
+		//Clear old influences
+		for(GhostInfluenceNode influenceNode : ghostInfluenceNodes.values()) 
 		{
-			if(forceDirectionCount > 0 && entry.getKey() == game.getPacmanLastMoveMade().opposite()) 
-			{
-				continue;
-			}
-
-			double nodeInfluence = influenceNodes.get(entry.getValue()).getInfluence();
-			
-			if(nodeInfluence > highestNodeInfluence)
-			{
-				highestNodeInfluence = nodeInfluence;
-				move = entry.getKey();
-			}
-		}
-
-		return move;
+			influenceNode.clearInfluence();
+		}	
+		
+		
 	}
 
 	/**
@@ -190,55 +183,21 @@ public class InfluenceMap {
 	}
 
 	/**
-	 * Determine whether a power pill is attractive to Ms. Pacman considering ghost distances to power pill
-	 * @param powerPillIndex
-	 * @return boolean
-	 */
-	private static boolean isPowerPillAttractive(Game game, int powerPillIndex) 
-	{
-		double sumOfGhostDistancesToPowerPill = 0.0;
-		int activeGhosts = 0;
-
-		for(GHOST ghost : GHOST.values()) 
-		{
-			if(game.getGhostLairTime(ghost) == 0 && !game.isGhostEdible(ghost)) 
-			{
-				sumOfGhostDistancesToPowerPill += game.getShortestPathDistance(powerPillIndex, game.getGhostCurrentNodeIndex(ghost));
-				activeGhosts++;
-			}
-		}
-
-		//If the sum of all ghost distances are within threshold this power pill is Attractive
-		if(activeGhosts >= 3)
-		{
-			if(sumOfGhostDistancesToPowerPill < IMConstants.POWERPILL_DISTANCE_THRESHOLD_PER_GHOST * activeGhosts) 
-			{
-				return true;
-			}
-		}
-		
-		return false;
-	}
-
-	/**
-	 * Clear Influences
-	 */
-	public static void clearInfluences() 
-	{
-		//Clear old influences
-		for(InfluenceNode influenceNode : influenceNodes.values()) 
-		{
-			influenceNode.clearInfluence();
-		}		
-	}
-
-	/**
-	 * Get the InfluenceNode Mappings
+	 * Get the PacmanInfluenceNode Mappings
 	 * @return InfluenceNodes
 	 */
-	public static HashMap<Integer, InfluenceNode> getInfluenceNodes() 
+	public static HashMap<Integer, PacmanInfluenceNode> getPacmanInfluenceNodes() 
 	{
-		return influenceNodes;
+		return pacmanInfluenceNodes;
+	}
+
+	/**
+	 * Get the GhostInfluenceNode Mappings
+	 * @return InfluenceNodes
+	 */
+	public static HashMap<Integer, GhostInfluenceNode> getGhostInfluenceNodes() 
+	{
+		return ghostInfluenceNodes;
 	}
 
 }
