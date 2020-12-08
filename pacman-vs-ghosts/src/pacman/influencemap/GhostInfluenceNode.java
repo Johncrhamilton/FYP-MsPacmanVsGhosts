@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import pacman.game.Game;
+import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.internal.Node;
 
@@ -34,7 +35,7 @@ public class GhostInfluenceNode {
 		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, originIndex);
 		double powerPillFactor = calculatePowerPillFactor(game);
 
-		if(powerPillFactor > IMConstants.POWER_PILL_THRESHOLD)
+		if(powerPillFactor >= IMConstants.POWER_PILL_THRESHOLD)
 		{
 			influenceOfPacman = IMConstants.INFLUENCE_OF_PACMAN * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_PACMAN, distanceFromCurrentToOrigin);
 		}
@@ -50,6 +51,40 @@ public class GhostInfluenceNode {
 			if(game.getShortestPathDistance(influenceNode.getNodeIndex(), originIndex) > distanceFromCurrentToOrigin) 
 			{
 				influenceNode.updatePacmanInfluence(game, influenceNodes, originIndex);
+			}
+		}
+	}
+	
+	/**
+	 * Update Ghost Influence
+	 * @param game
+	 * @param influenceNodes
+	 * @param ghost
+	 */
+	public void updateGhostInfluence(Game game, HashMap<Integer, GhostInfluenceNode> influenceNodes, GHOST ghost) 
+	{
+		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, game.getGhostCurrentNodeIndex(ghost));		
+		double ghostInfluenceValue = IMConstants.INFLUENCE_GHOST_WEIGHT * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_GHOST_WEIGHT, distanceFromCurrentToOrigin);
+
+		//Calculate the influence limiting factor
+		double distanceFromCurrentToPacman = game.getShortestPathDistance(mazeNode.nodeIndex, game.getPacmanCurrentNodeIndex());
+		double distanceFromGhostToPacman = game.getShortestPathDistance(game.getGhostCurrentNodeIndex(ghost), game.getPacmanCurrentNodeIndex());
+		
+		double influenceOfGhostLimit = (IMConstants.INFLUENCE_GHOST_WEIGHT - distanceFromCurrentToPacman * IMConstants.LIMITING_INFLUENCE_OF_PACMAN) / distanceFromGhostToPacman;
+
+		//Limit Influence and only the most negative ghost influence is considered
+		if(ghostInfluenceValue <= influenceOfGhostLimit && ghostInfluenceValue < influenceOfGhosts)
+		{
+			influenceOfGhosts = ghostInfluenceValue;
+
+			//Propagate the influence to this InfluenceNode's neighbours
+			for(GhostInfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
+			{
+				//If the node neighbour is further away from origin than this node then propagate influence
+				if(game.getShortestPathDistance(influenceNode.getNodeIndex(), game.getGhostCurrentNodeIndex(ghost)) > distanceFromCurrentToOrigin) 
+				{
+					influenceNode.updateGhostInfluence(game, influenceNodes, ghost);
+				}
 			}
 		}
 	}
@@ -81,7 +116,7 @@ public class GhostInfluenceNode {
 	{
 		if(InfluenceMap.closestPowerPillIndexToMsPacman(game) == -1)
 		{
-			return -1;
+			return IMConstants.POWER_PILL_THRESHOLD;
 		}
 		
 		return game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), InfluenceMap.closestPowerPillIndexToMsPacman(game)) / IMConstants.POWER_PILL_DISTANCE_FACTOR;

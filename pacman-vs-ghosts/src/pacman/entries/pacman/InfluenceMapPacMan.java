@@ -22,11 +22,16 @@ public class InfluenceMapPacMan extends Controller<MOVE>
 	
 	public MOVE getMove(Game game, long timeDue) 
 	{
+		//Setup Influence Map
 		InfluenceMap.getInstance(game);
+		
+		//Generate influences
 		InfluenceMap.generateMsPacmanInfluenceMap(game);
 		
+		//Get best Move from Map
 		MOVE move = getBestMove(game);
 		
+		//Force direction if needed
 		if(forceDirectionCount > 0)
 		{
 			forceDirectionCount--;

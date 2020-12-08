@@ -117,7 +117,7 @@ public class InfluenceMap {
 	 * Generate the Ghosts' Influence map
 	 * @param game
 	 */
-	public static void generateGhostsInfluenceMap(Game game) 
+	public static void generateGhostInfluenceMap(Game game, GHOST currentGhost) 
 	{
 		//Clear old influences
 		for(GhostInfluenceNode influenceNode : ghostInfluenceNodes.values()) 
@@ -127,14 +127,14 @@ public class InfluenceMap {
 
 		//Calculate Influence of Ms Pacman
 		ghostInfluenceNodes.get(game.getPacmanCurrentNodeIndex()).updatePacmanInfluence(game, ghostInfluenceNodes, game.getPacmanCurrentNodeIndex());
-		
+
 		//Calculate Influence of Ghosts
 		for(GHOST ghost : GHOST.values())
 		{
 			//Ghost outside lair
-			if(game.getGhostLairTime(ghost) == 0) 
+			if(game.getGhostLairTime(ghost) == 0 && ghost != currentGhost) 
 			{	
-				//ghostInfluenceNodes.get(game.getGhostCurrentNodeIndex(ghost)).updateGhostInfluence(game, ghostInfluenceNodes, ghost);
+				ghostInfluenceNodes.get(game.getGhostCurrentNodeIndex(ghost)).updateGhostInfluence(game, ghostInfluenceNodes, ghost);
 			}
 		}
 	}

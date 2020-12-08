@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 
 import pacman.controllers.Controller;
 import pacman.game.Game;
+import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.internal.Node;
@@ -18,15 +19,30 @@ public class InfluenceMapGhosts extends Controller<EnumMap<GHOST,MOVE>>
 	{
 		myMoves.clear();
 
+		//Setup influence Map
 		InfluenceMap.getInstance(game);
-		InfluenceMap.generateGhostsInfluenceMap(game);
 
-		for(GHOST ghost : GHOST.values()) 
+		for(GHOST ghost : GHOST.values())
 		{			
 			if(game.doesGhostRequireAction(ghost)) 
 			{
-				MOVE move = getBestMove(game, ghost);
-				myMoves.put(ghost, move);			
+				if(!game.isGhostEdible(ghost))
+				{
+					//Generate influences with regards to this ghost
+					InfluenceMap.generateGhostInfluenceMap(game, ghost);
+
+					//Get best Move from Map
+					MOVE move = getBestMove(game, ghost);
+					
+					myMoves.put(ghost, move);
+				}
+				else 
+				{
+					myMoves.put(ghost, game.getApproximateNextMoveAwayFromTarget(game.getGhostCurrentNodeIndex(ghost), 
+							game.getPacmanCurrentNodeIndex(), 
+							game.getGhostLastMoveMade(ghost), 
+							DM.PATH));
+				}
 			}
 		}
 
@@ -49,7 +65,7 @@ public class InfluenceMapGhosts extends Controller<EnumMap<GHOST,MOVE>>
 		for(Entry<MOVE,Integer> entry : currentGhostMazeNode.allNeighbourhoods.get(game.getGhostLastMoveMade(ghost)).entrySet()) 
 		{
 			double nodeInfluence = InfluenceMap.getGhostInfluenceNodes().get(entry.getValue()).getInfluence();
-			
+
 			if(nodeInfluence > highestNodeInfluence)
 			{
 				highestNodeInfluence = nodeInfluence;
