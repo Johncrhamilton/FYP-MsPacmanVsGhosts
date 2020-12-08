@@ -3,6 +3,7 @@ package pacman.influencemap;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import pacman.game.Game;
 import pacman.game.Constants.MOVE;
 import pacman.game.internal.Node;
 
@@ -22,13 +23,42 @@ public class GhostInfluenceNode {
 		influenceOfGhosts = 0.0;
 	}
 
+	/**
+	 * Update Ms Pacman Influence
+	 * @param game
+	 * @param influenceNodes
+	 * @param originIndex
+	 */
+	public void updatePacmanInfluence(Game game, HashMap<Integer, GhostInfluenceNode> influenceNodes, int originIndex) 
+	{
+		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, originIndex);
+		double powerPillFactor = calculatePowerPillFactor(game);
 
+		if(powerPillFactor > IMConstants.POWER_PILL_THRESHOLD)
+		{
+			influenceOfPacman = IMConstants.INFLUENCE_OF_PACMAN * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_PACMAN, distanceFromCurrentToOrigin);
+		}
+		else
+		{
+			influenceOfPacman = -IMConstants.INFLUENCE_OF_PACMAN * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_PACMAN, distanceFromCurrentToOrigin);
+		}
+
+		//Propagate the influence to this InfluenceNode's neighbours
+		for(GhostInfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
+		{
+			//If the node neighbour is further away from origin than this node then propagate influence
+			if(game.getShortestPathDistance(influenceNode.getNodeIndex(), originIndex) > distanceFromCurrentToOrigin) 
+			{
+				influenceNode.updatePacmanInfluence(game, influenceNodes, originIndex);
+			}
+		}
+	}
 
 	/**
 	 * Get Appropriate InfluenceNode Neighbours
 	 * @param appropriateNeighbours
 	 */
-	private ArrayList<GhostInfluenceNode> getAppropriateccNeighbours(HashMap<Integer, GhostInfluenceNode> influenceNodes, MOVE move) 
+	private ArrayList<GhostInfluenceNode> getAppropriateNeighbours(HashMap<Integer, GhostInfluenceNode> influenceNodes, MOVE move) 
 	{
 		ArrayList<GhostInfluenceNode> appropriateNeighbours = new ArrayList<GhostInfluenceNode>();
 
@@ -40,6 +70,21 @@ public class GhostInfluenceNode {
 		}
 
 		return appropriateNeighbours;
+	}
+
+	/**
+	 * Calculate Power Pill Factor
+	 * @param game
+	 * @return powerPillFactor
+	 */
+	private double calculatePowerPillFactor(Game game) 
+	{
+		if(InfluenceMap.closestPowerPillIndexToMsPacman(game) == -1)
+		{
+			return -1;
+		}
+		
+		return game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), InfluenceMap.closestPowerPillIndexToMsPacman(game)) / IMConstants.POWER_PILL_DISTANCE_FACTOR;
 	}
 
 	/**

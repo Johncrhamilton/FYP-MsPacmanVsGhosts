@@ -3,7 +3,6 @@ package pacman.influencemap;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import pacman.entries.pacman.InfluenceMapPacMan;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
@@ -42,8 +41,8 @@ public class PacmanInfluenceNode {
 		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, originIndex);
 		double pillInfluenceValue = IMConstants.INFLUENCE_OF_PILL * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_PILL, distanceFromCurrentToOrigin);
 
-		//Limit Influence and only the most positive pill influence is considered
-		if(pillInfluenceValue >= IMConstants.INFLUENCE_OF_PILL_LIMIT && pillInfluenceValue > influenceOfPills)
+		//Only the most positive pill influence is considered
+		if(pillInfluenceValue > influenceOfPills)
 		{
 			influenceOfPills = pillInfluenceValue;
 
@@ -109,8 +108,8 @@ public class PacmanInfluenceNode {
 		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, game.getGhostCurrentNodeIndex(ghost));
 		double edibleGhostInfluenceValue = IMConstants.INFLUENCE_OF_EDIBLE_GHOST * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_EDIBLE_GHOST, distanceFromCurrentToOrigin);
 
-		//Limit Influence and only the most positive edible ghost influence is considered
-		if(edibleGhostInfluenceValue >= IMConstants.INFLUENCE_OF_EDIBLE_GHOST_LIMIT && edibleGhostInfluenceValue > influenceOfEdibleGhosts) 
+		//Only the most positive edible ghost influence is considered
+		if(edibleGhostInfluenceValue > influenceOfEdibleGhosts) 
 		{
 			influenceOfEdibleGhosts = edibleGhostInfluenceValue;
 
@@ -136,44 +135,22 @@ public class PacmanInfluenceNode {
 	{
 		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, originIndex);
 
-		if(InfluenceMapPacMan.isPowerPillAttractive(game, originIndex))
+		if(isPowerPillAttractive(game, originIndex))
 		{
-			double powerPillInfluenceValue = IMConstants.INFLUENCE_OF_POWERPILL * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_POWERPILL, distanceFromCurrentToOrigin);
-
-			//Limit Influence and only the most positive power pill influence is considered
-			if(powerPillInfluenceValue >= IMConstants.INFLUENCE_OF_POWERPILL_POSITIVE_LIMIT) 
-			{
-				influenceOfPowerPill = powerPillInfluenceValue;
-
-				//Propagate the influence to this InfluenceNode's neighbours
-				for(PacmanInfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
-				{
-					//If the node neighbour is further away from origin than this node then propagate influence
-					if(game.getShortestPathDistance(influenceNode.getNodeIndex(), originIndex) > distanceFromCurrentToOrigin) 
-					{
-						influenceNode.updatePowerPillInfluence(game, influenceNodes, originIndex);
-					}
-				}
-			}
+			influenceOfPowerPill = IMConstants.INFLUENCE_OF_POWERPILL * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_POWERPILL, distanceFromCurrentToOrigin);
 		}
 		else
 		{
-			double powerPillInfluenceValue = -IMConstants.INFLUENCE_OF_POWERPILL * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_POWERPILL, distanceFromCurrentToOrigin);
-
-			//Limit Influence and only the most negative power pill influence is considered
-			if(powerPillInfluenceValue <= IMConstants.INFLUENCE_OF_POWERPILL_NEGATIVE_LIMIT) 
+			influenceOfPowerPill = -IMConstants.INFLUENCE_OF_POWERPILL * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_POWERPILL, distanceFromCurrentToOrigin);
+		}
+		
+		//Propagate the influence to this InfluenceNode's neighbours
+		for(PacmanInfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
+		{
+			//If the node neighbour is further away from origin than this node then propagate influence
+			if(game.getShortestPathDistance(influenceNode.getNodeIndex(), originIndex) > distanceFromCurrentToOrigin) 
 			{
-				influenceOfPowerPill = powerPillInfluenceValue;
-
-				//Propagate the influence to this InfluenceNode's neighbours
-				for(PacmanInfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
-				{
-					//If the node neighbour is further away from origin than this node then propagate influence
-					if(game.getShortestPathDistance(influenceNode.getNodeIndex(), originIndex) > distanceFromCurrentToOrigin) 
-					{
-						influenceNode.updatePowerPillInfluence(game, influenceNodes, originIndex);
-					}
-				}
+				influenceNode.updatePowerPillInfluence(game, influenceNodes, originIndex);
 			}
 		}
 	}
@@ -189,19 +166,15 @@ public class PacmanInfluenceNode {
 		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, originIndex);
 		double freedomOfChoiceInfluenceValue = IMConstants.INFLUENCE_OF_FREEDOM_OF_CHOICE * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_FREEDOM_OF_CHOICE, distanceFromCurrentToOrigin);
 
-		//Limit Influence and only the most positive power pill influence is considered
-		if(freedomOfChoiceInfluenceValue >= IMConstants.INFLUENCE_OF_FREEDOM_OF_CHOICE_LIMIT) 
-		{
-			influenceOfFreedomOfChoice = freedomOfChoiceInfluenceValue;
+		influenceOfFreedomOfChoice = freedomOfChoiceInfluenceValue;
 
-			//Propagate the influence to this InfluenceNode's neighbours
-			for(PacmanInfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
-			{				
-				//If the node neighbour is further away from origin than this node then propagate influence
-				if(game.getShortestPathDistance(influenceNode.getNodeIndex(), originIndex) > distanceFromCurrentToOrigin) 
-				{
-					influenceNode.updateFreedomOfChoiceInfluence(game, influenceNodes, originIndex);
-				}
+		//Propagate the influence to this InfluenceNode's neighbours
+		for(PacmanInfluenceNode influenceNode : getAppropriateNeighbours(influenceNodes, MOVE.NEUTRAL)) 
+		{				
+			//If the node neighbour is further away from origin than this node then propagate influence
+			if(game.getShortestPathDistance(influenceNode.getNodeIndex(), originIndex) > distanceFromCurrentToOrigin) 
+			{
+				influenceNode.updateFreedomOfChoiceInfluence(game, influenceNodes, originIndex);
 			}
 		}
 	}
@@ -222,6 +195,37 @@ public class PacmanInfluenceNode {
 		}
 
 		return appropriateNeighbours;
+	}
+
+	/**
+	 * Determine whether a power pill is attractive to Ms. Pacman considering ghost distances to power pill
+	 * @param powerPillIndex
+	 * @return boolean
+	 */
+	private boolean isPowerPillAttractive(Game game, int powerPillIndex) 
+	{
+		double sumOfGhostDistancesToPowerPill = 0.0;
+		int activeGhosts = 0;
+
+		for(GHOST ghost : GHOST.values()) 
+		{
+			if(game.getGhostLairTime(ghost) == 0 && !game.isGhostEdible(ghost)) 
+			{
+				sumOfGhostDistancesToPowerPill += game.getShortestPathDistance(powerPillIndex, game.getGhostCurrentNodeIndex(ghost));
+				activeGhosts++;
+			}
+		}
+
+		//If the sum of all ghost distances are within threshold this power pill is Attractive
+		if(activeGhosts >= 3)
+		{
+			if(sumOfGhostDistancesToPowerPill < IMConstants.POWERPILL_DISTANCE_THRESHOLD_PER_GHOST * activeGhosts) 
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

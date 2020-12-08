@@ -49,7 +49,7 @@ public class InfluenceMapGhosts extends Controller<EnumMap<GHOST,MOVE>>
 		for(Entry<MOVE,Integer> entry : currentGhostMazeNode.allNeighbourhoods.get(game.getGhostLastMoveMade(ghost)).entrySet()) 
 		{
 			double nodeInfluence = InfluenceMap.getGhostInfluenceNodes().get(entry.getValue()).getInfluence();
-
+			
 			if(nodeInfluence > highestNodeInfluence)
 			{
 				highestNodeInfluence = nodeInfluence;

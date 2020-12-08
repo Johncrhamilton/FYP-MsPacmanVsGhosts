@@ -70,35 +70,4 @@ public class InfluenceMapPacMan extends Controller<MOVE>
 
 		return move;
 	}
-
-	/**
-	 * Determine whether a power pill is attractive to Ms. Pacman considering ghost distances to power pill
-	 * @param powerPillIndex
-	 * @return boolean
-	 */
-	public static boolean isPowerPillAttractive(Game game, int powerPillIndex) 
-	{
-		double sumOfGhostDistancesToPowerPill = 0.0;
-		int activeGhosts = 0;
-
-		for(GHOST ghost : GHOST.values()) 
-		{
-			if(game.getGhostLairTime(ghost) == 0 && !game.isGhostEdible(ghost)) 
-			{
-				sumOfGhostDistancesToPowerPill += game.getShortestPathDistance(powerPillIndex, game.getGhostCurrentNodeIndex(ghost));
-				activeGhosts++;
-			}
-		}
-
-		//If the sum of all ghost distances are within threshold this power pill is Attractive
-		if(activeGhosts >= 3)
-		{
-			if(sumOfGhostDistancesToPowerPill < IMConstants.POWERPILL_DISTANCE_THRESHOLD_PER_GHOST * activeGhosts) 
-			{
-				return true;
-			}
-		}
-		
-		return false;
-	}
 }
