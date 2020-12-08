@@ -23,6 +23,7 @@ import pacman.controllers.examples.RandomPacMan;
 import pacman.controllers.examples.StarterGhosts;
 import pacman.controllers.examples.StarterPacMan;
 import pacman.entries.ghosts.DummyGhosts;
+import pacman.entries.ghosts.InfluenceMapGhosts;
 import pacman.entries.pacman.InfluenceMapPacMan;
 import pacman.game.Game;
 import pacman.game.GameView;
@@ -59,6 +60,7 @@ public class Executor
 		int delay = 15;
 		boolean visual=true;
 		//exec.runGame(new InfluenceMapPacMan(), new StarterGhosts(),visual,delay);
+		//exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(),visual,delay);
 		exec.runExperiment(new InfluenceMapPacMan(), new StarterGhosts(), 30);
 		 
 		///*
