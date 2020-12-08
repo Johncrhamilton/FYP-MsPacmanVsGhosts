@@ -22,7 +22,7 @@ public class IMConstants {
 	public static final double INFLUENCE_FACTOR_OF_POWERPILL = 0.95;
 	
 	public static final int INFLUENCE_OF_FREEDOM_OF_CHOICE = 60;
-	public static final int INFLUENCE_OF_FREEDOM_OF_CHOICE_THRESHOLD = -16;
+	public static final int INFLUENCE_OF_FREEDOM_OF_CHOICE_THRESHOLD = -30;
 	public static final double INFLUENCE_OF_FREEDOM_OF_CHOICE_LIMIT = 0.6;
 	public static final double INFLUENCE_FACTOR_OF_FREEDOM_OF_CHOICE = 0.95;
 	

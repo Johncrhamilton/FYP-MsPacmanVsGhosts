@@ -21,16 +21,16 @@ public class GhostInfluenceNode {
 		influenceOfPacman = 0.0;
 		influenceOfGhosts = 0.0;
 	}
-	
-	
+
+
 
 	/**
 	 * Get Appropriate InfluenceNode Neighbours
 	 * @param appropriateNeighbours
 	 */
-	private ArrayList<PacmanInfluenceNode> getAppropriateNeighbours(HashMap<Integer, PacmanInfluenceNode> influenceNodes, MOVE move) 
+	private ArrayList<GhostInfluenceNode> getAppropriateccNeighbours(HashMap<Integer, GhostInfluenceNode> influenceNodes, MOVE move) 
 	{
-		ArrayList<PacmanInfluenceNode> appropriateNeighbours = new ArrayList<PacmanInfluenceNode>();
+		ArrayList<GhostInfluenceNode> appropriateNeighbours = new ArrayList<GhostInfluenceNode>();
 
 		int[] allNeighbouringNodeIndexes = mazeNode.allNeighbouringNodes.get(move);
 
@@ -77,5 +77,5 @@ public class GhostInfluenceNode {
 		influenceOfPacman = 0.0;
 		influenceOfGhosts = 0.0;	
 	}
-	
+
 }
