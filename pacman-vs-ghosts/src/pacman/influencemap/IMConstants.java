@@ -31,6 +31,6 @@ public class IMConstants {
 	
 	public static final int INFLUENCE_GHOST_WEIGHT = -20;
 	public static final double INFLUENCE_FACTOR_OF_GHOST_WEIGHT = 0.9;
-	public static final int LIMITING_INFLUENCE_OF_PACMAN = -1;
+	public static final int LIMITING_INFLUENCE_OF_PACMAN = 0;
 	
 }
