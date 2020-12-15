@@ -41,7 +41,7 @@ public class GhostInfluenceNode {
 		}
 		else
 		{
-			influenceOfPacman = -IMConstants.INFLUENCE_OF_PACMAN * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_PACMAN, distanceFromCurrentToOrigin);
+			influenceOfPacman = -IMConstants.INFLUENCE_OF_PACMAN * Math.pow((IMConstants.INFLUENCE_FACTOR_OF_PACMAN - powerPillFactor), distanceFromCurrentToOrigin);
 		}
 
 		//Propagate the influence to this InfluenceNode's neighbours
@@ -119,7 +119,7 @@ public class GhostInfluenceNode {
 			return IMConstants.POWER_PILL_THRESHOLD;
 		}
 		
-		return game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), InfluenceMap.closestPowerPillIndexToMsPacman(game)) / IMConstants.POWER_PILL_DISTANCE_FACTOR;
+		return ((double) game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), InfluenceMap.closestPowerPillIndexToMsPacman(game)) / IMConstants.POWER_PILL_DISTANCE_FACTOR);
 	}
 
 	/**
