@@ -181,8 +181,6 @@ public class InfluenceMap {
 		for(int i = 0; i < junctionIndices.length; i++) 
 		{
 			int distanceToJunction = game.getShortestPathDistance(pacmanCurrentNodeIndex, junctionIndices[i]);
-
-			//If closer junction but Ms. Pacman isn't on this junction
 			if(distanceToJunction < closestJunctionDistance)
 			{
 				closestJunctionIndex = junctionIndices[i];

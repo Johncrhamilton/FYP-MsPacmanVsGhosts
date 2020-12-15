@@ -75,6 +75,7 @@ public class PacmanInfluenceNode {
 			influenceOfGhosts = ghostInfluenceValue;
 
 			ArrayList<PacmanInfluenceNode> neighbours;
+			
 			//Only consider neighbours in front of ghost initially
 			if(distanceFromCurrentToOrigin == 0.0)
 			{

@@ -60,9 +60,9 @@ public class Executor
 		int delay = 30;
 		boolean visual=true;
 		//exec.runGame(new InfluenceMapPacMan(), new StarterGhosts(),visual,delay);
-		//exec.runExperiment(new InfluenceMapPacMan(), new StarterGhosts(), 30);
+		exec.runExperiment(new InfluenceMapPacMan(), new StarterGhosts(), 30);
 		
-		exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(),visual,delay);
+		//exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(),visual,delay);
 		//exec.runExperiment(new StarterPacMan(), new InfluenceMapGhosts(), 30);
 		 
 		///*
