@@ -3,7 +3,6 @@ package pacman.entries.pacman;
 import java.util.Map.Entry;
 
 import pacman.controllers.Controller;
-import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 import pacman.game.internal.Node;
