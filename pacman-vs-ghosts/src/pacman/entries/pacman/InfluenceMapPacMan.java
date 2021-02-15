@@ -3,7 +3,6 @@ package pacman.entries.pacman;
 import java.util.Map.Entry;
 
 import pacman.controllers.Controller;
-import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 import pacman.game.internal.Node;
@@ -18,7 +17,7 @@ import pacman.influencemap.InfluenceMap;
  */
 public class InfluenceMapPacMan extends Controller<MOVE>
 {
-	private int forceDirectionCount = 0;
+	private double forceDirectionCount = 0;
 	
 	public MOVE getMove(Game game, long timeDue) 
 	{

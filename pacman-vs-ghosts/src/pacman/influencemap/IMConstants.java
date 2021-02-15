@@ -21,7 +21,7 @@ public class IMConstants {
 	public static final double INFLUENCE_OF_FREEDOM_OF_CHOICE_THRESHOLD = -30;
 	public static final double INFLUENCE_FACTOR_OF_FREEDOM_OF_CHOICE = 0.95;
 	
-	public static final int FORCE_DIRECTION_COUNT = 62;
+	public static final double FORCE_DIRECTION_COUNT = 62;
 	
 	//Constants for Ghosts
 	public static final double INFLUENCE_OF_PACMAN = 200;
