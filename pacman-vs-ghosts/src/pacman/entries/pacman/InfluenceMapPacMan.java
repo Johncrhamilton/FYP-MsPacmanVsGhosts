@@ -18,7 +18,7 @@ import pacman.influencemap.InfluenceMap;
  */
 public class InfluenceMapPacMan extends Controller<MOVE>
 {
-	private int forceDirectionCount = 0;
+	private double forceDirectionCount = 0;
 	
 	public MOVE getMove(Game game, long timeDue) 
 	{
