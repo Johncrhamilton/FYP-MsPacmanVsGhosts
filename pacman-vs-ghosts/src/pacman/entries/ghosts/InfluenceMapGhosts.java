@@ -26,23 +26,12 @@ public class InfluenceMapGhosts extends Controller<EnumMap<GHOST,MOVE>>
 		{			
 			if(game.doesGhostRequireAction(ghost)) 
 			{
-				if(!game.isGhostEdible(ghost))
-				{
-					//Generate influences with regards to this ghost
-					InfluenceMap.generateGhostInfluenceMap(game, ghost);
+				InfluenceMap.generateGhostInfluenceMap(game, ghost);
 
-					//Get best Move from Map
-					MOVE move = getBestMove(game, ghost);
-					
-					myMoves.put(ghost, move);
-				}
-				else 
-				{
-					myMoves.put(ghost, game.getApproximateNextMoveAwayFromTarget(game.getGhostCurrentNodeIndex(ghost), 
-							game.getPacmanCurrentNodeIndex(), 
-							game.getGhostLastMoveMade(ghost), 
-							DM.PATH));
-				}
+				//Get best Move from Map
+				MOVE move = getBestMove(game, ghost);
+
+				myMoves.put(ghost, move);
 			}
 		}
 

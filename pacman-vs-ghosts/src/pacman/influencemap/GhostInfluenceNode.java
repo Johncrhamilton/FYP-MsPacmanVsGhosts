@@ -30,18 +30,26 @@ public class GhostInfluenceNode {
 	 * @param influenceNodes
 	 * @param originIndex
 	 */
-	public void updatePacmanInfluence(Game game, HashMap<Integer, GhostInfluenceNode> influenceNodes, int originIndex) 
+	public void updatePacmanInfluence(Game game, HashMap<Integer, GhostInfluenceNode> influenceNodes, int originIndex, GHOST ghost) 
 	{
 		double distanceFromCurrentToOrigin = game.getShortestPathDistance(mazeNode.nodeIndex, originIndex);
 		double powerPillFactor = calculatePowerPillFactor(game);
 
-		if(powerPillFactor >= IMConstants.POWER_PILL_THRESHOLD)
+		if(!game.isGhostEdible(ghost))
 		{
-			influenceOfPacman = IMConstants.INFLUENCE_OF_PACMAN * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_PACMAN, distanceFromCurrentToOrigin);
+			if(powerPillFactor >= IMConstants.POWER_PILL_THRESHOLD)
+			{
+				influenceOfPacman = IMConstants.INFLUENCE_OF_PACMAN * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_PACMAN, distanceFromCurrentToOrigin);
+			}
+			else
+			{
+				influenceOfPacman = -IMConstants.INFLUENCE_OF_PACMAN * Math.pow((IMConstants.INFLUENCE_FACTOR_OF_PACMAN - powerPillFactor), distanceFromCurrentToOrigin);
+			}
 		}
 		else
 		{
-			influenceOfPacman = -IMConstants.INFLUENCE_OF_PACMAN * Math.pow((IMConstants.INFLUENCE_FACTOR_OF_PACMAN - powerPillFactor), distanceFromCurrentToOrigin);
+			//If ghost is edible pacman will emit a negative influence
+			influenceOfPacman = -IMConstants.INFLUENCE_OF_PACMAN * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_PACMAN, distanceFromCurrentToOrigin);		
 		}
 
 		//Propagate the influence to this InfluenceNode's neighbours
@@ -50,11 +58,11 @@ public class GhostInfluenceNode {
 			//If the node neighbour is further away from origin than this node then propagate influence
 			if(game.getShortestPathDistance(influenceNode.getNodeIndex(), originIndex) > distanceFromCurrentToOrigin) 
 			{
-				influenceNode.updatePacmanInfluence(game, influenceNodes, originIndex);
+				influenceNode.updatePacmanInfluence(game, influenceNodes, originIndex, ghost);
 			}
 		}
 	}
-	
+
 	/**
 	 * Update Ghost Influence
 	 * @param game
@@ -69,7 +77,7 @@ public class GhostInfluenceNode {
 		//Calculate the influence limiting factor
 		double distanceFromCurrentToPacman = game.getShortestPathDistance(mazeNode.nodeIndex, game.getPacmanCurrentNodeIndex());
 		double distanceFromGhostToPacman = game.getShortestPathDistance(game.getGhostCurrentNodeIndex(ghost), game.getPacmanCurrentNodeIndex());
-		
+
 		double influenceOfGhostLimit = (IMConstants.INFLUENCE_GHOST_WEIGHT - distanceFromCurrentToPacman * IMConstants.LIMITING_INFLUENCE_OF_PACMAN) / distanceFromGhostToPacman;
 
 		//Limit Influence and only the most negative ghost influence is considered
@@ -118,7 +126,7 @@ public class GhostInfluenceNode {
 		{
 			return IMConstants.POWER_PILL_THRESHOLD;
 		}
-		
+
 		return ((double) game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), InfluenceMap.closestPowerPillIndexToMsPacman(game)) / IMConstants.POWER_PILL_DISTANCE_FACTOR);
 	}
 
