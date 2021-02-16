@@ -27,7 +27,7 @@ public class InfluenceMapPacMan extends Controller<MOVE>
 		//Generate influences
 		InfluenceMap.generateMsPacmanInfluenceMap(game);
 		
-		//Get best Move from Map
+		//Get best Move from IMap
 		MOVE move = getBestMove(game);
 		
 		//Force direction if needed

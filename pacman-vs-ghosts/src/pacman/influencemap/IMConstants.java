@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class IMConstants {
 	
-	//All tunable pacman parameters
+	//All tunable Ms. Pacman parameters
 	public static final ArrayList<IMTunableParameter> PACMAN_PARAMETERS = new ArrayList<IMTunableParameter>() {{
 		add(new IMTunableParameter(IMAPControllerParameter.P_FORCE_DIRECTION_COUNT, new double[] {0.0, 15.0, 30.0, 45.0, 60.0, 75.0, 90.0, 105.0, 120.0}));		
 		add(new IMTunableParameter(IMAPControllerParameter.P_INFLUENCE_OF_GHOST, new double[] {-100.0, -90.0, -85.0, -80.0, -75.0, -70.0, -60.0}));		
@@ -42,7 +42,7 @@ public class IMConstants {
 
 	public static double FORCE_DIRECTION_COUNT = 62;
 
-	//All tunable ghost parameters in order of importance
+	//All tunable Ghost parameters in order of importance
 	public static final ArrayList<IMTunableParameter> GHOST_PARAMETERS = new ArrayList<IMTunableParameter>() {{
 		add(new IMTunableParameter(IMAPControllerParameter.G_INFLUENCE_OF_PACMAN, new double[] {140.0, 170.0, 180.0, 190.0, 200.0, 210.0, 220.0, 230.0, 260.0}));
 		add(new IMTunableParameter(IMAPControllerParameter.G_POWER_PILL_DISTANCE_FACTOR, new double[] {20.0, 27.5, 30.0, 32.5, 35.0, 37.5, 40.0, 42.5, 50.0}));

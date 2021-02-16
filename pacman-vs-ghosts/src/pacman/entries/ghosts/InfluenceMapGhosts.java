@@ -5,7 +5,6 @@ import java.util.Map.Entry;
 
 import pacman.controllers.Controller;
 import pacman.game.Game;
-import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.internal.Node;
@@ -28,7 +27,7 @@ public class InfluenceMapGhosts extends Controller<EnumMap<GHOST,MOVE>>
 			{
 				InfluenceMap.generateGhostInfluenceMap(game, ghost);
 
-				//Get best Move from Map
+				//Get best Move from IMap
 				MOVE move = getBestMove(game, ghost);
 
 				myMoves.put(ghost, move);

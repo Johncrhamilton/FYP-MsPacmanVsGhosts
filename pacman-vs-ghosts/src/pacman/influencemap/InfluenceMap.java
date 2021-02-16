@@ -128,13 +128,16 @@ public class InfluenceMap {
 		//Calculate Influence of Ms Pacman
 		ghostInfluenceNodes.get(game.getPacmanCurrentNodeIndex()).updatePacmanInfluence(game, ghostInfluenceNodes, game.getPacmanCurrentNodeIndex(), currentGhost);
 
-		//Calculate Influence of Ghosts
-		for(GHOST ghost : GHOST.values())
+		if(!game.isGhostEdible(currentGhost))
 		{
-			//Ghost outside lair
-			if(game.getGhostLairTime(ghost) == 0 && ghost != currentGhost) 
-			{	
-				ghostInfluenceNodes.get(game.getGhostCurrentNodeIndex(ghost)).updateGhostInfluence(game, ghostInfluenceNodes, ghost);
+			//Calculate Influence of Ghosts
+			for(GHOST ghost : GHOST.values())
+			{
+				//Ghost outside lair
+				if(game.getGhostLairTime(ghost) == 0 && ghost != currentGhost) 
+				{	
+					ghostInfluenceNodes.get(game.getGhostCurrentNodeIndex(ghost)).updateGhostInfluence(game, ghostInfluenceNodes, ghost);
+				}
 			}
 		}
 	}

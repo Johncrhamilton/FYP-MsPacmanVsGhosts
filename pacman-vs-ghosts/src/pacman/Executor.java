@@ -42,7 +42,7 @@ import static pacman.game.Constants.*;
 @SuppressWarnings("unused")
 public class Executor
 {	
-	private final static int NUM_EXPERIMENT_RUNS = 60;
+	private final static int NUM_EXPERIMENT_RUNS = 10;
 
 	/**
 	 * The main method. Several options are listed - simply remove comments to use the option you want.
@@ -73,7 +73,7 @@ public class Executor
 		//exec.runGame(new InfluenceMapPacMan(), new StarterGhosts(),visual,delay);
 		//exec.runExperiment(new InfluenceMapPacMan(), new StarterGhosts(), 30);
 
-		exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(),visual,delay);
+		exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(), visual, delay);
 		//exec.runExperiment(new StarterPacMan(), new InfluenceMapGhosts(), 30);
 
 		///*
@@ -109,10 +109,10 @@ public class Executor
 	 */
 	private static void tunePacmanParameters(Executor exec) 
 	{
-		for(IMTunableParameter pacmanParam : IMConstants.PACMAN_PARAMETERS) 
+		for(IMTunableParameter pacmanParam : IMConstants.PACMAN_PARAMETERS)
 		{
 			setBestParameterValue(exec, true, new InfluenceMapPacMan(), new StarterGhosts(), pacmanParam.getParamEnum(), pacmanParam.getParamValues());
-		}		
+		}
 	}
 	
 	/**
@@ -143,12 +143,13 @@ public class Executor
 		//Find the best parameter value
 		for(int i = 0; i < paramValues.length; i++)
 		{
-			IMConstants.setConstant(param, paramValues[i]);;
+			IMConstants.setConstant(param, paramValues[i]);
 			double newParamPerformanceValue = exec.runExperiment(pacManController, ghostController, NUM_EXPERIMENT_RUNS);
 
 			if(tunePacman) 
 			{
 				//A better performance for pacman is greater than current performance
+				//System.out.println(newParamPerformanceValue + " " + bestParamPerformanceValue);
 				if(newParamPerformanceValue > bestParamPerformanceValue)
 				{
 					bestParamValue = paramValues[i];
@@ -158,6 +159,7 @@ public class Executor
 			else 
 			{
 				//A better performance for ghosts is less than current performance
+				//System.out.println(newParamPerformanceValue + " " + bestParamPerformanceValue);
 				if(newParamPerformanceValue < bestParamPerformanceValue)
 				{
 					bestParamValue = paramValues[i];
@@ -202,7 +204,7 @@ public class Executor
 			//System.out.println(i+"\t"+game.getScore());
 		}
 
-		System.out.println(avgScore/trials);
+		//System.out.println(avgScore/trials);
 		return avgScore/trials;
 	}
 
