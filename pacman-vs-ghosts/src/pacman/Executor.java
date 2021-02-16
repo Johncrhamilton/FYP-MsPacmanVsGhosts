@@ -42,7 +42,7 @@ import static pacman.game.Constants.*;
 @SuppressWarnings("unused")
 public class Executor
 {	
-	private final static int NUM_EXPERIMENT_RUNS = 10;
+	private final static int NUM_EXPERIMENT_RUNS = 60;
 
 	/**
 	 * The main method. Several options are listed - simply remove comments to use the option you want.
