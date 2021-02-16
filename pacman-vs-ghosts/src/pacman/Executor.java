@@ -28,8 +28,8 @@ import pacman.entries.pacman.InfluenceMapPacMan;
 import pacman.game.Game;
 import pacman.game.GameView;
 import pacman.influencemap.IMConstants;
-import pacman.influencemap.IMConstants.IMGhostParams;
-import pacman.influencemap.IMConstants.IMPacmanParams;
+import pacman.influencemap.IMConstants.IMAPControllerParameter;
+import pacman.influencemap.IMTunableParameter;
 
 import static pacman.game.Constants.*;
 
@@ -43,7 +43,7 @@ import static pacman.game.Constants.*;
 public class Executor
 {	
 	private final static int NUM_EXPERIMENT_RUNS = 60;
-	
+
 	/**
 	 * The main method. Several options are listed - simply remove comments to use the option you want.
 	 *
@@ -52,51 +52,12 @@ public class Executor
 	public static void main(String[] args)
 	{
 		Executor exec = new Executor();
-
-		//Pacman parameter tuning ordered from first to last
-		//1st
-		//fixBestPacmanParameterValue(exec, IMPacmanParams.ENUM_FORCE_DIRECTION_COUNT, new double[] {0.0, 15.0, 30.0, 45.0, 60.0, 75.0, 90.0, 115.0, 130.0});		
-		//2nd
-		//fixBestPacmanParameterValue(exec, IMPacmanParams.ENUM_INFLUENCE_OF_GHOST, new double[] {-65.0, -0.75, -80.0, -0.85, -95.0});		
-		//3rd
-		//fixBestPacmanParameterValue(exec, IMPacmanParams.ENUM_INFLUENCE_OF_EDIBLE_GHOST, new double[] {40.0, 50.0, 60.0, 70.0, 80.0});
-		//4th
-		//fixBestPacmanParameterValue(exec, IMPacmanParams.ENUM_INFLUENCE_OF_POWERPILL, new double[] {20.0, 25.0, 30.0, 35.0, 40.0});		
-		//5th
-		//fixBestPacmanParameterValue(exec, IMPacmanParams.ENUM_INFLUENCE_OF_FREEDOM_OF_CHOICE, new double[] {20.0, 40.0, 50.0, 60.0, 70.0, 80.0, 100.0});
-		//6th
-		//fixBestPacmanParameterValue(exec, IMPacmanParams.ENUM_INFLUENCE_OF_PILL, new double[] {2.0, 4.0, 6.0, 8.0});
-		//7th
-		//fixBestPacmanParameterValue(exec, IMPacmanParams.ENUM_INFLUENCE_FACTOR_OF_GHOST, new double[] {0.8, 0.85, 0.9, 0.95});
-		//8th
-		//fixBestPacmanParameterValue(exec, IMPacmanParams.ENUM_INFLUENCE_FACTOR_OF_EDIBLE_GHOST, new double[] {0.8, 0.85, 0.9, 0.95});
-		//9th
-		//fixBestPacmanParameterValue(exec, IMPacmanParams.ENUM_POWERPILL_DISTANCE_THRESHOLD_PER_GHOST, new double[] {90.0, 100.0, 110.0, 120.0});
-		//10th
-		//fixBestPacmanParameterValue(exec, IMPacmanParams.ENUM_INFLUENCE_FACTOR_OF_POWERPILL, new double[] {0.8, 0.85, 0.9, 0.95});		
-		//11th
-		//fixBestPacmanParameterValue(exec, IMPacmanParams.ENUM_INFLUENCE_OF_FREEDOM_OF_CHOICE_THRESHOLD, new double[] {0.0, -15.0, -25.0, -30.0, -35.0 -45.0, -60.0});
-		//12th
-		//fixBestPacmanParameterValue(exec, IMPacmanParams.ENUM_INFLUENCE_FACTOR_OF_FREEDOM_OF_CHOICE, new double[] {0.8, 0.85, 0.9, 0.95});
-		//13th
-		//fixBestPacmanParameterValue(exec, IMPacmanParams.ENUM_INFLUENCE_FACTOR_OF_PILL, new double[] {0.8, 0.85, 0.9, 0.95});
 		
+		//Tune parameters for IMAP Based MsPacman
+		//tunePacmanParameters(exec);
 		
-		//Ghost parameter tuning ordered from first to last		
-		//1st
-		//fixBestGhostParameterValue(exec, IMGhostParams.ENUM_INFLUENCE_OF_PACMAN, new double[] {50.0, 100.0, 125.0, 150.0, 175.0, 200.0, 250.0, 300.0});
-		//2nd
-		//fixBestGhostParameterValue(exec, IMGhostParams.ENUM_POWER_PILL_DISTANCE_FACTOR, new double[] {5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 35.0, 40.0});
-		//3rd
-		//fixBestGhostParameterValue(exec, IMGhostParams.ENUM_POWER_PILL_THRESHOLD, new double[] {0.75, 0.8, 0.85, 0.9, 0.95});		
-		//4th
-		//fixBestGhostParameterValue(exec, IMGhostParams.ENUM_INFLUENCE_GHOST_WEIGHT, new double[] {-5.0, -15.0, -20.0, -22.5, -25.0, -27.5, -30.0});
-		//5th
-		//fixBestGhostParameterValue(exec, IMGhostParams.ENUM_INFLUENCE_FACTOR_OF_PACMAN, new double[] {0.75, 0.8, 0.85, 0.9, 0.95});
-		//6th
-		//fixBestGhostParameterValue(exec, IMGhostParams.ENUM_INFLUENCE_FACTOR_OF_GHOST_WEIGHT, new double[] {0.75, 0.8, 0.85, 0.9, 0.95});
-		//7th
-		//fixBestGhostParameterValue(exec, IMGhostParams.ENUM_LIMITING_INFLUENCE_OF_PACMAN, new double[] {-10.0, -5.0, 0.0, 5.0, 10.0, 20.0, 30.0, 40.0});		
+		//Tune parameters for IMAP Based Ghosts
+		//tuneGhostParameters(exec);
 
 		/*
 		//run multiple games in batch mode - good for testing.
@@ -107,13 +68,13 @@ public class Executor
 		/*
 		 */
 		//run a game in synchronous mode: game waits until controllers respond.
-		//int delay = 30;
+		int delay = 30;
 		boolean visual=true;
 		//exec.runGame(new InfluenceMapPacMan(), new StarterGhosts(),visual,delay);
 		//exec.runExperiment(new InfluenceMapPacMan(), new StarterGhosts(), 30);
 
-		//exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(),visual,delay);
-		//exec.runExperiment(new StarterPacMan(), new InfluenceMapGhosts(), 60);
+		exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(),visual,delay);
+		//exec.runExperiment(new StarterPacMan(), new InfluenceMapGhosts(), 30);
 
 		///*
 		//run the game in asynchronous mode.
@@ -143,75 +104,71 @@ public class Executor
 	}
 	
 	/**
+	 * Find and set the best pacman parameters
+	 * @param exec
+	 */
+	private static void tunePacmanParameters(Executor exec) 
+	{
+		for(IMTunableParameter pacmanParam : IMConstants.PACMAN_PARAMETERS) 
+		{
+			setBestParameterValue(exec, true, new InfluenceMapPacMan(), new StarterGhosts(), pacmanParam.getParamEnum(), pacmanParam.getParamValues());
+		}		
+	}
+	
+	/**
+	 * Find and set the best ghost parameters
+	 * @param exec
+	 */
+	private static void tuneGhostParameters(Executor exec) 
+	{
+		for(IMTunableParameter ghostParam : IMConstants.GHOST_PARAMETERS) 
+		{
+			setBestParameterValue(exec, false, new StarterPacMan(), new InfluenceMapGhosts(), ghostParam.getParamEnum(), ghostParam.getParamValues());
+		}		
+	}
+
+	/**
 	 * Run experiments for each parameter value for a given parameter (enum) and then select the best value
 	 * @param exec
 	 * @param pacmanParam
 	 * @param paramValues
 	 */
-	private static void fixBestPacmanParameterValue(Executor exec, IMPacmanParams pacmanParam, double[] paramValues) 
+	private static void setBestParameterValue(Executor exec, boolean tunePacman, Controller<MOVE> pacManController, Controller<EnumMap<GHOST,MOVE>> ghostController, IMAPControllerParameter param, double[] paramValues) 
 	{
-		double bestParamValue = IMConstants.getPacmanConstant(pacmanParam);
-		double bestParamPerformanceValue = exec.runExperiment(new InfluenceMapPacMan(), new StarterGhosts(), NUM_EXPERIMENT_RUNS);
-		
-		System.out.println("Default: " + bestParamValue);
-		
-		//Find the best pacman parameter value
+		double bestParamValue = IMConstants.getConstant(param);
+		double bestParamPerformanceValue = exec.runExperiment(pacManController, ghostController, NUM_EXPERIMENT_RUNS);
+
+		System.out.println("Default " +  param.toString() + ": " + bestParamValue);
+
+		//Find the best parameter value
 		for(int i = 0; i < paramValues.length; i++)
 		{
-			IMConstants.setPacmanConstant(pacmanParam, paramValues[i]);;
-			double newParamPerformanceValue = exec.runExperiment(new InfluenceMapPacMan(), new StarterGhosts(), NUM_EXPERIMENT_RUNS);
-			
-			//Better performance for pacman is greater than current performance
-			//System.out.println(paramValues[i] + " < " + bestParamValue);
-			//System.out.println(newParamPerformanceValue + " < " + bestParamPerformanceValue);
-			//System.out.println(newParamPerformanceValue < bestParamPerformanceValue);
-			//System.out.println();
-			if(newParamPerformanceValue > bestParamPerformanceValue)
+			IMConstants.setConstant(param, paramValues[i]);;
+			double newParamPerformanceValue = exec.runExperiment(pacManController, ghostController, NUM_EXPERIMENT_RUNS);
+
+			if(tunePacman) 
 			{
-				bestParamValue = paramValues[i];
-				bestParamPerformanceValue = newParamPerformanceValue;
+				//A better performance for pacman is greater than current performance
+				if(newParamPerformanceValue > bestParamPerformanceValue)
+				{
+					bestParamValue = paramValues[i];
+					bestParamPerformanceValue = newParamPerformanceValue;
+				}
+			}	
+			else 
+			{
+				//A better performance for ghosts is less than current performance
+				if(newParamPerformanceValue < bestParamPerformanceValue)
+				{
+					bestParamValue = paramValues[i];
+					bestParamPerformanceValue = newParamPerformanceValue;
+				}
 			}
 		}
-		
-		//Set the best pacman parameter value
-		IMConstants.setPacmanConstant(pacmanParam, bestParamValue);;
-		System.out.println(pacmanParam.toString() + ": Set " + bestParamValue + " as best parameter value.");
-	}
-	
-	/**
-	 * Run experiments for each parameter value for a given parameter (enum) and then select the best value
-	 * @param exec
-	 * @param ghostParam
-	 * @param paramValues
-	 */
-	private static void fixBestGhostParameterValue(Executor exec, IMGhostParams ghostParam, double[] paramValues) 
-	{
-		double bestParamValue = IMConstants.getGhostConstant(ghostParam);
-		double bestParamPerformanceValue = exec.runExperiment(new StarterPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS);
-		
-		System.out.println("Default: " + bestParamValue);
-		
-		//Find the best ghost parameter value
-		for(int i = 0; i < paramValues.length; i++)
-		{
-			IMConstants.setGhostConstant(ghostParam, paramValues[i]);
-			double newParamPerformanceValue = exec.runExperiment(new StarterPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS);
-			
-			//Better performance for ghosts is less than current performance
-			//System.out.println(paramValues[i] + " < " + bestParamValue);
-			//System.out.println(newParamPerformanceValue + " < " + bestParamPerformanceValue);
-			//System.out.println(newParamPerformanceValue < bestParamPerformanceValue);
-			//System.out.println();
-			if(newParamPerformanceValue < bestParamPerformanceValue)
-			{
-				bestParamValue = paramValues[i];
-				bestParamPerformanceValue = newParamPerformanceValue;
-			}
-		}
-		
-		//Set the best ghost parameter value
-		IMConstants.setGhostConstant(ghostParam, bestParamValue);
-		System.out.println(ghostParam.toString() + ": Set " + bestParamValue + " as best parameter value.");
+
+		//Set the best parameter value
+		IMConstants.setConstant(param, bestParamValue);;
+		System.out.println(param.toString() + ": Set " + bestParamValue + " as the best parameter value.");
 	}
 
 	/**
@@ -245,7 +202,7 @@ public class Executor
 			//System.out.println(i+"\t"+game.getScore());
 		}
 
-		//System.out.println(avgScore/trials);
+		System.out.println(avgScore/trials);
 		return avgScore/trials;
 	}
 

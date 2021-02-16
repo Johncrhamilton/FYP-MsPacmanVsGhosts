@@ -126,7 +126,7 @@ public class InfluenceMap {
 		}
 
 		//Calculate Influence of Ms Pacman
-		ghostInfluenceNodes.get(game.getPacmanCurrentNodeIndex()).updatePacmanInfluence(game, ghostInfluenceNodes, game.getPacmanCurrentNodeIndex());
+		ghostInfluenceNodes.get(game.getPacmanCurrentNodeIndex()).updatePacmanInfluence(game, ghostInfluenceNodes, game.getPacmanCurrentNodeIndex(), currentGhost);
 
 		//Calculate Influence of Ghosts
 		for(GHOST ghost : GHOST.values())
