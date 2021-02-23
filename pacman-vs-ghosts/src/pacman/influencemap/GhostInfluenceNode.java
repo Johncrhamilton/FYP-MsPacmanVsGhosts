@@ -37,6 +37,7 @@ public class GhostInfluenceNode {
 
 		if(!game.isGhostEdible(ghost))
 		{
+			//Regular pacman influence calculation when ghost isn't edible
 			if(powerPillFactor >= IMConstants.POWER_PILL_THRESHOLD)
 			{
 				influenceOfPacman = IMConstants.INFLUENCE_OF_PACMAN * Math.pow(IMConstants.INFLUENCE_FACTOR_OF_PACMAN, distanceFromCurrentToOrigin);

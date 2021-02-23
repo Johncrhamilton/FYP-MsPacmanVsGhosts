@@ -27,9 +27,14 @@ import pacman.entries.ghosts.InfluenceMapGhosts;
 import pacman.entries.pacman.InfluenceMapPacMan;
 import pacman.game.Game;
 import pacman.game.GameView;
+import pacman.game.util.ExperimentResult;
 import pacman.influencemap.IMConstants;
 import pacman.influencemap.IMConstants.IMAPControllerParameter;
 import pacman.influencemap.IMTunableParameter;
+
+import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
+import org.apache.commons.math3.stat.inference.OneWayAnova;
+import org.apache.commons.math3.stat.inference.TTest;
 
 import static pacman.game.Constants.*;
 
@@ -42,7 +47,11 @@ import static pacman.game.Constants.*;
 @SuppressWarnings("unused")
 public class Executor
 {	
-	private final static int NUM_EXPERIMENT_RUNS = 60;
+	private final static int NUM_EXPERIMENT_RUNS = 30;
+	private final static double ALPHA = 0.05;
+
+	private static OneWayAnova oneWayAnova = new OneWayAnova();
+	private static StandardDeviation standardDeviation = new StandardDeviation();
 
 	/**
 	 * The main method. Several options are listed - simply remove comments to use the option you want.
@@ -52,10 +61,10 @@ public class Executor
 	public static void main(String[] args)
 	{
 		Executor exec = new Executor();
-		
+
 		//Tune parameters for IMAP Based MsPacman
 		//tunePacmanParameters(exec);
-		
+
 		//Tune parameters for IMAP Based Ghosts
 		//tuneGhostParameters(exec);
 
@@ -68,13 +77,15 @@ public class Executor
 		/*
 		 */
 		//run a game in synchronous mode: game waits until controllers respond.
-		int delay = 30;
-		boolean visual=true;
+		//int delay = 30;
+		//boolean visual=true;
+		//Single games with visuals
 		//exec.runGame(new InfluenceMapPacMan(), new StarterGhosts(),visual,delay);
-		//exec.runExperiment(new InfluenceMapPacMan(), new StarterGhosts(), 30);
+		//exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(), visual, delay);
 
-		exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(), visual, delay);
-		//exec.runExperiment(new StarterPacMan(), new InfluenceMapGhosts(), 30);
+		//Multiple games without visuals
+		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new StarterGhosts(), NUM_EXPERIMENT_RUNS).toString());
+		//System.out.print(exec.runExperiment(new StarterPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS).toString());
 
 		///*
 		//run the game in asynchronous mode.
@@ -102,28 +113,34 @@ public class Executor
 		//exec.replayGame(fileName,visual);
 		 */
 	}
-	
+
 	/**
 	 * Find and set the best pacman parameters
 	 * @param exec
 	 */
 	private static void tunePacmanParameters(Executor exec) 
 	{
-		for(IMTunableParameter pacmanParam : IMConstants.PACMAN_PARAMETERS)
+		for(int index = 0; index < IMConstants.PACMAN_PARAMETERS.size(); index++) 
 		{
-			setBestParameterValue(exec, true, new InfluenceMapPacMan(), new StarterGhosts(), pacmanParam.getParamEnum(), pacmanParam.getParamValues());
+			String filePath = "data/IMapPacman/" + index + "_" + IMConstants.PACMAN_PARAMETERS.get(index).getParamEnum().toString() + ".txt";
+			
+			setBestParameterValue(exec, new InfluenceMapPacMan(), new StarterGhosts(), true, IMConstants.PACMAN_PARAMETERS.get(index).getParamEnum(), 
+					IMConstants.PACMAN_PARAMETERS.get(index).getParamValues(), filePath);
 		}
 	}
-	
+
 	/**
 	 * Find and set the best ghost parameters
 	 * @param exec
 	 */
 	private static void tuneGhostParameters(Executor exec) 
 	{
-		for(IMTunableParameter ghostParam : IMConstants.GHOST_PARAMETERS) 
+		for(int index = 0; index < IMConstants.GHOST_PARAMETERS.size(); index++) 
 		{
-			setBestParameterValue(exec, false, new StarterPacMan(), new InfluenceMapGhosts(), ghostParam.getParamEnum(), ghostParam.getParamValues());
+			String filePath = "data/IMapGhost/" + index + "_" + IMConstants.GHOST_PARAMETERS.get(index).getParamEnum().toString() + ".txt";
+			
+			setBestParameterValue(exec, new StarterPacMan(), new InfluenceMapGhosts(), false, IMConstants.GHOST_PARAMETERS.get(index).getParamEnum(), 
+					IMConstants.GHOST_PARAMETERS.get(index).getParamValues(), filePath);
 		}		
 	}
 
@@ -131,46 +148,85 @@ public class Executor
 	 * Run experiments for each parameter value for a given parameter (enum) and then select the best value
 	 * @param exec
 	 * @param pacmanParam
-	 * @param paramValues
+	 * @param parameterValues
 	 */
-	private static void setBestParameterValue(Executor exec, boolean tunePacman, Controller<MOVE> pacManController, Controller<EnumMap<GHOST,MOVE>> ghostController, IMAPControllerParameter param, double[] paramValues) 
-	{
-		double bestParamValue = IMConstants.getConstant(param);
-		double bestParamPerformanceValue = exec.runExperiment(pacManController, ghostController, NUM_EXPERIMENT_RUNS);
+	private static void setBestParameterValue(Executor exec, Controller<MOVE> pacManController, Controller<EnumMap<GHOST,MOVE>> ghostController, 
+			boolean tunePacman, IMAPControllerParameter parameter, double[] parameterValues, String filePath) 
+	{		
+		//Default parameter value
+		double bestParameterValue = IMConstants.getConstant(parameter);
+		String s = parameter.toString() + " default: " + bestParameterValue + "\n";
 
-		System.out.println("Default " +  param.toString() + ": " + bestParamValue);
+		//Collect the experimental performance of each parameter
+		ArrayList<ExperimentResult> parameterExperimentResults = new ArrayList<ExperimentResult>(parameterValues.length);
+		ArrayList<double[]> allParameterRunScores = new ArrayList<double[]>(parameterValues.length);
 
-		//Find the best parameter value
-		for(int i = 0; i < paramValues.length; i++)
+		for(int i = 0; i < parameterValues.length; i++)
 		{
-			IMConstants.setConstant(param, paramValues[i]);
-			double newParamPerformanceValue = exec.runExperiment(pacManController, ghostController, NUM_EXPERIMENT_RUNS);
+			IMConstants.setConstant(parameter, parameterValues[i]);
+			ExperimentResult parameterExperimentResult = exec.runExperiment(pacManController, ghostController, NUM_EXPERIMENT_RUNS);	
 
+			parameterExperimentResults.add(parameterExperimentResult);
+			allParameterRunScores.add(parameterExperimentResult.getRunScores());
+		}
+
+		//Calculate OneWayAnova Test Result for the experiment results
+		//boolean anovaTestResult = oneWayAnova.anovaTest(allParameterRunScores, ALPHA);
+		double annovaPValue = oneWayAnova.anovaPValue(allParameterRunScores);
+
+		s += "Anova P value " + annovaPValue + "\n";
+
+		//If there is a significant difference between groups i.e parameter value results
+		if(annovaPValue < ALPHA)
+		{
+			//A better pacman parameter will yield a higher score
 			if(tunePacman) 
 			{
-				//A better performance for pacman is greater than current performance
-				//System.out.println(newParamPerformanceValue + " " + bestParamPerformanceValue);
-				if(newParamPerformanceValue > bestParamPerformanceValue)
+				//To start off bestParameterExperimentResult will be the worst parameter experiment result
+				ExperimentResult bestParameterExperimentResult = new ExperimentResult(-Double.MAX_VALUE, 0.0, new double[1]);;
+				
+				for(int i = 0; i < parameterExperimentResults.size(); i++) 
 				{
-					bestParamValue = paramValues[i];
-					bestParamPerformanceValue = newParamPerformanceValue;
+					if(parameterExperimentResults.get(i).getAverageScore() > bestParameterExperimentResult.getAverageScore()) 
+					{
+						bestParameterValue = parameterValues[i];
+						bestParameterExperimentResult = parameterExperimentResults.get(i);
+					}
 				}
-			}	
-			else 
+			}
+			//A better ghost parameter will yield a lower score
+			else
 			{
-				//A better performance for ghosts is less than current performance
-				//System.out.println(newParamPerformanceValue + " " + bestParamPerformanceValue);
-				if(newParamPerformanceValue < bestParamPerformanceValue)
+				//To start off bestParameterExperimentResult will be the worst parameter experiment result
+				ExperimentResult bestParameterExperimentResult = new ExperimentResult(Double.MAX_VALUE, 0.0, new double[1]);;
+				
+				for(int i = 0; i < parameterExperimentResults.size(); i++) 
 				{
-					bestParamValue = paramValues[i];
-					bestParamPerformanceValue = newParamPerformanceValue;
+					if(parameterExperimentResults.get(i).getAverageScore() < bestParameterExperimentResult.getAverageScore()) 
+					{
+						bestParameterValue = parameterValues[i];
+						bestParameterExperimentResult = parameterExperimentResults.get(i);
+					}
 				}
 			}
 		}
 
 		//Set the best parameter value
-		IMConstants.setConstant(param, bestParamValue);;
-		System.out.println(param.toString() + ": Set " + bestParamValue + " as the best parameter value.");
+		IMConstants.setConstant(parameter, bestParameterValue);;
+
+		//Save the data in a file
+		s += "Set " + bestParameterValue + " as the best parameter value.\n";
+		s += "\n//////////////////////////////////////////////////\n\n";
+
+		for(int i = 0; i < parameterValues.length; i++) 
+		{
+			s += parameterValues[i] + "\n";
+			s += parameterExperimentResults.get(i).toString();
+			s += "-----------------------------------------------\n";
+		}
+
+		//System.out.println(s);
+		saveToFile(s, filePath, true);
 	}
 
 	/**
@@ -183,9 +239,13 @@ public class Executor
 	 * @param ghostController The Ghosts controller
 	 * @param trials The number of trials to be executed
 	 */
-	public double runExperiment(Controller<MOVE> pacManController,Controller<EnumMap<GHOST,MOVE>> ghostController,int trials)
-	{
+	public ExperimentResult runExperiment(Controller<MOVE> pacManController, Controller<EnumMap<GHOST,MOVE>> ghostController, int trials)
+	{		
+		//Average score in experiment
 		double avgScore=0;
+
+		//Stored score of each run
+		double[] runScores = new double[trials];
 
 		Random rnd=new Random(0);
 		Game game;
@@ -200,12 +260,15 @@ public class Executor
 						ghostController.getMove(game.copy(),System.currentTimeMillis()+DELAY));
 			}
 
-			avgScore+=game.getScore();
+			avgScore += game.getScore();
+			runScores[i] = game.getScore();
+
 			//System.out.println(i+"\t"+game.getScore());
 		}
-
 		//System.out.println(avgScore/trials);
-		return avgScore/trials;
+
+		//Return the ExperimentResult = Average score, standard deviation and the individual run scores
+		return new ExperimentResult(avgScore/trials, standardDeviation.evaluate(runScores, avgScore/trials), runScores);
 	}
 
 	/**
