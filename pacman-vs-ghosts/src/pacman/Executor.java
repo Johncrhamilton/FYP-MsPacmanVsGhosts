@@ -47,7 +47,7 @@ import static pacman.game.Constants.*;
 @SuppressWarnings("unused")
 public class Executor
 {	
-	private final static int NUM_EXPERIMENT_RUNS = 30;
+	private final static int NUM_EXPERIMENT_RUNS = 50;
 	private final static double ALPHA = 0.05;
 
 	private static OneWayAnova oneWayAnova = new OneWayAnova();
@@ -66,7 +66,7 @@ public class Executor
 		//tunePacmanParameters(exec);
 
 		//Tune parameters for IMAP Based Ghosts
-		//tuneGhostParameters(exec);
+		tuneGhostParameters(exec);
 
 		/*
 		//run multiple games in batch mode - good for testing.
