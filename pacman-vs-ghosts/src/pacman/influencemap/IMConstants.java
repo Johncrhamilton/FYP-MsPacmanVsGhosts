@@ -41,7 +41,7 @@ public class IMConstants {
 	public static double INFLUENCE_OF_FREEDOM_OF_CHOICE_THRESHOLD = -30;
 	public static double INFLUENCE_FACTOR_OF_FREEDOM_OF_CHOICE = 0.95;
 
-	public static double FORCE_DIRECTION_COUNT = 62;
+	public static double FORCE_DIRECTION_COUNT = 124;
 
 	//All tunable Ghost parameters in order of importance
 	@SuppressWarnings("serial")
@@ -56,12 +56,12 @@ public class IMConstants {
 	}};
 	
 	//Constants for Ghosts, no longer "final" due to parameter tuning	
-	public static double INFLUENCE_OF_PACMAN = 200;
+	public static double INFLUENCE_OF_PACMAN = 150;
 	public static double POWER_PILL_DISTANCE_FACTOR = 35;
 	public static double POWER_PILL_THRESHOLD = 0.85;
-	public static double INFLUENCE_FACTOR_OF_PACMAN = 0.95;
+	public static double INFLUENCE_FACTOR_OF_PACMAN = 0.9;
 
-	public static double INFLUENCE_GHOST_WEIGHT = -20;
+	public static double INFLUENCE_GHOST_WEIGHT = -25;
 	public static double INFLUENCE_FACTOR_OF_GHOST_WEIGHT = 0.9;
 	public static double LIMITING_INFLUENCE_OF_PACMAN = 0;
 

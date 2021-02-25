@@ -63,10 +63,10 @@ public class Executor
 		Executor exec = new Executor();
 
 		//Tune parameters for IMAP Based MsPacman
-		//tunePacmanParameters(exec);
+		//tuneIMPacmanParameters(exec);
 
 		//Tune parameters for IMAP Based Ghosts
-		tuneGhostParameters(exec);
+		//tuneIMGhostParameters(exec);
 
 		/*
 		//run multiple games in batch mode - good for testing.
@@ -84,8 +84,10 @@ public class Executor
 		//exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(), visual, delay);
 
 		//Multiple games without visuals
+		//System.out.print(exec.runExperiment(new StarterPacMan(), new StarterGhosts(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new StarterGhosts(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS).toString());
+		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS).toString());
 
 		///*
 		//run the game in asynchronous mode.
@@ -118,7 +120,7 @@ public class Executor
 	 * Find and set the best pacman parameters
 	 * @param exec
 	 */
-	private static void tunePacmanParameters(Executor exec) 
+	private static void tuneIMPacmanParameters(Executor exec) 
 	{
 		for(int index = 0; index < IMConstants.PACMAN_PARAMETERS.size(); index++) 
 		{
@@ -133,7 +135,7 @@ public class Executor
 	 * Find and set the best ghost parameters
 	 * @param exec
 	 */
-	private static void tuneGhostParameters(Executor exec) 
+	private static void tuneIMGhostParameters(Executor exec) 
 	{
 		for(int index = 0; index < IMConstants.GHOST_PARAMETERS.size(); index++) 
 		{
@@ -175,12 +177,12 @@ public class Executor
 		double annovaPValue = oneWayAnova.anovaPValue(allParameterRunScores);
 
 		s += "Anova P value " + annovaPValue + "\n";
-
+		
 		//If there is a significant difference between groups i.e parameter value results
 		if(annovaPValue < ALPHA)
 		{
 			//A better pacman parameter will yield a higher score
-			if(tunePacman) 
+			if(tunePacman)
 			{
 				//To start off bestParameterExperimentResult will be the worst parameter experiment result
 				ExperimentResult bestParameterExperimentResult = new ExperimentResult(-Double.MAX_VALUE, 0.0, new double[1]);;
@@ -225,8 +227,8 @@ public class Executor
 			s += "-----------------------------------------------\n";
 		}
 
-		//System.out.println(s);
-		saveToFile(s, filePath, true);
+		System.out.println(s);
+		//saveToFile(s, filePath, true);
 	}
 
 	/**
