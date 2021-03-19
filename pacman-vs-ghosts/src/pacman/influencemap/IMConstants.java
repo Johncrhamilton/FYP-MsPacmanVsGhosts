@@ -23,20 +23,25 @@ public class IMConstants {
 	}};
 
 	//Constants for Ms. Pacman, no longer "final" due to parameter tuning
+	//Pill influence (IoP)
 	public static double INFLUENCE_OF_PILL = 4;
 	public static double INFLUENCE_FACTOR_OF_PILL = 0.95;
 
+	//Ghost influence (IoG)
 	public static double INFLUENCE_OF_GHOST = -80;
 	public static double INFLUENCE_OF_GHOST_LIMIT = INFLUENCE_OF_GHOST/10;
 	public static double INFLUENCE_FACTOR_OF_GHOST = 0.95;
 
+	//Edible ghost influence (IoEG)
 	public static double INFLUENCE_OF_EDIBLE_GHOST = 60;
 	public static double INFLUENCE_FACTOR_OF_EDIBLE_GHOST = 0.95;
 
+	//Power pill influence (IoPP)
 	public static double INFLUENCE_OF_POWERPILL = 30;
 	public static double POWERPILL_DISTANCE_THRESHOLD_PER_GHOST = 110;
 	public static double INFLUENCE_FACTOR_OF_POWERPILL = 0.95;
 
+	//Freedom of choice influence (IoFoC)
 	public static double INFLUENCE_OF_FREEDOM_OF_CHOICE = 60;
 	public static double INFLUENCE_OF_FREEDOM_OF_CHOICE_THRESHOLD = -30;
 	public static double INFLUENCE_FACTOR_OF_FREEDOM_OF_CHOICE = 0.95;
@@ -55,14 +60,17 @@ public class IMConstants {
 		add(new IMTunableParameter(IMAPControllerParameter.G_LIMITING_INFLUENCE_OF_PACMAN, new double[] {-10.0, -7.5, -5.0, -2.5, 0.0, 2.5, 5.0, 7.5, 10.0}));
 	}};
 	
-	//Constants for Ghosts, no longer "final" due to parameter tuning	
+	//Constants for Ghosts, no longer "final" due to parameter tuning
 	public static double INFLUENCE_OF_PACMAN = 150;
+	//Power pill distance factor (cpp)
 	public static double POWER_PILL_DISTANCE_FACTOR = 35;
 	public static double POWER_PILL_THRESHOLD = 0.85;
 	public static double INFLUENCE_FACTOR_OF_PACMAN = 0.9;
 
+	//Ghost weight (gamma)
 	public static double INFLUENCE_GHOST_WEIGHT = -25;
 	public static double INFLUENCE_FACTOR_OF_GHOST_WEIGHT = 0.9;
+	//Ms. Pac-Man Influence (Beta)
 	public static double LIMITING_INFLUENCE_OF_PACMAN = 0;
 
 	/**

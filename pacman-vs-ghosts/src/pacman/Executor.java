@@ -82,13 +82,20 @@ public class Executor
 		//Single games with visuals
 		//exec.runGame(new InfluenceMapPacMan(), new StarterGhosts(),visual,delay);
 		//exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(), visual, delay);
+		
+		//Long startTime = System.currentTimeMillis();
 
 		//Multiple games without visuals
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new StarterGhosts(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new StarterGhosts(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS).toString());
-
+		//System.out.print(exec.runExperiment(new StarterPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
+		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
+		
+		//Long endTime = System.currentTimeMillis();
+		//System.out.println("Duration: " + (endTime - startTime));
+		
 		///*
 		//run the game in asynchronous mode.
 		//boolean visual=true;

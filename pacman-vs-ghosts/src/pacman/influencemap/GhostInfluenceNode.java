@@ -123,6 +123,8 @@ public class GhostInfluenceNode {
 	 */
 	private double calculatePowerPillFactor(Game game) 
 	{
+		//If there is no power pill left for Ms. Pacman to eat return IMConstants.POWER_PILL_THRESHOLD (0.85)
+		//This will result in the Pacman Influence being positive
 		if(InfluenceMap.closestPowerPillIndexToMsPacman(game) == -1)
 		{
 			return IMConstants.POWER_PILL_THRESHOLD;
