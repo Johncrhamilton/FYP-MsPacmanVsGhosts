@@ -38,7 +38,8 @@ public class InfluenceMapGhosts extends Controller<EnumMap<GHOST,MOVE>>
 	}
 
 	/**
-	 * Return Move for Ghost that leads to the node with the highest influence
+	 * Return Move for Ghost that leads to the node with the highest influence.
+	 * Doesn't consider directions opposing the last move made.
 	 * @param game
 	 * @return Move
 	 */

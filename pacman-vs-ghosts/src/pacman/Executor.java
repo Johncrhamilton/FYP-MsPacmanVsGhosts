@@ -77,11 +77,12 @@ public class Executor
 		/*
 		 */
 		//run a game in synchronous mode: game waits until controllers respond.
-		//int delay = 30;
-		//boolean visual=true;
+		int delay = 30;
+		boolean visual=true;
 		//Single games with visuals
-		//exec.runGame(new InfluenceMapPacMan(), new StarterGhosts(),visual,delay);
+		exec.runGame(new StarterPacMan(), new DummyGhosts(), visual, delay);
 		//exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(), visual, delay);
+		//exec.runGame(new InfluenceMapPacMan(), new StarterGhosts(),visual,delay);
 		
 		//Long startTime = System.currentTimeMillis();
 
