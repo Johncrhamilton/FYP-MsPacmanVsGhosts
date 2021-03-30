@@ -7,58 +7,87 @@ import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 import pacman.game.internal.Node;
-import pacman.strategy.flocking.FSConstants.Actor;
+import pacman.strategy.flocking.FSConstants.ACTOR;
+import pacman.strategy.flocking.FSConstants.GHOST_STATE;
 
 public class FlockingStrategy {
 
-	private static MOVE move = MOVE.NEUTRAL;
-	
-	private double[] stateValues;
-	private double[] actorValues;
+	private double[][][] actorContextMatrixMagnitudes;
 
-	public FlockingStrategy(double[] stateValues, double[] actorValues) 
+	public FlockingStrategy(double[][][] actorContextMatrixMagnitudes) 
 	{
-		this.stateValues = stateValues;
-		this.actorValues = actorValues;
-	}
-
-	public static MOVE highestSteeringForceMove(Game game, GHOST currentGhost)
-	{
-		HashMap<Actor, Integer> activeActors = findActiveActors(game, currentGhost);
-		
-		for(Entry<Actor, Integer> actor : activeActors.entrySet()) 
-		{
-			int neighbourhood = -1;
-			
-			//Determine neighbourhood
-			int neighbourhoodIndex = 1;
-			while(neighbourhoodIndex <= FSConstants.NUMBER_OF_NEIGHBOURHOODS) 
-			{
-				//If Euclidean Distance from current ghost to actor is less than the maximum distance boundary for the neighbourhood
-				if(game.getEuclideanDistance(game.getGhostCurrentNodeIndex(currentGhost), actor.getValue()) < neighbourhoodIndex * FSConstants.NEIGHBOURHOOD_INTERVAL) 
-				{
-					neighbourhood = neighbourhoodIndex;
-				}
-			}
-		}
-		
-		return move;
+		this.actorContextMatrixMagnitudes = actorContextMatrixMagnitudes;
 	}
 
 	/**
-	 * Find the active actors in the current game state
+	 * Determine the neighbourhood and steering force of all active actors, then using this information calculate the total steering force.
+	 * Finally translate and return a feasible move from the total steering that has the highest rank.
 	 * @param game
-	 * @return Active actors in format HashMap<Actor, position>
+	 * @param currentGhost
+	 * @param ghostState
+	 * @return Move
 	 */
-	private static HashMap<Actor, Integer> findActiveActors(Game game, GHOST currentGhost)
+	public MOVE steeringForceMove(Game game, GHOST currentGhost, GHOST_STATE ghostState)
 	{
-		//Active actors estimated as 1 Pacman, 0-4 PowerPills, 0-4 Ghosts
-		HashMap<Actor, Integer> activeActors = new HashMap<Actor, Integer>(10);
-
+		HashMap<Integer, ACTOR> activeActors = findActiveActors(game, currentGhost);		
 		Node[] mazeNodes = game.getCurrentMaze().graph;
+				
+		double[] totalSteeringForce = new double[2];		
+		int currentGhostIndex = game.getGhostCurrentNodeIndex(currentGhost);
+		
+		for(Entry<Integer, ACTOR> actor : activeActors.entrySet())
+		{			
+			//Determine neighbourhood (delta) the actor falls into
+			
+			double ghostToActorEuclideanDistance = game.getEuclideanDistance(currentGhostIndex, actor.getKey());			
+			int neighbourhood = -1;
+			
+			for(int neighbourhoodIndex = 0; neighbourhoodIndex < FSConstants.NUMBER_OF_NEIGHBOURHOODS; neighbourhoodIndex++)
+			{
+				//If Euclidean Distance from current ghost to actor is less than the maximum distance boundary specified for the neighbourhood
+				if(ghostToActorEuclideanDistance < FSConstants.NEIGHBOURHOODS[neighbourhoodIndex]) 
+				{
+					neighbourhood = neighbourhoodIndex;
+					break;
+				}
+			}
+			
+			//Determine the steering force (F_alpha) for the actor
+			
+			//Calculate the positional difference
+			double[] steeringForce = {mazeNodes[actor.getKey()].x - mazeNodes[currentGhostIndex].x, 
+									  mazeNodes[actor.getKey()].y - mazeNodes[currentGhostIndex].y};
+			
+			for(int j = 0; j < steeringForce.length; j++) 
+			{
+				//Divide by the euclidean distance between actor and ghost
+				steeringForce[j] /= ghostToActorEuclideanDistance;
+				
+				//Multiply by the actor's magnitude given the context alpha_(ghostState,actor,neighbourhood)
+				steeringForce[j] *= actorContextMatrixMagnitudes[ghostState.ordinal()][actor.getValue().ordinal()][neighbourhood];
+			}
+			
+			//Add the steering force (F_alpha) for the actor to the total steering force
+			totalSteeringForce[0] += steeringForce[0];
+			totalSteeringForce[1] += steeringForce[1];
+		}
+		
+		//Return a feasible move with the highest rank from the total steering force
+		return translateTotalSteeringForce(game, totalSteeringForce, currentGhost);
+	}
+
+	/**
+	 * Find the active actors in the current game state, storing their nodeIndex and Enum
+	 * @param game
+	 * @return Active actors in format HashMap<Integer, ACTOR>
+	 */
+	private HashMap<Integer, ACTOR> findActiveActors(Game game, GHOST currentGhost)
+	{
+		//Active actors estimated as 1 Pacman, 0-4 PowerPills, 0-4 Ghosts at any given time
+		HashMap<Integer, ACTOR> activeActors = new HashMap<Integer, ACTOR>(10);
 
 		//Pacman Actor
-		activeActors.put(Actor.PACMAN, game.getPacmanCurrentNodeIndex());
+		activeActors.put(game.getPacmanCurrentNodeIndex(), ACTOR.PACMAN);
 
 		//Active PowerPills
 		int[] powerPillsIndices = game.getActivePowerPillsIndices();
@@ -66,7 +95,7 @@ public class FlockingStrategy {
 		{
 			for(int i = 0; i < powerPillsIndices.length; i++) 
 			{
-				activeActors.put(Actor.POWERPILL, powerPillsIndices[i]);
+				activeActors.put(powerPillsIndices[i], ACTOR.POWERPILL);
 			}
 		}
 
@@ -76,29 +105,86 @@ public class FlockingStrategy {
 			//If the current ghost isn't this ghost and this ghost is outside lair
 			if(!currentGhost.equals(ghost) && game.getGhostLairTime(ghost) == 0) 
 			{
-				Actor ghostType;
+				ACTOR ghostType;
 				
 				//Filter Hunter Ghosts
 				if(!game.isGhostEdible(ghost)) 
 				{
-					ghostType = Actor.HUNTER;
+					ghostType = ACTOR.HUNTER;
 				}
 				//Filter Hunted Ghosts
-				if(game.getGhostEdibleTime(ghost) > 30) 
+				else if(game.getGhostEdibleTime(ghost) > 30) 
 				{
-					ghostType = Actor.HUNTED;				
+					ghostType = ACTOR.HUNTED;				
 				}
 				//Filter Out Flashing Ghosts
 				else
 				{
-					ghostType = Actor.FLASH;
+					ghostType = ACTOR.FLASH;
 				}
 				
-				activeActors.put(ghostType, game.getGhostCurrentNodeIndex(ghost));	
+				activeActors.put(game.getGhostCurrentNodeIndex(ghost), ghostType);	
 			}
 		}
 
 		return activeActors;
 	}
+	
+	/**
+	 * Translates the Total Steering Force into a Move that the ghost should take
+	 * @param game
+	 * @param totalSteeringForce
+	 * @param currentGhost
+	 * @return MOVE
+	 */
+	private MOVE translateTotalSteeringForce(Game game, double[] totalSteeringForce, GHOST currentGhost) 
+	{	
+		MOVE move;
+		
+		//Determine the horizontal move
+		MOVE moveHorizontal;
+		if(totalSteeringForce[0] >= 0)
+		{
+			moveHorizontal = MOVE.RIGHT;
+		}
+		else 
+		{
+			moveHorizontal = MOVE.LEFT;
+		}
 
+		//Determine the vertical move
+		MOVE moveVertical;
+		if(totalSteeringForce[1] >= 0)
+		{
+			moveVertical = MOVE.DOWN;
+		}
+		else 
+		{
+			moveVertical = MOVE.UP;
+		}
+		
+		//Determine whether the vertical or horizontal move has the higher rank
+		if(Math.abs(totalSteeringForce[0]) >= Math.abs(totalSteeringForce[1]))
+		{
+			move = moveHorizontal;
+			
+			//If the move goes against the previous move, make the vertical move instead
+			if(move == game.getGhostLastMoveMade(currentGhost).opposite()) 
+			{
+				move = moveVertical;
+			}
+		}
+		else
+		{
+			move = moveVertical;
+
+			//If the move goes against the previous move, make the horizontal move instead
+			if(move == game.getGhostLastMoveMade(currentGhost).opposite()) 
+			{
+				move = moveHorizontal;
+			}
+		}
+		
+		return move;
+	}
 }

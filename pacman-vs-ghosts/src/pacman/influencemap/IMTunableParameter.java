@@ -1,19 +1,19 @@
 package pacman.influencemap;
-import pacman.influencemap.IMConstants.IMAPControllerParameter;
+import pacman.influencemap.IMConstants.IMAP_CONTROLLER_PARAMETER;
 
 public class IMTunableParameter {
 	
-	private IMAPControllerParameter param;
+	private IMAP_CONTROLLER_PARAMETER param;
 	private double[] paramValues;
 	
 	//A tunable parameter has defined as a parameter enum and a parameter space (parameter values)
-	public IMTunableParameter(IMAPControllerParameter param, double[] paramValues) 
+	public IMTunableParameter(IMAP_CONTROLLER_PARAMETER param, double[] paramValues) 
 	{
 		this.param = param;
 		this.paramValues = paramValues;
 	}
 	
-	public IMAPControllerParameter getParamEnum() 
+	public IMAP_CONTROLLER_PARAMETER getParamEnum() 
 	{
 		return param;
 	}

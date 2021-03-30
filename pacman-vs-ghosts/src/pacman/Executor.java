@@ -23,14 +23,15 @@ import pacman.controllers.examples.RandomPacMan;
 import pacman.controllers.examples.StarterGhosts;
 import pacman.controllers.examples.StarterPacMan;
 import pacman.entries.ghosts.DummyGhosts;
+import pacman.entries.ghosts.FlockingStrategyGhosts;
 import pacman.entries.ghosts.InfluenceMapGhosts;
 import pacman.entries.pacman.InfluenceMapPacMan;
 import pacman.game.Game;
 import pacman.game.GameView;
 import pacman.game.util.ExperimentResult;
 import pacman.influencemap.IMConstants;
-import pacman.influencemap.IMConstants.IMAPControllerParameter;
 import pacman.influencemap.IMTunableParameter;
+import pacman.influencemap.IMConstants.IMAP_CONTROLLER_PARAMETER;
 
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.apache.commons.math3.stat.inference.OneWayAnova;
@@ -80,7 +81,8 @@ public class Executor
 		int delay = 30;
 		boolean visual=true;
 		//Single games with visuals
-		exec.runGame(new StarterPacMan(), new DummyGhosts(), visual, delay);
+		exec.runGame(new StarterPacMan(), new FlockingStrategyGhosts(), visual, delay);
+		//exec.runGame(new StarterPacMan(), new DummyGhosts(), visual, delay);
 		//exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(), visual, delay);
 		//exec.runGame(new InfluenceMapPacMan(), new StarterGhosts(),visual,delay);
 		
@@ -93,6 +95,7 @@ public class Executor
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
+		//System.out.print(exec.runExperiment(new StarterPacMan(), new FlockingStrategyGhosts(), NUM_EXPERIMENT_RUNS).toString());
 		
 		//Long endTime = System.currentTimeMillis();
 		//System.out.println("Duration: " + (endTime - startTime));
@@ -161,7 +164,7 @@ public class Executor
 	 * @param parameterValues
 	 */
 	private static void setBestParameterValue(Executor exec, Controller<MOVE> pacManController, Controller<EnumMap<GHOST,MOVE>> ghostController, 
-			boolean tunePacman, IMAPControllerParameter parameter, double[] parameterValues, String filePath) 
+			boolean tunePacman, IMAP_CONTROLLER_PARAMETER parameter, double[] parameterValues, String filePath) 
 	{		
 		//Default parameter value
 		double bestParameterValue = IMConstants.getConstant(parameter);

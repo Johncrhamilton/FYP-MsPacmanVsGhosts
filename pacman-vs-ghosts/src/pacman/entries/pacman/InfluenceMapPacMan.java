@@ -6,14 +6,12 @@ import pacman.controllers.Controller;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 import pacman.game.internal.Node;
-
 import pacman.influencemap.IMConstants;
 import pacman.influencemap.InfluenceMap;
 
 /*
- * This is the class you need to modify for your entry. In particular, you need to
- * fill in the getAction() method. Any additional classes you write should either
- * be placed in this package or sub-packages (e.g., game.entries.pacman.mypackage).
+ * InfluenceMapPacMan, is a Ms. Pacman Controller that follows an Influence Map-based approach where game entities propagate their influences through the maze and
+ * pacman can then choose directions that have the best influence.
  */
 public class InfluenceMapPacMan extends Controller<MOVE>
 {

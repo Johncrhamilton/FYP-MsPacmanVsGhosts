@@ -7,19 +7,19 @@ public class IMConstants {
 	//All tunable Ms. Pacman parameters
 	@SuppressWarnings("serial")
 	public static final ArrayList<IMTunableParameter> PACMAN_PARAMETERS = new ArrayList<IMTunableParameter>() {{
-		add(new IMTunableParameter(IMAPControllerParameter.P_FORCE_DIRECTION_COUNT, new double[] {0.0, 15.0, 31.0, 46.0, 62.0, 77.0, 93.0, 124.0}));		
-		add(new IMTunableParameter(IMAPControllerParameter.P_INFLUENCE_OF_GHOST, new double[] {-95.0, -90.0, -85.0, -80.0, -75.0, -70.0, -65.0}));		
-		add(new IMTunableParameter(IMAPControllerParameter.P_INFLUENCE_OF_EDIBLE_GHOST, new double[] {45.0, 50.0, 55.0, 60.0, 65.0, 70.0, 75.0}));		
-		add(new IMTunableParameter(IMAPControllerParameter.P_INFLUENCE_OF_POWERPILL, new double[] {15.0, 20.0, 25.0, 30.0, 35.0, 40.0, 45.0}));
-		add(new IMTunableParameter(IMAPControllerParameter.P_INFLUENCE_OF_FREEDOM_OF_CHOICE_THRESHOLD, new double[] {-40.0, -35.0, -30.0, -25.0, -20.0, -15.0, -10.0, -5.0, 0.0}));
-		add(new IMTunableParameter(IMAPControllerParameter.P_POWERPILL_DISTANCE_THRESHOLD_PER_GHOST, new double[] {95.0, 100.0, 105.0, 110.0, 115.0, 120.0, 125.0}));		
-		add(new IMTunableParameter(IMAPControllerParameter.P_INFLUENCE_OF_FREEDOM_OF_CHOICE, new double[] {30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0}));		
-		add(new IMTunableParameter(IMAPControllerParameter.P_INFLUENCE_OF_PILL, new double[] {2.0, 4.0, 6.0, 8.0}));		
-		add(new IMTunableParameter(IMAPControllerParameter.P_INFLUENCE_FACTOR_OF_GHOST, new double[] {0.8, 0.85, 0.9, 0.95}));		
-		add(new IMTunableParameter(IMAPControllerParameter.P_INFLUENCE_FACTOR_OF_EDIBLE_GHOST, new double[] {0.8, 0.85, 0.9, 0.95}));
-		add(new IMTunableParameter(IMAPControllerParameter.P_INFLUENCE_FACTOR_OF_POWERPILL, new double[] {0.8, 0.85, 0.9, 0.95}));
-		add(new IMTunableParameter(IMAPControllerParameter.P_INFLUENCE_FACTOR_OF_FREEDOM_OF_CHOICE, new double[] {0.8, 0.85, 0.9, 0.95}));
-		add(new IMTunableParameter(IMAPControllerParameter.P_INFLUENCE_FACTOR_OF_PILL, new double[] {0.8, 0.85, 0.9, 0.95}));		
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.P_FORCE_DIRECTION_COUNT, new double[] {0.0, 15.0, 31.0, 46.0, 62.0, 77.0, 93.0, 124.0}));		
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.P_INFLUENCE_OF_GHOST, new double[] {-95.0, -90.0, -85.0, -80.0, -75.0, -70.0, -65.0}));		
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.P_INFLUENCE_OF_EDIBLE_GHOST, new double[] {45.0, 50.0, 55.0, 60.0, 65.0, 70.0, 75.0}));		
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.P_INFLUENCE_OF_POWERPILL, new double[] {15.0, 20.0, 25.0, 30.0, 35.0, 40.0, 45.0}));
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.P_INFLUENCE_OF_FREEDOM_OF_CHOICE_THRESHOLD, new double[] {-40.0, -35.0, -30.0, -25.0, -20.0, -15.0, -10.0, -5.0, 0.0}));
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.P_POWERPILL_DISTANCE_THRESHOLD_PER_GHOST, new double[] {95.0, 100.0, 105.0, 110.0, 115.0, 120.0, 125.0}));		
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.P_INFLUENCE_OF_FREEDOM_OF_CHOICE, new double[] {30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0}));		
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.P_INFLUENCE_OF_PILL, new double[] {2.0, 4.0, 6.0, 8.0}));		
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.P_INFLUENCE_FACTOR_OF_GHOST, new double[] {0.8, 0.85, 0.9, 0.95}));		
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.P_INFLUENCE_FACTOR_OF_EDIBLE_GHOST, new double[] {0.8, 0.85, 0.9, 0.95}));
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.P_INFLUENCE_FACTOR_OF_POWERPILL, new double[] {0.8, 0.85, 0.9, 0.95}));
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.P_INFLUENCE_FACTOR_OF_FREEDOM_OF_CHOICE, new double[] {0.8, 0.85, 0.9, 0.95}));
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.P_INFLUENCE_FACTOR_OF_PILL, new double[] {0.8, 0.85, 0.9, 0.95}));		
 	}};
 
 	//Constants for Ms. Pacman, no longer "final" due to parameter tuning
@@ -51,13 +51,13 @@ public class IMConstants {
 	//All tunable Ghost parameters in order of importance
 	@SuppressWarnings("serial")
 	public static final ArrayList<IMTunableParameter> GHOST_PARAMETERS = new ArrayList<IMTunableParameter>() {{
-		add(new IMTunableParameter(IMAPControllerParameter.G_INFLUENCE_OF_PACMAN, new double[] {150.0, 160.0, 170.0, 180.0, 190.0, 200.0, 210.0, 220.0, 230.0, 240.0}));
-		add(new IMTunableParameter(IMAPControllerParameter.G_POWER_PILL_DISTANCE_FACTOR, new double[] {25.0, 27.5, 30.0, 32.5, 35.0, 37.5, 40.0, 42.5, 45.0}));
-		add(new IMTunableParameter(IMAPControllerParameter.G_POWER_PILL_THRESHOLD, new double[] {0.8, 0.85, 0.9, 0.95}));
-		add(new IMTunableParameter(IMAPControllerParameter.G_INFLUENCE_GHOST_WEIGHT, new double[] {-32.5, -30.0, -27.5, -25.0, -22.5, -20.0, -17.5, -15.0, -12.5, -10.0}));	
-		add(new IMTunableParameter(IMAPControllerParameter.G_INFLUENCE_FACTOR_OF_PACMAN, new double[] {0.8, 0.85, 0.9, 0.95}));
-		add(new IMTunableParameter(IMAPControllerParameter.G_INFLUENCE_FACTOR_OF_GHOST_WEIGHT, new double[] {0.8, 0.85, 0.9, 0.95}));
-		add(new IMTunableParameter(IMAPControllerParameter.G_LIMITING_INFLUENCE_OF_PACMAN, new double[] {-10.0, -7.5, -5.0, -2.5, 0.0, 2.5, 5.0, 7.5, 10.0}));
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.G_INFLUENCE_OF_PACMAN, new double[] {150.0, 160.0, 170.0, 180.0, 190.0, 200.0, 210.0, 220.0, 230.0, 240.0}));
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.G_POWER_PILL_DISTANCE_FACTOR, new double[] {25.0, 27.5, 30.0, 32.5, 35.0, 37.5, 40.0, 42.5, 45.0}));
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.G_POWER_PILL_THRESHOLD, new double[] {0.8, 0.85, 0.9, 0.95}));
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.G_INFLUENCE_GHOST_WEIGHT, new double[] {-32.5, -30.0, -27.5, -25.0, -22.5, -20.0, -17.5, -15.0, -12.5, -10.0}));	
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.G_INFLUENCE_FACTOR_OF_PACMAN, new double[] {0.8, 0.85, 0.9, 0.95}));
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.G_INFLUENCE_FACTOR_OF_GHOST_WEIGHT, new double[] {0.8, 0.85, 0.9, 0.95}));
+		add(new IMTunableParameter(IMAP_CONTROLLER_PARAMETER.G_LIMITING_INFLUENCE_OF_PACMAN, new double[] {-10.0, -7.5, -5.0, -2.5, 0.0, 2.5, 5.0, 7.5, 10.0}));
 	}};
 	
 	//Constants for Ghosts, no longer "final" due to parameter tuning
@@ -78,7 +78,7 @@ public class IMConstants {
 	 * @param pacmanParam
 	 * @return constant's value
 	 */
-	public static double getConstant(IMAPControllerParameter param) 
+	public static double getConstant(IMAP_CONTROLLER_PARAMETER param) 
 	{
 		switch(param) 
 		{
@@ -141,7 +141,7 @@ public class IMConstants {
 	 * @param pacmanParam
 	 * @param newValue
 	 */
-	public static void setConstant(IMAPControllerParameter param, double newValue) 
+	public static void setConstant(IMAP_CONTROLLER_PARAMETER param, double newValue) 
 	{
 		switch(param) 
 		{
@@ -220,7 +220,7 @@ public class IMConstants {
 		}
 	}
 	
-	public enum IMAPControllerParameter 
+	public enum IMAP_CONTROLLER_PARAMETER 
 	{
 		P_INFLUENCE_OF_PILL,
 		P_INFLUENCE_FACTOR_OF_PILL,

@@ -10,6 +10,10 @@ import pacman.game.Constants.MOVE;
 import pacman.game.internal.Node;
 import pacman.influencemap.InfluenceMap;
 
+/*
+ * InfluenceMapGhosts, is a Ghost Controller that follows an Influence Map-based approach where game entities propagate their influences through the maze and
+ * ghosts can then choose directions that have the best influence.
+ */
 public class InfluenceMapGhosts extends Controller<EnumMap<GHOST,MOVE>> 
 {
 	private EnumMap<GHOST, MOVE> myMoves = new EnumMap<GHOST, MOVE>(GHOST.class);
