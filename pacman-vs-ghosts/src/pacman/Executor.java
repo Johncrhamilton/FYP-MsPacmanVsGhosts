@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Random;
 import pacman.controllers.Controller;
@@ -32,7 +33,14 @@ import pacman.game.util.ExperimentResult;
 import pacman.influencemap.IMConstants;
 import pacman.influencemap.IMTunableParameter;
 import pacman.influencemap.IMConstants.IMAP_CONTROLLER_PARAMETER;
+import pacman.strategy.flocking.FSConstants;
+import pacman.strategy.flocking.FlockingStrategy;
+import pacman.strategy.flocking.GeneticAlgorithm;
+import pacman.strategy.flocking.FSConstants.ACTOR;
+import pacman.strategy.flocking.FSConstants.GHOST_STATE;
 
+import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.apache.commons.math3.stat.inference.OneWayAnova;
 import org.apache.commons.math3.stat.inference.TTest;
@@ -74,17 +82,20 @@ public class Executor
 		int numTrials=10;
 		exec.runExperiment(new RandomPacMan(),new RandomGhosts(),numTrials);
 		 */
-
+		
+		GeneticAlgorithm GA = new GeneticAlgorithm(exec);
+		GA.bestFlockingStrategy().toString();
+		
 		/*
 		 */
 		//run a game in synchronous mode: game waits until controllers respond.
-		int delay = 30;
-		boolean visual=true;
+		//int delay = 20;
+		//boolean visual=true;
 		//Single games with visuals
-		exec.runGame(new StarterPacMan(), new FlockingStrategyGhosts(), visual, delay);
 		//exec.runGame(new StarterPacMan(), new DummyGhosts(), visual, delay);
 		//exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(), visual, delay);
 		//exec.runGame(new InfluenceMapPacMan(), new StarterGhosts(),visual,delay);
+		//exec.runGame(new StarterPacMan(), new FlockingStrategyGhosts(new FlockingStrategy(FSConstants.NEIGHBOURHOODS, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES)), visual, delay);
 		
 		//Long startTime = System.currentTimeMillis();
 
@@ -95,7 +106,7 @@ public class Executor
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
-		//System.out.print(exec.runExperiment(new StarterPacMan(), new FlockingStrategyGhosts(), NUM_EXPERIMENT_RUNS).toString());
+		//System.out.print(exec.runExperiment(new StarterPacMan(), new FlockingStrategyGhosts(new FlockingStrategy(FSConstants.NEIGHBOURHOODS, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES)), NUM_EXPERIMENT_RUNS).toString());
 		
 		//Long endTime = System.currentTimeMillis();
 		//System.out.println("Duration: " + (endTime - startTime));

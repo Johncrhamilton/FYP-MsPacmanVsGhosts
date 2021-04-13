@@ -4,7 +4,6 @@ import java.util.EnumMap;
 
 import pacman.controllers.Controller;
 import pacman.game.Game;
-import pacman.strategy.flocking.FSConstants;
 import pacman.strategy.flocking.FlockingStrategy;
 import pacman.strategy.flocking.FSConstants.GHOST_STATE;
 import pacman.game.Constants.GHOST;
@@ -13,16 +12,16 @@ import pacman.game.Constants.MOVE;
 public class FlockingStrategyGhosts extends Controller<EnumMap<GHOST,MOVE>> {
 
 	private EnumMap<GHOST, MOVE> myMoves = new EnumMap<GHOST, MOVE>(GHOST.class);
-	private FlockingStrategy FS;
+	private FlockingStrategy flockingStrategy;
+	
+	public FlockingStrategyGhosts(FlockingStrategy flockingStrategy) 
+	{
+		super();
+		this.flockingStrategy = flockingStrategy;
+	}
 	
 	public EnumMap<GHOST, MOVE> getMove(Game game, long timeDue)
 	{
-		//If the flocking strategy hasn't been created
-		if(FS == null)
-		{       
-			FS = new FlockingStrategy(FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES);
-		}
-		
 		myMoves.clear();
 		
 		for(GHOST ghost : GHOST.values())
@@ -46,7 +45,7 @@ public class FlockingStrategyGhosts extends Controller<EnumMap<GHOST,MOVE>> {
 				{
 					ghostState = GHOST_STATE.FLASH;
 				}
-				myMoves.put(ghost, FS.steeringForceMove(game, ghost, ghostState));
+				myMoves.put(ghost, flockingStrategy.steeringForceMove(game, ghost, ghostState));
 			}
 		}
 

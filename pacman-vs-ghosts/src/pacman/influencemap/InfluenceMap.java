@@ -13,10 +13,12 @@ public class InfluenceMap {
 	private static HashMap<Integer, PacmanInfluenceNode> pacmanInfluenceNodes;
 	private static HashMap<Integer, GhostInfluenceNode> ghostInfluenceNodes;
 	private static Node[] graph;
+	private static int gameLevel;
 
 	private InfluenceMap(Game game)
 	{	
 		graph = game.getCurrentMaze().graph;
+		gameLevel = game.getCurrentLevel();
 
 		pacmanInfluenceNodes = new HashMap<Integer, PacmanInfluenceNode>(graph.length);
 		ghostInfluenceNodes = new HashMap<Integer, GhostInfluenceNode>(graph.length);
@@ -40,8 +42,9 @@ public class InfluenceMap {
 		{
 			INSTANCE = new InfluenceMap(game);
 		}
+		
 		//Recreate the InfluenceMap structure when maze changes
-		else if(game.getCurrentMaze().graph != graph) 
+		else if(game.getCurrentLevel() != gameLevel) 
 		{
 			INSTANCE = new InfluenceMap(game);		
 		}

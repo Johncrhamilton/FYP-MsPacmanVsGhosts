@@ -1,5 +1,6 @@
 package pacman.strategy.flocking;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -12,10 +13,12 @@ import pacman.strategy.flocking.FSConstants.GHOST_STATE;
 
 public class FlockingStrategy {
 
+	private ArrayList<Double> neighbourhoods;
 	private double[][][] actorContextMatrixMagnitudes;
 
-	public FlockingStrategy(double[][][] actorContextMatrixMagnitudes) 
+	public FlockingStrategy(ArrayList<Double> neighbourhoods, double[][][] actorContextMatrixMagnitudes) 
 	{
+		this.neighbourhoods = neighbourhoods;
 		this.actorContextMatrixMagnitudes = actorContextMatrixMagnitudes;
 	}
 
@@ -42,17 +45,17 @@ public class FlockingStrategy {
 			double ghostToActorEuclideanDistance = game.getEuclideanDistance(currentGhostIndex, actor.getKey());			
 			int neighbourhood = -1;
 			
-			for(int neighbourhoodIndex = 0; neighbourhoodIndex < FSConstants.NUMBER_OF_NEIGHBOURHOODS; neighbourhoodIndex++)
+			for(int neighbourhoodIndex = 0; neighbourhoodIndex < neighbourhoods.size(); neighbourhoodIndex++)
 			{
 				//If Euclidean Distance from current ghost to actor is less than the maximum distance boundary specified for the neighbourhood
-				if(ghostToActorEuclideanDistance < FSConstants.NEIGHBOURHOODS[neighbourhoodIndex]) 
+				if(ghostToActorEuclideanDistance < neighbourhoods.get(neighbourhoodIndex)) 
 				{
 					neighbourhood = neighbourhoodIndex;
 					break;
 				}
 			}
 			
-			//Determine the steering force (F_alpha) for the actor
+			//Next determine the steering force (F_alpha) for the actor
 			
 			//Calculate the positional difference
 			double[] steeringForce = {mazeNodes[actor.getKey()].x - mazeNodes[currentGhostIndex].x, 
@@ -186,5 +189,53 @@ public class FlockingStrategy {
 		}
 		
 		return move;
+	}
+	
+	/**
+	 * Get Neighbourhoods
+	 * @return neighbourhoods
+	 */
+	public ArrayList<Double> getNeighbourhoods()
+	{
+		return neighbourhoods;
+	}
+
+	/**
+	 * Get Actor Context Matrix Magnitudes
+	 * @return actorContextMatrixMagnitudes
+	 */
+	public double[][][] getActorContextMatrixMagnitudes() 
+	{
+		return actorContextMatrixMagnitudes;
+	}
+	
+	public String toString() 
+	{	
+		//Neighbourhoods
+		String string = "\n----\nNeighbourhoods ";
+		
+		for(int n = 0; n < neighbourhoods.size(); n++) 
+		{
+			string += neighbourhoods.get(n) + " ";
+		}
+		
+		//Actor Context Matrix Magnitudes
+		string += "\n\nActor Context Matrix Magnitudes\n";
+		for(GHOST_STATE ghostState : GHOST_STATE.values())
+		{
+			string += "\n" + ghostState;
+			for(ACTOR actor : ACTOR.values())
+			{
+				string += "\n" + actor + " ";
+				for(int n = 0; n < neighbourhoods.size(); n++)
+				{
+					string += actorContextMatrixMagnitudes[ghostState.ordinal()][actor.ordinal()][n] + " ";
+				}
+			}
+			string += "\n";
+		}
+		string += "----";
+		
+		return string;
 	}
 }
