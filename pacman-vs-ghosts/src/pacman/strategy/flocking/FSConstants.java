@@ -4,12 +4,15 @@ import java.util.ArrayList;
 
 public class FSConstants {
 
+	public static final boolean HOMOGENEOUS_GHOSTS = true;
+	
 	/*Genetic Algorithm Constants*/
 	public static final int NUMBER_OF_GENERATIONS = 100;
 	public static final int POPULATION_SIZE = 50;
-	public static final double RECOMBINATION_PROBABILITY = 0.9;
+	public static final int TOURNAMENT_SELECTION_SIZE = 5;
+	public static final double RECOMBINATION_PROBABILITY = 0.95;
 	public static final double RECOMBINATION_MIXING_PROBABILITY = 0.6;
-	public static final double MUTATION_PROBABILITY = 0.1;
+	public static final double MUTATION_PROBABILITY = 0.15;
 	public static final double MUTATION_SWITCH_PROBABILITY = 0.25;
 	public static final boolean ELITISM = true;
 

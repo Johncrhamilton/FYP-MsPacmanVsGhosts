@@ -209,6 +209,10 @@ public class FlockingStrategy {
 		return actorContextMatrixMagnitudes;
 	}
 	
+	/**
+	 * String representation of the FlockingStrategy
+	 * @return String
+	 */
 	public String toString() 
 	{	
 		//Neighbourhoods
@@ -234,8 +238,17 @@ public class FlockingStrategy {
 			}
 			string += "\n";
 		}
-		string += "----";
+		string += "----\n";
 		
 		return string;
+	}
+	
+	/**
+	 * Returns a clone of the FlockingStrategy
+	 * @return FlockingStrategy
+	 */
+	public FlockingStrategy clone() 
+	{
+		return new FlockingStrategy(((ArrayList<Double>)neighbourhoods.clone()), actorContextMatrixMagnitudes.clone());
 	}
 }
