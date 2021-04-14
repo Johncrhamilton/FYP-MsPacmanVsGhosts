@@ -67,7 +67,6 @@ public class GeneticAlgorithm {
 		{
 			//Number of different ghosts (Blinky, Pinky, Inky and Sue)
 			individualFlockingStrategySize = GHOST.values().length;
-			System.out.println(GHOST.values().length);
 		}
 	}
 
@@ -91,9 +90,11 @@ public class GeneticAlgorithm {
 		
 		System.out.println("Score: " + fittestIndividualScore + "\n");
 
-		int generationCount = 0;		
+		int generationCount = 0;
+		int fittestIndividualStreak = 0;
+		ArrayList<FlockingStrategy> previousFittestIndividual = fittestIndividual;
 
-		while(generationCount < FSConstants.NUMBER_OF_GENERATIONS) 
+		while(generationCount < FSConstants.NUMBER_OF_GENERATIONS && fittestIndividualStreak < 10) 
 		{
 			//Produce offspring through recombination of parents and mutation
 			ArrayList<ArrayList<FlockingStrategy>> offspringPopulation = produceOffspring(population, populationScores);
@@ -110,9 +111,22 @@ public class GeneticAlgorithm {
 				population.set(eliteIndex, fittestIndividual);
 				populationScores.set(eliteIndex, fittestIndividualScore);
 			}
+			
+			//If the fittest individual hasn't changed this generation
+			if(fittestIndividual.equals(previousFittestIndividual))
+			{
+				fittestIndividualStreak++;
+			}
+			else
+			{
+				fittestIndividualStreak = 0;
+				previousFittestIndividual = fittestIndividual;
+			}
 
 			generationCount++;
 		}
+		
+		System.out.println("Total number of Generations: " + generationCount);
 
 		//Print the fittest individual
 		System.out.println("Fittest individual: ");
