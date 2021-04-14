@@ -34,17 +34,17 @@ public class FlockingStrategy {
 	{
 		HashMap<Integer, ACTOR> activeActors = findActiveActors(game, currentGhost);		
 		Node[] mazeNodes = game.getCurrentMaze().graph;
-				
+
 		double[] totalSteeringForce = new double[2];		
 		int currentGhostIndex = game.getGhostCurrentNodeIndex(currentGhost);
-		
+
 		for(Entry<Integer, ACTOR> actor : activeActors.entrySet())
 		{			
 			//Determine neighbourhood (delta) the actor falls into
-			
+
 			double ghostToActorEuclideanDistance = game.getEuclideanDistance(currentGhostIndex, actor.getKey());			
 			int neighbourhood = -1;
-			
+
 			for(int neighbourhoodIndex = 0; neighbourhoodIndex < neighbourhoods.size(); neighbourhoodIndex++)
 			{
 				//If Euclidean Distance from current ghost to actor is less than the maximum distance boundary specified for the neighbourhood
@@ -54,27 +54,27 @@ public class FlockingStrategy {
 					break;
 				}
 			}
-			
+
 			//Next determine the steering force (F_alpha) for the actor
-			
+
 			//Calculate the positional difference
 			double[] steeringForce = {mazeNodes[actor.getKey()].x - mazeNodes[currentGhostIndex].x, 
-									  mazeNodes[actor.getKey()].y - mazeNodes[currentGhostIndex].y};
-			
+					mazeNodes[actor.getKey()].y - mazeNodes[currentGhostIndex].y};
+
 			for(int j = 0; j < steeringForce.length; j++) 
 			{
 				//Divide by the euclidean distance between actor and ghost
 				steeringForce[j] /= ghostToActorEuclideanDistance;
-				
+
 				//Multiply by the actor's magnitude given the context alpha_(ghostState,actor,neighbourhood)
 				steeringForce[j] *= actorContextMatrixMagnitudes[ghostState.ordinal()][actor.getValue().ordinal()][neighbourhood];
 			}
-			
+
 			//Add the steering force (F_alpha) for the actor to the total steering force
 			totalSteeringForce[0] += steeringForce[0];
 			totalSteeringForce[1] += steeringForce[1];
 		}
-		
+
 		//Return a feasible move with the highest rank from the total steering force
 		return translateTotalSteeringForce(game, totalSteeringForce, currentGhost);
 	}
@@ -109,7 +109,7 @@ public class FlockingStrategy {
 			if(!currentGhost.equals(ghost) && game.getGhostLairTime(ghost) == 0) 
 			{
 				ACTOR ghostType;
-				
+
 				//Filter Hunter Ghosts
 				if(!game.isGhostEdible(ghost)) 
 				{
@@ -125,14 +125,14 @@ public class FlockingStrategy {
 				{
 					ghostType = ACTOR.FLASH;
 				}
-				
+
 				activeActors.put(game.getGhostCurrentNodeIndex(ghost), ghostType);	
 			}
 		}
 
 		return activeActors;
 	}
-	
+
 	/**
 	 * Translates the Total Steering Force into a Move that the ghost should take
 	 * @param game
@@ -143,7 +143,7 @@ public class FlockingStrategy {
 	private MOVE translateTotalSteeringForce(Game game, double[] totalSteeringForce, GHOST currentGhost) 
 	{	
 		MOVE move;
-		
+
 		//Determine the horizontal move
 		MOVE moveHorizontal;
 		if(totalSteeringForce[0] >= 0)
@@ -165,12 +165,12 @@ public class FlockingStrategy {
 		{
 			moveVertical = MOVE.UP;
 		}
-		
+
 		//Determine whether the vertical or horizontal move has the higher rank
 		if(Math.abs(totalSteeringForce[0]) >= Math.abs(totalSteeringForce[1]))
 		{
 			move = moveHorizontal;
-			
+
 			//If the move goes against the previous move, make the vertical move instead
 			if(move == game.getGhostLastMoveMade(currentGhost).opposite()) 
 			{
@@ -187,10 +187,10 @@ public class FlockingStrategy {
 				move = moveHorizontal;
 			}
 		}
-		
+
 		return move;
 	}
-	
+
 	/**
 	 * Get Neighbourhoods
 	 * @return neighbourhoods
@@ -208,41 +208,42 @@ public class FlockingStrategy {
 	{
 		return actorContextMatrixMagnitudes;
 	}
-	
+
 	/**
 	 * String representation of the FlockingStrategy
 	 * @return String
 	 */
 	public String toString() 
 	{	
+		StringBuilder sb = new StringBuilder();
+
 		//Neighbourhoods
-		String string = "\n----\nNeighbourhoods ";
-		
+		sb.append("\n----FlockingStrategy----");
+		sb.append("\nNeighbourhoods ");
 		for(int n = 0; n < neighbourhoods.size(); n++) 
 		{
-			string += neighbourhoods.get(n) + " ";
+			sb.append(neighbourhoods.get(n) + " ");
 		}
-		
+
 		//Actor Context Matrix Magnitudes
-		string += "\n\nActor Context Matrix Magnitudes\n";
+		sb.append("\n\nActor Context Matrix Magnitudes\n");
 		for(GHOST_STATE ghostState : GHOST_STATE.values())
 		{
-			string += "\n" + ghostState;
+			sb.append("\n" + ghostState);
 			for(ACTOR actor : ACTOR.values())
 			{
-				string += "\n" + actor + " ";
+				sb.append("\n" + actor + " ");
 				for(int n = 0; n < neighbourhoods.size(); n++)
 				{
-					string += actorContextMatrixMagnitudes[ghostState.ordinal()][actor.ordinal()][n] + " ";
+					sb.append(actorContextMatrixMagnitudes[ghostState.ordinal()][actor.ordinal()][n] + " ");
 				}
 			}
-			string += "\n";
+			sb.append("\n");
 		}
-		string += "----\n";
-		
-		return string;
+
+		return sb.toString();
 	}
-	
+
 	/**
 	 * Returns a clone of the FlockingStrategy
 	 * @return FlockingStrategy

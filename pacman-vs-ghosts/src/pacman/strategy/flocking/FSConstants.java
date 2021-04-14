@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 public class FSConstants {
 
-	public static final boolean HOMOGENEOUS_GHOSTS = true;
-	
 	/*Genetic Algorithm Constants*/
 	public static final int NUMBER_OF_GENERATIONS = 100;
 	public static final int POPULATION_SIZE = 50;
@@ -19,7 +17,7 @@ public class FSConstants {
 	/*Flocking Strategy Constants and ENUMS*/
 	//Euclidean distance from top left power pill to bottom right is about 141 hence the largest neighbourhood radius should be greater than this distance
 	public final static double LARGEST_NEIGHBOURHOOD_RADIUS = 300.0;
-	
+
 	public final static ArrayList<Double> NEIGHBOURHOODS = new ArrayList<Double>() 
 	{{
 		add(50.0);
@@ -27,7 +25,7 @@ public class FSConstants {
 		add(150.0);
 		add(LARGEST_NEIGHBOURHOOD_RADIUS);
 	}};
-	
+
 	public final static int NUMBER_OF_NEIGHBOURHOODS = 4;
 
 	public final static double[][][] ACTOR_CONTEXT_MATRIX_MAGNITUDES =

@@ -67,12 +67,16 @@ public class GeneticAlgorithm {
 		//Evaluate new Individuals and save their scores
 		ArrayList<Double> populationScores = evaluatePopulation(population);		
 
+		//Print the Starting fittest individual
 		System.out.print("Starting fittest individual: ");
-		System.out.println(fittestIndividual.toString() + "Score: " + fittestIndividualScore + "\n");
+		System.out.println(fittestIndividual.toString());		
+		System.out.println("Score: " + fittestIndividualScore + "\n");
 
-		int generationCount = 0;		
+		int generationCount = 0;
+		int fittestIndividualStreak = 0;
+		FlockingStrategy previousFittestIndividual = fittestIndividual;
 
-		while(generationCount < FSConstants.NUMBER_OF_GENERATIONS) 
+		while(generationCount < FSConstants.NUMBER_OF_GENERATIONS && fittestIndividualStreak < 10) 
 		{
 			//Produce offspring through recombination of parents and mutation
 			ArrayList<FlockingStrategy> offspringPopulation = produceOffspring(population, populationScores);
@@ -83,18 +87,36 @@ public class GeneticAlgorithm {
 			//Survivor Selection Generational
 			population = offspringPopulation;
 
-			if(FSConstants.ELITISM) 
+			if(FSConstants.ELITISM)
 			{
 				int eliteIndex = random.nextInt(population.size());
 				population.set(eliteIndex, fittestIndividual);
 				populationScores.set(eliteIndex, fittestIndividualScore);
 			}
+			
+			System.out.println(fittestIndividualStreak);
+			
+			//If the fittest individual hasn't changed this generation
+			if(fittestIndividual.equals(previousFittestIndividual))
+			{
+				fittestIndividualStreak++;
+			}
+			else
+			{
+				fittestIndividualStreak = 0;
+				previousFittestIndividual = fittestIndividual;
+			}
 
 			generationCount++;
 		}
+		
+		System.out.println("Total number of Generations: " + generationCount);
 
-		System.out.print("Fittest individual: " + fittestIndividual.toString());
-		System.out.println(fittestIndividualScore);
+		//Print the fittest individual
+		System.out.println("Fittest individual: ");
+		System.out.println(fittestIndividual.toString());		
+		System.out.println("Score: " + fittestIndividualScore);
+
 		return fittestIndividual;
 	}
 
@@ -238,7 +260,7 @@ public class GeneticAlgorithm {
 
 			//Add children
 			offspringPopulation.add(childOne);
-			
+
 			//In the event that the population size is odd, don't add the second child at the end
 			if(offspringPopulation.size() < population.size()) 
 			{

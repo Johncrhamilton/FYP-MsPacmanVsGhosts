@@ -13,23 +13,23 @@ public class FlockingStrategyGhosts extends Controller<EnumMap<GHOST,MOVE>> {
 
 	private EnumMap<GHOST, MOVE> myMoves = new EnumMap<GHOST, MOVE>(GHOST.class);
 	private FlockingStrategy flockingStrategy;
-	
+
 	public FlockingStrategyGhosts(FlockingStrategy flockingStrategy) 
 	{
 		super();
 		this.flockingStrategy = flockingStrategy;
 	}
-	
+
 	public EnumMap<GHOST, MOVE> getMove(Game game, long timeDue)
 	{
 		myMoves.clear();
-		
+
 		for(GHOST ghost : GHOST.values())
 		{
 			if(game.doesGhostRequireAction(ghost)) 
 			{
 				GHOST_STATE ghostState;
-				
+
 				//Hunter Ghost State
 				if(!game.isGhostEdible(ghost)) 
 				{
