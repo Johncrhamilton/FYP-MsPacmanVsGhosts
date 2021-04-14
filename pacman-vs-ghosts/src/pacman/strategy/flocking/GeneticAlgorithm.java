@@ -94,8 +94,6 @@ public class GeneticAlgorithm {
 				populationScores.set(eliteIndex, fittestIndividualScore);
 			}
 			
-			System.out.println(fittestIndividualStreak);
-			
 			//If the fittest individual hasn't changed this generation
 			if(fittestIndividual.equals(previousFittestIndividual))
 			{
