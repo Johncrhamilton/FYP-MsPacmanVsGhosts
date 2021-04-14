@@ -14,6 +14,7 @@ import pacman.entries.ghosts.FlockingStrategyGhosts;
 import pacman.entries.pacman.InfluenceMapPacMan;
 
 import pacman.game.Constants.MOVE;
+import pacman.game.Constants.GHOST;
 import pacman.strategy.flocking.FSConstants.ACTOR;
 import pacman.strategy.flocking.FSConstants.GHOST_STATE;
 
@@ -33,8 +34,10 @@ public class GeneticAlgorithm {
 	private NormalDistribution gaussianDistribution;
 
 	//Genetic Algorithm parameters
-	private FlockingStrategy fittestIndividual = null;
+	private ArrayList<FlockingStrategy> fittestIndividual = null;
 	private double fittestIndividualScore = Double.MAX_VALUE;
+
+	private int individualFlockingStrategySize;
 
 	private Executor exec;
 	private Random random;
@@ -55,27 +58,45 @@ public class GeneticAlgorithm {
 			add(new StarterPacMan());
 			//add(new InfluenceMapPacMan());
 		}};
+
+		if(FSConstants.HOMOGENEOUS_GHOSTS) 
+		{
+			individualFlockingStrategySize = 1;
+		}
+		else 
+		{
+			//Number of different ghosts (Blinky, Pinky, Inky and Sue)
+			individualFlockingStrategySize = GHOST.values().length;
+			System.out.println(GHOST.values().length);
+		}
 	}
 
-	public FlockingStrategy bestFlockingStrategy() 
+	public ArrayList<FlockingStrategy> bestFlockingStrategy() 
 	{
 		random = new Random();
 
 		//Initialisation of population
-		ArrayList<FlockingStrategy> population = initialisation();
+		ArrayList<ArrayList<FlockingStrategy>> population = initialisation();
 
 		//Evaluate new Individuals and save their scores
 		ArrayList<Double> populationScores = evaluatePopulation(population);		
 
+		//Print the Starting fittest individual
 		System.out.print("Starting fittest individual: ");
-		System.out.println(fittestIndividual.toString() + "Score: " + fittestIndividualScore + "\n");
+		
+		for(FlockingStrategy flockingStrategy : fittestIndividual) 
+		{
+			System.out.println(flockingStrategy.toString());
+		}
+		
+		System.out.println("Score: " + fittestIndividualScore + "\n");
 
 		int generationCount = 0;		
 
 		while(generationCount < FSConstants.NUMBER_OF_GENERATIONS) 
 		{
 			//Produce offspring through recombination of parents and mutation
-			ArrayList<FlockingStrategy> offspringPopulation = produceOffspring(population, populationScores);
+			ArrayList<ArrayList<FlockingStrategy>> offspringPopulation = produceOffspring(population, populationScores);
 
 			//Evaluate new Individuals and update the saved scores
 			populationScores = evaluatePopulation(offspringPopulation);
@@ -93,8 +114,15 @@ public class GeneticAlgorithm {
 			generationCount++;
 		}
 
-		System.out.print("Fittest individual: " + fittestIndividual.toString());
-		System.out.println(fittestIndividualScore);
+		//Print the fittest individual
+		System.out.println("Fittest individual: ");
+		
+		for(FlockingStrategy flockingStrategy : fittestIndividual) 
+		{
+			System.out.println(flockingStrategy.toString());
+		}
+		
+		System.out.println("Score: " + fittestIndividualScore);
 		return fittestIndividual;
 	}
 
@@ -102,52 +130,60 @@ public class GeneticAlgorithm {
 	 * Initialise the population
 	 * @return population
 	 */
-	private ArrayList<FlockingStrategy> initialisation()
+	private ArrayList<ArrayList<FlockingStrategy>> initialisation()
 	{
-		ArrayList<FlockingStrategy> initialPopulation = new ArrayList<FlockingStrategy>(FSConstants.POPULATION_SIZE);
+		ArrayList<ArrayList<FlockingStrategy>> initialPopulation = new ArrayList<ArrayList<FlockingStrategy>>(FSConstants.POPULATION_SIZE);
 
 		while(initialPopulation.size() != FSConstants.POPULATION_SIZE) 
 		{
-			//Determine Neighbourhoods using a Uniform Real Distribution for the number generation
-			ArrayList<Double> neighbourhoods = new ArrayList<Double>();
+			ArrayList<FlockingStrategy> individual = new ArrayList<FlockingStrategy>(individualFlockingStrategySize);
 
-			for(int n = 0; n < (FSConstants.NUMBER_OF_NEIGHBOURHOODS - 1); n++)
+			//An individual can have 1 or 4 flocking strategies
+			for(int i = 0; i < individualFlockingStrategySize; i++) 
 			{
-				neighbourhoods.add(uniformRealDistribution.sample());				
-			}
-			//The fourth neighbourhood is always between the (NUMBER_OF_NEIGHBOURHOODS - 1)th neighbourhood and the largest neighbourhood
-			neighbourhoods.add(FSConstants.LARGEST_NEIGHBOURHOOD_RADIUS);
+				//Determine Neighbourhoods using a Uniform Real Distribution for the number generation
+				ArrayList<Double> neighbourhoods = new ArrayList<Double>();
 
-			//Sort in ascending order
-			Collections.sort(neighbourhoods);
-
-			//Determine the Actor Context Matrix Magnitudes using a truncated [-1, 1] Normal Distribution with 0 mean and 1/3 standard deviation
-			double[][][] actorContextMatrixMagnitudes = new double[GHOST_STATE.values().length][ACTOR.values().length][FSConstants.NUMBER_OF_NEIGHBOURHOODS];
-
-			for(int x = 0; x < GHOST_STATE.values().length; x++)
-			{
-				for(int y = 0; y < ACTOR.values().length; y++)
+				for(int n = 0; n < (FSConstants.NUMBER_OF_NEIGHBOURHOODS - 1); n++)
 				{
-					for(int z = 0; z < FSConstants.NUMBER_OF_NEIGHBOURHOODS; z++)
+					neighbourhoods.add(uniformRealDistribution.sample());				
+				}
+				//The fourth neighbourhood is always between the (NUMBER_OF_NEIGHBOURHOODS - 1)th neighbourhood and the largest neighbourhood
+				neighbourhoods.add(FSConstants.LARGEST_NEIGHBOURHOOD_RADIUS);
+
+				//Sort in ascending order
+				Collections.sort(neighbourhoods);
+
+				//Determine the Actor Context Matrix Magnitudes using a truncated [-1, 1] Normal Distribution with 0 mean and 1/3 standard deviation
+				double[][][] actorContextMatrixMagnitudes = new double[GHOST_STATE.values().length][ACTOR.values().length][FSConstants.NUMBER_OF_NEIGHBOURHOODS];
+
+				for(int x = 0; x < GHOST_STATE.values().length; x++)
+				{
+					for(int y = 0; y < ACTOR.values().length; y++)
 					{
-						double magnitude = gaussianDistribution.sample();
+						for(int z = 0; z < FSConstants.NUMBER_OF_NEIGHBOURHOODS; z++)
+						{
+							double magnitude = gaussianDistribution.sample();
 
-						//Truncate magnitude between 1 and -1
-						if(magnitude > 1) 
-						{
-							magnitude = 1;
-						} 
-						else if(magnitude < -1) 
-						{
-							magnitude = -1;
+							//Truncate magnitude between 1 and -1
+							if(magnitude > 1) 
+							{
+								magnitude = 1;
+							} 
+							else if(magnitude < -1) 
+							{
+								magnitude = -1;
+							}
+
+							actorContextMatrixMagnitudes[x][y][z] = magnitude;
 						}
-
-						actorContextMatrixMagnitudes[x][y][z] = magnitude;
 					}
 				}
+
+				individual.add(new FlockingStrategy(neighbourhoods, actorContextMatrixMagnitudes));
 			}
 
-			initialPopulation.add(new FlockingStrategy(neighbourhoods, actorContextMatrixMagnitudes));
+			initialPopulation.add(individual);
 		}
 
 		return initialPopulation;
@@ -158,87 +194,91 @@ public class GeneticAlgorithm {
 	 * @param population 
 	 * @return offspringPopulation
 	 */
-	private ArrayList<FlockingStrategy> produceOffspring(ArrayList<FlockingStrategy> population, ArrayList<Double> populationScores)
+	private ArrayList<ArrayList<FlockingStrategy>> produceOffspring(ArrayList<ArrayList<FlockingStrategy>> population, ArrayList<Double> populationScores)
 	{
-		ArrayList<FlockingStrategy> offspringPopulation = new ArrayList<FlockingStrategy>(population.size());
+		ArrayList<ArrayList<FlockingStrategy>> offspringPopulation = new ArrayList<ArrayList<FlockingStrategy>>(population.size());
 
 		while(offspringPopulation.size() != population.size()) 
 		{
 			//Select two parents
-			FlockingStrategy parentOne = tournamentParentSelection(population, populationScores);
-			FlockingStrategy parentTwo = tournamentParentSelection(population, populationScores);
+			ArrayList<FlockingStrategy> parentOne = tournamentParentSelection(population, populationScores);
+			ArrayList<FlockingStrategy> parentTwo = tournamentParentSelection(population, populationScores);
 
-			FlockingStrategy childOne = null;
-			FlockingStrategy childTwo = null;
+			ArrayList<FlockingStrategy> childOne = new ArrayList<FlockingStrategy>();
+			ArrayList<FlockingStrategy> childTwo = new ArrayList<FlockingStrategy>();
 
-			//Recombination (Uniform Crossover)
-			if(random.nextDouble() < FSConstants.RECOMBINATION_PROBABILITY) 
+			//An individual can have 1 or 4 flocking strategies
+			for(int i = 0; i < individualFlockingStrategySize; i++) 
 			{
-				//Neighbourhoods
-				ArrayList<Double> childOneNeighbourhoods = new ArrayList<Double>();
-				ArrayList<Double> childTwoNeighbourhoods = new ArrayList<Double>();
-
-				for(int n = 0; n < FSConstants.NUMBER_OF_NEIGHBOURHOODS; n++)
+				//Recombination (Uniform Crossover)
+				if(random.nextDouble() < FSConstants.RECOMBINATION_PROBABILITY) 
 				{
-					if(random.nextDouble() < FSConstants.RECOMBINATION_MIXING_PROBABILITY) 
-					{
-						childOneNeighbourhoods.add(parentOne.getNeighbourhoods().get(n));	
-						childTwoNeighbourhoods.add(parentTwo.getNeighbourhoods().get(n));															
-					} 
-					else
-					{
-						childOneNeighbourhoods.add(parentTwo.getNeighbourhoods().get(n));	
-						childTwoNeighbourhoods.add(parentOne.getNeighbourhoods().get(n));							
-					}
-				}
+					//Neighbourhoods
+					ArrayList<Double> childOneNeighbourhoods = new ArrayList<Double>();
+					ArrayList<Double> childTwoNeighbourhoods = new ArrayList<Double>();
 
-				//Sort in ascending order
-				Collections.sort(childOneNeighbourhoods);
-				Collections.sort(childTwoNeighbourhoods);
-
-				//Actor Context Matrix Magnitudes
-				double[][][] childOneACMM = new double[GHOST_STATE.values().length][ACTOR.values().length][FSConstants.NUMBER_OF_NEIGHBOURHOODS];
-				double[][][] childTwoACMM = new double[GHOST_STATE.values().length][ACTOR.values().length][FSConstants.NUMBER_OF_NEIGHBOURHOODS];
-
-				for(int x = 0; x < GHOST_STATE.values().length; x++)
-				{
-					for(int y = 0; y < ACTOR.values().length; y++)
+					for(int n = 0; n < FSConstants.NUMBER_OF_NEIGHBOURHOODS; n++)
 					{
-						for(int z = 0; z < FSConstants.NUMBER_OF_NEIGHBOURHOODS; z++)
+						if(random.nextDouble() < FSConstants.RECOMBINATION_MIXING_PROBABILITY) 
 						{
-							if(random.nextDouble() < FSConstants.RECOMBINATION_MIXING_PROBABILITY)
+							childOneNeighbourhoods.add(parentOne.get(i).getNeighbourhoods().get(n));	
+							childTwoNeighbourhoods.add(parentTwo.get(i).getNeighbourhoods().get(n));															
+						} 
+						else
+						{
+							childOneNeighbourhoods.add(parentTwo.get(i).getNeighbourhoods().get(n));	
+							childTwoNeighbourhoods.add(parentOne.get(i).getNeighbourhoods().get(n));							
+						}
+					}
+
+					//Sort in ascending order
+					Collections.sort(childOneNeighbourhoods);
+					Collections.sort(childTwoNeighbourhoods);
+
+					//Actor Context Matrix Magnitudes
+					double[][][] childOneACMM = new double[GHOST_STATE.values().length][ACTOR.values().length][FSConstants.NUMBER_OF_NEIGHBOURHOODS];
+					double[][][] childTwoACMM = new double[GHOST_STATE.values().length][ACTOR.values().length][FSConstants.NUMBER_OF_NEIGHBOURHOODS];
+
+					for(int x = 0; x < GHOST_STATE.values().length; x++)
+					{
+						for(int y = 0; y < ACTOR.values().length; y++)
+						{
+							for(int z = 0; z < FSConstants.NUMBER_OF_NEIGHBOURHOODS; z++)
 							{
-								childOneACMM[x][y][z] = parentOne.getActorContextMatrixMagnitudes()[x][y][z];
-								childTwoACMM[x][y][z] = parentTwo.getActorContextMatrixMagnitudes()[x][y][z];
-							}
-							else
-							{
-								childOneACMM[x][y][z] = parentTwo.getActorContextMatrixMagnitudes()[x][y][z];
-								childTwoACMM[x][y][z] = parentOne.getActorContextMatrixMagnitudes()[x][y][z];
+								if(random.nextDouble() < FSConstants.RECOMBINATION_MIXING_PROBABILITY)
+								{
+									childOneACMM[x][y][z] = parentOne.get(i).getActorContextMatrixMagnitudes()[x][y][z];
+									childTwoACMM[x][y][z] = parentTwo.get(i).getActorContextMatrixMagnitudes()[x][y][z];
+								}
+								else
+								{
+									childOneACMM[x][y][z] = parentTwo.get(i).getActorContextMatrixMagnitudes()[x][y][z];
+									childTwoACMM[x][y][z] = parentOne.get(i).getActorContextMatrixMagnitudes()[x][y][z];
+								}
 							}
 						}
 					}
+
+					//Create the new children
+					childOne.add(new FlockingStrategy(childOneNeighbourhoods, childOneACMM));
+					childTwo.add(new FlockingStrategy(childTwoNeighbourhoods, childTwoACMM));
+				}
+				else
+				{
+					//Set children as clones of their parents
+					//Have to be clones since the same parents can be used again
+					childOne.add(parentOne.get(i).clone());
+					childTwo.add(parentTwo.get(i).clone());
 				}
 
-				//Create the new children
-				childOne = new FlockingStrategy(childOneNeighbourhoods, childOneACMM);
-				childTwo = new FlockingStrategy(childTwoNeighbourhoods, childTwoACMM);
+				//Mutation
+				mutation(childOne.get(i));
+				mutation(childTwo.get(i));
 			}
-			else
-			{
-				//Set children as clones of their parents
-				//Have to be clones since the same parents can be used again
-				childOne = parentOne.clone();
-				childTwo = parentTwo.clone();
-			}
-
-			//Mutation
-			mutation(childOne);
-			mutation(childTwo);
 
 			//Add children
 			offspringPopulation.add(childOne);
-			
+
 			//In the event that the population size is odd, don't add the second child at the end
 			if(offspringPopulation.size() < population.size()) 
 			{
@@ -255,9 +295,9 @@ public class GeneticAlgorithm {
 	 * @param populationScores
 	 * @return selectedParent
 	 */
-	private FlockingStrategy tournamentParentSelection(ArrayList<FlockingStrategy> population, ArrayList<Double> populationScores) 
+	private ArrayList<FlockingStrategy> tournamentParentSelection(ArrayList<ArrayList<FlockingStrategy>> population, ArrayList<Double> populationScores) 
 	{
-		FlockingStrategy selectedParent = null;
+		ArrayList<FlockingStrategy> selectedParent = null;
 		double selectedParentScore = Double.MAX_VALUE;
 
 		if(population.size() == populationScores.size()) 
@@ -326,7 +366,7 @@ public class GeneticAlgorithm {
 	 * Evaluate the fitness of each member in the population
 	 * @param population
 	 */
-	private ArrayList<Double> evaluatePopulation(ArrayList<FlockingStrategy> population) 
+	private ArrayList<Double> evaluatePopulation(ArrayList<ArrayList<FlockingStrategy>> population) 
 	{	
 		ArrayList<Double> populationScores = new ArrayList<Double>(population.size());
 
@@ -351,7 +391,7 @@ public class GeneticAlgorithm {
 	 * @param Individual
 	 * @return score
 	 */
-	private double calculateScore(FlockingStrategy Individual) 
+	private double calculateScore(ArrayList<FlockingStrategy> Individual) 
 	{
 		double score = 0;
 		FlockingStrategyGhosts flockingStrategyGhosts = new FlockingStrategyGhosts(Individual);

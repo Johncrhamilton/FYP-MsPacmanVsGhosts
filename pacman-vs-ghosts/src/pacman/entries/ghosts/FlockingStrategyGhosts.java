@@ -1,10 +1,12 @@
 package pacman.entries.ghosts;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 
 import pacman.controllers.Controller;
 import pacman.game.Game;
 import pacman.strategy.flocking.FlockingStrategy;
+import pacman.strategy.flocking.FSConstants;
 import pacman.strategy.flocking.FSConstants.GHOST_STATE;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
@@ -12,24 +14,24 @@ import pacman.game.Constants.MOVE;
 public class FlockingStrategyGhosts extends Controller<EnumMap<GHOST,MOVE>> {
 
 	private EnumMap<GHOST, MOVE> myMoves = new EnumMap<GHOST, MOVE>(GHOST.class);
-	private FlockingStrategy flockingStrategy;
-	
-	public FlockingStrategyGhosts(FlockingStrategy flockingStrategy) 
+	private ArrayList<FlockingStrategy> flockingStrategies;
+
+	public FlockingStrategyGhosts(ArrayList<FlockingStrategy> flockingStrategies) 
 	{
 		super();
-		this.flockingStrategy = flockingStrategy;
+		this.flockingStrategies = flockingStrategies;
 	}
-	
+
 	public EnumMap<GHOST, MOVE> getMove(Game game, long timeDue)
 	{
 		myMoves.clear();
-		
+
 		for(GHOST ghost : GHOST.values())
 		{
 			if(game.doesGhostRequireAction(ghost)) 
 			{
 				GHOST_STATE ghostState;
-				
+
 				//Hunter Ghost State
 				if(!game.isGhostEdible(ghost)) 
 				{
@@ -45,7 +47,21 @@ public class FlockingStrategyGhosts extends Controller<EnumMap<GHOST,MOVE>> {
 				{
 					ghostState = GHOST_STATE.FLASH;
 				}
-				myMoves.put(ghost, flockingStrategy.steeringForceMove(game, ghost, ghostState));
+				
+				FlockingStrategy selectedFlockingStrategy;
+
+				if(FSConstants.HOMOGENEOUS_GHOSTS) 
+				{
+					//Get the strategy that applies to all ghosts
+					selectedFlockingStrategy = flockingStrategies.get(0);
+				}
+				else
+				{
+					//Get this specific ghost's strategy
+					selectedFlockingStrategy = flockingStrategies.get(ghost.ordinal());					
+				}
+				
+				myMoves.put(ghost, selectedFlockingStrategy.steeringForceMove(game, ghost, ghostState));
 			}
 		}
 

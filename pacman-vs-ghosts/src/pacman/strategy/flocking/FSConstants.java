@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class FSConstants {
 
-	public static final boolean HOMOGENEOUS_GHOSTS = true;
+	public static final boolean HOMOGENEOUS_GHOSTS = false;
 	
 	/*Genetic Algorithm Constants*/
 	public static final int NUMBER_OF_GENERATIONS = 100;

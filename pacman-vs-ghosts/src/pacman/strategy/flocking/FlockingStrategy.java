@@ -214,33 +214,34 @@ public class FlockingStrategy {
 	 * @return String
 	 */
 	public String toString() 
-	{	
-		//Neighbourhoods
-		String string = "\n----\nNeighbourhoods ";
+	{
+		StringBuilder sb = new StringBuilder();
 		
+		//Neighbourhoods
+		sb.append("\n----FlockingStrategy----");	
+		sb.append("\nNeighbourhoods ");
 		for(int n = 0; n < neighbourhoods.size(); n++) 
 		{
-			string += neighbourhoods.get(n) + " ";
+			sb.append(neighbourhoods.get(n) + " ");
 		}
 		
 		//Actor Context Matrix Magnitudes
-		string += "\n\nActor Context Matrix Magnitudes\n";
+		sb.append("\n\nActor Context Matrix Magnitudes\n");
 		for(GHOST_STATE ghostState : GHOST_STATE.values())
 		{
-			string += "\n" + ghostState;
+			sb.append("\n" + ghostState);
 			for(ACTOR actor : ACTOR.values())
 			{
-				string += "\n" + actor + " ";
+				sb.append("\n" + actor + " ");
 				for(int n = 0; n < neighbourhoods.size(); n++)
 				{
-					string += actorContextMatrixMagnitudes[ghostState.ordinal()][actor.ordinal()][n] + " ";
+					sb.append(actorContextMatrixMagnitudes[ghostState.ordinal()][actor.ordinal()][n] + " ");
 				}
 			}
-			string += "\n";
+			sb.append("\n");
 		}
-		string += "----\n";
 		
-		return string;
+		return sb.toString();
 	}
 	
 	/**
