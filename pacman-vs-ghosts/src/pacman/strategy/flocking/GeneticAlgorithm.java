@@ -1,7 +1,6 @@
 package pacman.strategy.flocking;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 import pacman.Executor;
@@ -137,10 +136,7 @@ public class GeneticAlgorithm {
 			}
 			//The fourth neighbourhood is always between the (NUMBER_OF_NEIGHBOURHOODS - 1)th neighbourhood and the largest neighbourhood
 			neighbourhoods.add(FSConstants.LARGEST_NEIGHBOURHOOD_RADIUS);
-
-			//Sort in ascending order
-			Collections.sort(neighbourhoods);
-
+			
 			//Determine the Actor Context Matrix Magnitudes using a truncated [-1, 1] Normal Distribution with 0 mean and 1/3 standard deviation
 			double[][][] actorContextMatrixMagnitudes = new double[GHOST_STATE.values().length][ACTOR.values().length][FSConstants.NUMBER_OF_NEIGHBOURHOODS];
 
@@ -211,10 +207,6 @@ public class GeneticAlgorithm {
 						childTwoNeighbourhoods.add(parentOne.getNeighbourhoods().get(n));							
 					}
 				}
-
-				//Sort in ascending order
-				Collections.sort(childOneNeighbourhoods);
-				Collections.sort(childTwoNeighbourhoods);
 
 				//Actor Context Matrix Magnitudes
 				double[][][] childOneACMM = new double[GHOST_STATE.values().length][ACTOR.values().length][FSConstants.NUMBER_OF_NEIGHBOURHOODS];
@@ -313,10 +305,7 @@ public class GeneticAlgorithm {
 			{
 				//The fourth neighbourhood is always between the (NUMBER_OF_NEIGHBOURHOODS - 1)th neighbourhood and the largest neighbourhood
 				int randomIndex = random.nextInt((FSConstants.NUMBER_OF_NEIGHBOURHOODS - 1));
-				flockingStrategy.getNeighbourhoods().set(randomIndex, uniformRealDistribution.sample());
-
-				//Sort in ascending order
-				Collections.sort(flockingStrategy.getNeighbourhoods());
+				flockingStrategy.setNeighbourhood(randomIndex, uniformRealDistribution.sample());
 			}
 			//Reinitialise a random Actor Context Matrix Magnitude using a truncated [-1, 1] Normal Distribution with 0 mean and 1/3 standard deviation
 			else 
@@ -376,7 +365,7 @@ public class GeneticAlgorithm {
 		double score = 0;
 		FlockingStrategyGhosts flockingStrategyGhosts = new FlockingStrategyGhosts(Individual);
 
-		for(Controller<MOVE> pacManController : pacmanControllers) 
+		for(Controller<MOVE> pacManController : pacmanControllers)
 		{
 			double pacManScore = exec.runExperiment(pacManController, flockingStrategyGhosts, NUM_EXPERIMENT_RUNS).getAverageScore();
 			score += pacManScore;

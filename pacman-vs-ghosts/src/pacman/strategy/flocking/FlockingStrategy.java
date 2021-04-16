@@ -1,6 +1,7 @@
 package pacman.strategy.flocking;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -18,7 +19,15 @@ public class FlockingStrategy {
 
 	public FlockingStrategy(ArrayList<Double> neighbourhoods, double[][][] actorContextMatrixMagnitudes) 
 	{
+		if(neighbourhoods.size() != FSConstants.NUMBER_OF_NEIGHBOURHOODS) 
+		{
+			throw new IllegalStateException("Neighbourhood passed doesn't meet the require number: " + neighbourhoods.size() + " vs " + FSConstants.NUMBER_OF_NEIGHBOURHOODS);
+		}
+
+		//Sort in ascending order
+		Collections.sort(neighbourhoods);
 		this.neighbourhoods = neighbourhoods;
+
 		this.actorContextMatrixMagnitudes = actorContextMatrixMagnitudes;
 	}
 
@@ -192,6 +201,17 @@ public class FlockingStrategy {
 	}
 
 	/**
+	 * Set a neighbourhood at a certain position in the neighbourhoods collection
+	 * @param index
+	 * @param maximumNeighbourhoodRadius
+	 */
+	public void setNeighbourhood(int index, double maximumNeighbourhoodRadius) 
+	{
+		neighbourhoods.set(index, maximumNeighbourhoodRadius);
+		Collections.sort(neighbourhoods);
+	}
+
+	/**
 	 * Get Neighbourhoods
 	 * @return neighbourhoods
 	 */
@@ -242,6 +262,48 @@ public class FlockingStrategy {
 		}
 
 		return sb.toString();
+	}
+
+	/**
+	 * Checks whether an object is equivalent to this FlockingStrategy in all regards
+	 * @return boolean
+	 */
+	public boolean equals(Object obj) 
+	{
+		if(!(obj instanceof FlockingStrategy)) 
+		{
+			return false;
+		}
+		
+		FlockingStrategy other = (FlockingStrategy)obj;
+		
+		//Neighbourhoods
+		for(int n = 0; n < neighbourhoods.size(); n++) 
+		{
+			if(other.getNeighbourhoods().get(n) != neighbourhoods.get(n)) 
+			{
+				return false;
+			}
+		}
+
+		//Actor Context Matrix Magnitudes
+		for(GHOST_STATE ghostState : GHOST_STATE.values())
+		{
+			for(ACTOR actor : ACTOR.values())
+			{
+				for(int n = 0; n < neighbourhoods.size(); n++)
+				{
+					if(other.getActorContextMatrixMagnitudes()[ghostState.ordinal()][actor.ordinal()][n] != 
+							actorContextMatrixMagnitudes[ghostState.ordinal()][actor.ordinal()][n]) 
+					{
+						return false;
+					}					
+				}
+			}
+		}
+		
+		//Object is equivalent
+		return true;
 	}
 
 	/**
