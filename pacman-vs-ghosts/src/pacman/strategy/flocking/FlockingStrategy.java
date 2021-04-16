@@ -208,6 +208,7 @@ public class FlockingStrategy {
 	public void setNeighbourhood(int index, double maximumNeighbourhoodRadius)
 	{
 		neighbourhoods.set(index, maximumNeighbourhoodRadius);
+		//Resort the neighbourhoods in ascending order
 		Collections.sort(neighbourhoods);
 	}
 

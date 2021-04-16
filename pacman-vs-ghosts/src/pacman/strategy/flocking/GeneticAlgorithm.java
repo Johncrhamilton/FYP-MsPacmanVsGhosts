@@ -93,7 +93,7 @@ public class GeneticAlgorithm {
 		int fittestIndividualStreak = 0;
 		ArrayList<FlockingStrategy> previousFittestIndividual = fittestIndividual;
 
-		while(generationCount < FSConstants.NUMBER_OF_GENERATIONS && fittestIndividualStreak < 10)
+		while(generationCount < FSConstants.NUMBER_OF_GENERATIONS && fittestIndividualStreak < FSConstants.MAXIMUM_FITTEST_INDIVIDUAL_STREAK)
 		{
 			//Produce offspring through recombination of parents and mutation
 			ArrayList<ArrayList<FlockingStrategy>> offspringPopulation = produceOffspring(population, populationScores);
@@ -154,7 +154,6 @@ public class GeneticAlgorithm {
 			//An individual can have 1 or 4 flocking strategies
 			for(int i = 0; i < individualFlockingStrategySize; i++)
 			{
-
 				//Determine Neighbourhoods using a Uniform Real Distribution for the number generation
 				ArrayList<Double> neighbourhoods = new ArrayList<Double>();
 
