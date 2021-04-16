@@ -75,7 +75,7 @@ public class GeneticAlgorithm {
 		int fittestIndividualStreak = 0;
 		FlockingStrategy previousFittestIndividual = fittestIndividual;
 
-		while(generationCount < FSConstants.NUMBER_OF_GENERATIONS && fittestIndividualStreak < 10) 
+		while(generationCount < FSConstants.NUMBER_OF_GENERATIONS && fittestIndividualStreak < FSConstants.MAXIMUM_FITTEST_INDIVIDUAL_STREAK) 
 		{
 			//Produce offspring through recombination of parents and mutation
 			ArrayList<FlockingStrategy> offspringPopulation = produceOffspring(population, populationScores);

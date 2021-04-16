@@ -6,6 +6,7 @@ public class FSConstants {
 
 	/*Genetic Algorithm Constants*/
 	public static final int NUMBER_OF_GENERATIONS = 100;
+	public static final int MAXIMUM_FITTEST_INDIVIDUAL_STREAK = 10;
 	public static final int POPULATION_SIZE = 50;
 	public static final int TOURNAMENT_SELECTION_SIZE = 5;
 	public static final double RECOMBINATION_PROBABILITY = 0.95;
