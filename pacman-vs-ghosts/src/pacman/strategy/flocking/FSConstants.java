@@ -8,28 +8,28 @@ public class FSConstants {
 
 	/*Genetic Algorithm Constants*/
 	public static final int NUMBER_OF_GENERATIONS = 100;
-	public static final int MAXIMUM_FITTEST_INDIVIDUAL_STREAK = 10;
+	public static final int MAXIMUM_FITTEST_INDIVIDUAL_STREAK = 20;
 	public static final int POPULATION_SIZE = 50;
 	public static final int TOURNAMENT_SELECTION_SIZE = 5;
-	public static final double RECOMBINATION_PROBABILITY = 1.0;
+	public static final double RECOMBINATION_PROBABILITY = 0.95;
 	public static final double RECOMBINATION_MIXING_PROBABILITY = 0.5;
 	public static final double MUTATION_PROBABILITY = 0.25;
 	public static final double MUTATION_SWITCH_PROBABILITY = 0.35;
 	public static final boolean ELITISM = true;
 
 	/*Flocking Strategy Constants and ENUMS*/
-	//Euclidean distance from top left power pill to bottom right is about 141 hence the largest neighbourhood radius should be greater than this distance
-	public final static double LARGEST_NEIGHBOURHOOD_RADIUS = 300.0;
+	//Euclidean distance from top left power pill to bottom right is about 141 hence the largest neighbourhood radius should be at least double this distance
+	public final static double LARGEST_NEIGHBOURHOOD_RADIUS = 300;
+
+	public final static int NUMBER_OF_NEIGHBOURHOODS = 4;
 
 	public final static ArrayList<Double> NEIGHBOURHOODS = new ArrayList<Double>()
 	{{
-		add(50.0);
-		add(100.0);
+		add(75.0);
 		add(150.0);
+		add(225.0);
 		add(LARGEST_NEIGHBOURHOOD_RADIUS);
 	}};
-
-	public final static int NUMBER_OF_NEIGHBOURHOODS = 4;
 
 	public final static double[][][] ACTOR_CONTEXT_MATRIX_MAGNITUDES =
 		{

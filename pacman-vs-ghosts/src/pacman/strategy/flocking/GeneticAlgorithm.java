@@ -22,9 +22,6 @@ import org.apache.commons.math3.distribution.UniformRealDistribution;
 
 public class GeneticAlgorithm {
 
-	//Number of games run when calculating flocking strategy scores
-	private static final int NUM_EXPERIMENT_RUNS = 1;
-
 	//Pacman Controllers
 	private ArrayList<Controller<MOVE>> pacmanControllers;
 
@@ -217,6 +214,9 @@ public class GeneticAlgorithm {
 			//An individual can have 1 or 4 flocking strategies
 			for(int i = 0; i < individualFlockingStrategySize; i++)
 			{
+				//Homogeneous ghosts will all crossover within the same strategy
+				//Heterogeneous ghosts will only crossover with their respective flocking strategy
+
 				//Recombination (Uniform Crossover)
 				if(random.nextDouble() < FSConstants.RECOMBINATION_PROBABILITY)
 				{
@@ -226,6 +226,7 @@ public class GeneticAlgorithm {
 
 					for(int n = 0; n < FSConstants.NUMBER_OF_NEIGHBOURHOODS; n++)
 					{
+						//Add neighbourhood from the appropriate parent's flocking strategy to the appropriate child's strategy
 						if(random.nextDouble() < FSConstants.RECOMBINATION_MIXING_PROBABILITY)
 						{
 							childOneNeighbourhoods.add(parentOne.get(i).getNeighbourhoods().get(n));
@@ -398,7 +399,8 @@ public class GeneticAlgorithm {
 
 		for(Controller<MOVE> pacManController : pacmanControllers)
 		{
-			double pacManScore = exec.runExperiment(pacManController, flockingStrategyGhosts, NUM_EXPERIMENT_RUNS).getAverageScore();
+			//Number of games run when calculating flocking strategy scores = 1
+			double pacManScore = exec.runExperiment(pacManController, flockingStrategyGhosts, 1).getAverageScore();
 			score += pacManScore;
 		}
 

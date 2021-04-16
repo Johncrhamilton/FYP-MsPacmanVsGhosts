@@ -91,11 +91,12 @@ public class Executor
 		//run a game in synchronous mode: game waits until controllers respond.
 		//int delay = 20;
 		//boolean visual=true;
+		
 		//Single games with visuals
 		//exec.runGame(new StarterPacMan(), new DummyGhosts(), visual, delay);
 		//exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(), visual, delay);
 		//exec.runGame(new InfluenceMapPacMan(), new StarterGhosts(),visual,delay);
-		//exec.runGame(new StarterPacMan(), new FlockingStrategyGhosts(new FlockingStrategy(FSConstants.NEIGHBOURHOODS, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES)), visual, delay);
+		//exec.runGame(new StarterPacMan(), new FlockingStrategyGhosts(flockingStrategies), visual, delay);
 		
 		//Long startTime = System.currentTimeMillis();
 
@@ -106,7 +107,17 @@ public class Executor
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
-		//System.out.print(exec.runExperiment(new StarterPacMan(), new FlockingStrategyGhosts(new FlockingStrategy(FSConstants.NEIGHBOURHOODS, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES)), NUM_EXPERIMENT_RUNS).toString());
+		
+		/*
+		 * Flocking Ghosts
+		 * 1 strategy for Homogeneous ghosts and 4 strategies for Heterogeneous Ghosts
+		 */
+		//ArrayList<FlockingStrategy> flockingStrategies = new ArrayList<FlockingStrategy>() 
+		//{{
+		//	add(new FlockingStrategy(FSConstants.NEIGHBOURHOODS, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES));
+		//}};
+		//exec.runGame(new StarterPacMan(), new FlockingStrategyGhosts(flockingStrategies), visual, delay);
+		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new FlockingStrategyGhosts(flockingStrategies), NUM_EXPERIMENT_RUNS).toString());
 		
 		//Long endTime = System.currentTimeMillis();
 		//System.out.println("Duration: " + (endTime - startTime));
