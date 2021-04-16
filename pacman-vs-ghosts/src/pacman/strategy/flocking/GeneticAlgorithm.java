@@ -165,20 +165,8 @@ public class GeneticAlgorithm {
 				//The fourth neighbourhood is always between the (NUMBER_OF_NEIGHBOURHOODS - 1)th neighbourhood and the largest neighbourhood
 				neighbourhoods.add(FSConstants.LARGEST_NEIGHBOURHOOD_RADIUS);
 
-				//Sort in ascending order
-				Collections.sort(neighbourhoods);
-
 				//Determine the Actor Context Matrix Magnitudes using a truncated [-1, 1] Normal Distribution with 0 mean and 1/3 standard deviation
 				double[][][] actorContextMatrixMagnitudes = new double[GHOST_STATE.values().length][ACTOR.values().length][FSConstants.NUMBER_OF_NEIGHBOURHOODS];
-
-				neighbourhoods.add(uniformRealDistribution.sample());
-			}
-			//The fourth neighbourhood is always between the (NUMBER_OF_NEIGHBOURHOODS - 1)th neighbourhood and the largest neighbourhood
-			neighbourhoods.add(FSConstants.LARGEST_NEIGHBOURHOOD_RADIUS);
-
-			//Determine the Actor Context Matrix Magnitudes using a truncated [-1, 1] Normal Distribution with 0 mean and 1/3 standard deviation
-			double[][][] actorContextMatrixMagnitudes = new double[GHOST_STATE.values().length][ACTOR.values().length][FSConstants.NUMBER_OF_NEIGHBOURHOODS];
-
 
 				for(int x = 0; x < GHOST_STATE.values().length; x++)
 				{
@@ -202,13 +190,10 @@ public class GeneticAlgorithm {
 						}
 					}
 				}
-
 				individual.add(new FlockingStrategy(neighbourhoods, actorContextMatrixMagnitudes));
 			}
-
 			initialPopulation.add(individual);
 		}
-
 		return initialPopulation;
 	}
 
@@ -254,9 +239,9 @@ public class GeneticAlgorithm {
 						}
 					}
 
-				//Actor Context Matrix Magnitudes
-				double[][][] childOneACMM = new double[GHOST_STATE.values().length][ACTOR.values().length][FSConstants.NUMBER_OF_NEIGHBOURHOODS];
-				double[][][] childTwoACMM = new double[GHOST_STATE.values().length][ACTOR.values().length][FSConstants.NUMBER_OF_NEIGHBOURHOODS];
+					//Actor Context Matrix Magnitudes
+					double[][][] childOneACMM = new double[GHOST_STATE.values().length][ACTOR.values().length][FSConstants.NUMBER_OF_NEIGHBOURHOODS];
+					double[][][] childTwoACMM = new double[GHOST_STATE.values().length][ACTOR.values().length][FSConstants.NUMBER_OF_NEIGHBOURHOODS];
 
 					for(int x = 0; x < GHOST_STATE.values().length; x++)
 					{
