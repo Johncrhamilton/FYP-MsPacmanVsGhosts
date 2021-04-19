@@ -17,9 +17,9 @@ public class FlockingStrategy {
 	private ArrayList<Double> neighbourhoods;
 	private double[][][] actorContextMatrixMagnitudes;
 
-	public FlockingStrategy(ArrayList<Double> neighbourhoods, double[][][] actorContextMatrixMagnitudes)
+	public FlockingStrategy(ArrayList<Double> neighbourhoods, double[][][] actorContextMatrixMagnitudes) 
 	{
-		if(neighbourhoods.size() != FSConstants.NUMBER_OF_NEIGHBOURHOODS)
+		if(neighbourhoods.size() != FSConstants.NUMBER_OF_NEIGHBOURHOODS) 
 		{
 			throw new IllegalStateException("Neighbourhood passed doesn't meet the require number: " + neighbourhoods.size() + " vs " + FSConstants.NUMBER_OF_NEIGHBOURHOODS);
 		}
@@ -41,23 +41,23 @@ public class FlockingStrategy {
 	 */
 	public MOVE steeringForceMove(Game game, GHOST currentGhost, GHOST_STATE ghostState)
 	{
-		HashMap<Integer, ACTOR> activeActors = findActiveActors(game, currentGhost);
+		HashMap<Integer, ACTOR> activeActors = findActiveActors(game, currentGhost);		
 		Node[] mazeNodes = game.getCurrentMaze().graph;
 
-		double[] totalSteeringForce = new double[2];
+		double[] totalSteeringForce = new double[2];		
 		int currentGhostIndex = game.getGhostCurrentNodeIndex(currentGhost);
 
 		for(Entry<Integer, ACTOR> actor : activeActors.entrySet())
-		{
+		{			
 			//Determine neighbourhood (delta) the actor falls into
 
-			double ghostToActorEuclideanDistance = game.getEuclideanDistance(currentGhostIndex, actor.getKey());
+			double ghostToActorEuclideanDistance = game.getEuclideanDistance(currentGhostIndex, actor.getKey());			
 			int neighbourhood = -1;
 
 			for(int neighbourhoodIndex = 0; neighbourhoodIndex < neighbourhoods.size(); neighbourhoodIndex++)
 			{
 				//If Euclidean Distance from current ghost to actor is less than the maximum distance boundary specified for the neighbourhood
-				if(ghostToActorEuclideanDistance < neighbourhoods.get(neighbourhoodIndex))
+				if(ghostToActorEuclideanDistance < neighbourhoods.get(neighbourhoodIndex)) 
 				{
 					neighbourhood = neighbourhoodIndex;
 					break;
@@ -67,10 +67,10 @@ public class FlockingStrategy {
 			//Next determine the steering force (F_alpha) for the actor
 
 			//Calculate the positional difference
-			double[] steeringForce = {mazeNodes[actor.getKey()].x - mazeNodes[currentGhostIndex].x,
+			double[] steeringForce = {mazeNodes[actor.getKey()].x - mazeNodes[currentGhostIndex].x, 
 					mazeNodes[actor.getKey()].y - mazeNodes[currentGhostIndex].y};
 
-			for(int j = 0; j < steeringForce.length; j++)
+			for(int j = 0; j < steeringForce.length; j++) 
 			{
 				//Divide by the euclidean distance between actor and ghost
 				steeringForce[j] /= ghostToActorEuclideanDistance;
@@ -103,9 +103,9 @@ public class FlockingStrategy {
 
 		//Active PowerPills
 		int[] powerPillsIndices = game.getActivePowerPillsIndices();
-		if(powerPillsIndices.length > 0)
+		if(powerPillsIndices.length > 0) 
 		{
-			for(int i = 0; i < powerPillsIndices.length; i++)
+			for(int i = 0; i < powerPillsIndices.length; i++) 
 			{
 				activeActors.put(powerPillsIndices[i], ACTOR.POWERPILL);
 			}
@@ -115,19 +115,19 @@ public class FlockingStrategy {
 		for(GHOST ghost : GHOST.values())
 		{
 			//If the current ghost isn't this ghost and this ghost is outside lair
-			if(!currentGhost.equals(ghost) && game.getGhostLairTime(ghost) == 0)
+			if(!currentGhost.equals(ghost) && game.getGhostLairTime(ghost) == 0) 
 			{
 				ACTOR ghostType;
 
 				//Filter Hunter Ghosts
-				if(!game.isGhostEdible(ghost))
+				if(!game.isGhostEdible(ghost)) 
 				{
 					ghostType = ACTOR.HUNTER;
 				}
 				//Filter Hunted Ghosts
-				else if(game.getGhostEdibleTime(ghost) > 30)
+				else if(game.getGhostEdibleTime(ghost) > 30) 
 				{
-					ghostType = ACTOR.HUNTED;
+					ghostType = ACTOR.HUNTED;				
 				}
 				//Filter Out Flashing Ghosts
 				else
@@ -135,7 +135,7 @@ public class FlockingStrategy {
 					ghostType = ACTOR.FLASH;
 				}
 
-				activeActors.put(game.getGhostCurrentNodeIndex(ghost), ghostType);
+				activeActors.put(game.getGhostCurrentNodeIndex(ghost), ghostType);	
 			}
 		}
 
@@ -149,8 +149,8 @@ public class FlockingStrategy {
 	 * @param currentGhost
 	 * @return MOVE
 	 */
-	private MOVE translateTotalSteeringForce(Game game, double[] totalSteeringForce, GHOST currentGhost)
-	{
+	private MOVE translateTotalSteeringForce(Game game, double[] totalSteeringForce, GHOST currentGhost) 
+	{	
 		MOVE move;
 
 		//Determine the horizontal move
@@ -159,7 +159,7 @@ public class FlockingStrategy {
 		{
 			moveHorizontal = MOVE.RIGHT;
 		}
-		else
+		else 
 		{
 			moveHorizontal = MOVE.LEFT;
 		}
@@ -170,7 +170,7 @@ public class FlockingStrategy {
 		{
 			moveVertical = MOVE.DOWN;
 		}
-		else
+		else 
 		{
 			moveVertical = MOVE.UP;
 		}
@@ -181,7 +181,7 @@ public class FlockingStrategy {
 			move = moveHorizontal;
 
 			//If the move goes against the previous move, make the vertical move instead
-			if(move == game.getGhostLastMoveMade(currentGhost).opposite())
+			if(move == game.getGhostLastMoveMade(currentGhost).opposite()) 
 			{
 				move = moveVertical;
 			}
@@ -191,7 +191,7 @@ public class FlockingStrategy {
 			move = moveVertical;
 
 			//If the move goes against the previous move, make the horizontal move instead
-			if(move == game.getGhostLastMoveMade(currentGhost).opposite())
+			if(move == game.getGhostLastMoveMade(currentGhost).opposite()) 
 			{
 				move = moveHorizontal;
 			}
@@ -205,10 +205,9 @@ public class FlockingStrategy {
 	 * @param index
 	 * @param maximumNeighbourhoodRadius
 	 */
-	public void setNeighbourhood(int index, double maximumNeighbourhoodRadius)
+	public void setNeighbourhood(int index, double maximumNeighbourhoodRadius) 
 	{
 		neighbourhoods.set(index, maximumNeighbourhoodRadius);
-		//Resort the neighbourhoods in ascending order
 		Collections.sort(neighbourhoods);
 	}
 
@@ -225,7 +224,7 @@ public class FlockingStrategy {
 	 * Get Actor Context Matrix Magnitudes
 	 * @return actorContextMatrixMagnitudes
 	 */
-	public double[][][] getActorContextMatrixMagnitudes()
+	public double[][][] getActorContextMatrixMagnitudes() 
 	{
 		return actorContextMatrixMagnitudes;
 	}
@@ -234,14 +233,14 @@ public class FlockingStrategy {
 	 * String representation of the FlockingStrategy
 	 * @return String
 	 */
-	public String toString()
-	{
+	public String toString() 
+	{	
 		StringBuilder sb = new StringBuilder();
 
 		//Neighbourhoods
 		sb.append("\n----FlockingStrategy----");
 		sb.append("\nNeighbourhoods ");
-		for(int n = 0; n < neighbourhoods.size(); n++)
+		for(int n = 0; n < neighbourhoods.size(); n++) 
 		{
 			sb.append(neighbourhoods.get(n) + " ");
 		}
@@ -269,19 +268,19 @@ public class FlockingStrategy {
 	 * Checks whether an object is equivalent to this FlockingStrategy in all regards
 	 * @return boolean
 	 */
-	public boolean equals(Object obj)
+	public boolean equals(Object obj) 
 	{
-		if(!(obj instanceof FlockingStrategy))
+		if(!(obj instanceof FlockingStrategy)) 
 		{
 			return false;
 		}
-
+		
 		FlockingStrategy other = (FlockingStrategy)obj;
-
+		
 		//Neighbourhoods
-		for(int n = 0; n < neighbourhoods.size(); n++)
+		for(int n = 0; n < neighbourhoods.size(); n++) 
 		{
-			if(other.getNeighbourhoods().get(n) != neighbourhoods.get(n))
+			if(other.getNeighbourhoods().get(n) != neighbourhoods.get(n)) 
 			{
 				return false;
 			}
@@ -294,15 +293,15 @@ public class FlockingStrategy {
 			{
 				for(int n = 0; n < neighbourhoods.size(); n++)
 				{
-					if(other.getActorContextMatrixMagnitudes()[ghostState.ordinal()][actor.ordinal()][n] !=
-							actorContextMatrixMagnitudes[ghostState.ordinal()][actor.ordinal()][n])
+					if(other.getActorContextMatrixMagnitudes()[ghostState.ordinal()][actor.ordinal()][n] != 
+							actorContextMatrixMagnitudes[ghostState.ordinal()][actor.ordinal()][n]) 
 					{
 						return false;
-					}
+					}					
 				}
 			}
 		}
-
+		
 		//Object is equivalent
 		return true;
 	}
@@ -311,7 +310,7 @@ public class FlockingStrategy {
 	 * Returns a clone of the FlockingStrategy
 	 * @return FlockingStrategy
 	 */
-	public FlockingStrategy clone()
+	public FlockingStrategy clone() 
 	{
 		return new FlockingStrategy(((ArrayList<Double>)neighbourhoods.clone()), actorContextMatrixMagnitudes.clone());
 	}
