@@ -11,9 +11,9 @@ public class FSConstants {
 	public static final int MAXIMUM_FITTEST_INDIVIDUAL_STREAK = 10;
 	public static final int POPULATION_SIZE = 50;
 	public static final int TOURNAMENT_SELECTION_SIZE = 5;
-	public static final double RECOMBINATION_PROBABILITY = 1.0;
+	public static final double RECOMBINATION_PROBABILITY = 0.95;
 	public static final double RECOMBINATION_MIXING_PROBABILITY = 0.5;
-	public static final double MUTATION_PROBABILITY = 0.3;
+	public static final double MUTATION_PROBABILITY = 0.25;
 	public static final double MUTATION_SWITCH_PROBABILITY = 0.15;
 	public static final boolean ELITISM = true;
 

@@ -84,7 +84,6 @@ public class Executor
 		 */
 		
 		GeneticAlgorithm GA = new GeneticAlgorithm(exec);
-		GA.bestFlockingStrategy().toString();
 		
 		/*
 		 */
@@ -98,7 +97,8 @@ public class Executor
 		//exec.runGame(new InfluenceMapPacMan(), new StarterGhosts(),visual,delay);
 		//exec.runGame(new StarterPacMan(), new FlockingStrategyGhosts(flockingStrategies), visual, delay);
 		
-		//Long startTime = System.currentTimeMillis();
+		Long startTime = System.currentTimeMillis();
+		GA.bestFlockingStrategy().toString();
 
 		//Multiple games without visuals
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new StarterGhosts(), NUM_EXPERIMENT_RUNS).toString());
@@ -119,8 +119,8 @@ public class Executor
 		//exec.runGame(new StarterPacMan(), new FlockingStrategyGhosts(flockingStrategies), visual, delay);
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new FlockingStrategyGhosts(flockingStrategies), NUM_EXPERIMENT_RUNS).toString());
 		
-		//Long endTime = System.currentTimeMillis();
-		//System.out.println("Duration: " + (endTime - startTime));
+		Long endTime = System.currentTimeMillis();
+		System.out.println("Duration: " + (endTime - startTime));
 		
 		///*
 		//run the game in asynchronous mode.
