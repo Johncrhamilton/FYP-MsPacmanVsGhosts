@@ -79,10 +79,10 @@ public class GeneticAlgorithm {
 		//Print the Starting fittest individual
 		System.out.print("Starting fittest individual: ");
 
-		for(FlockingStrategy flockingStrategy : fittestIndividual)
-		{
-			System.out.println(flockingStrategy.toString());
-		}
+		//for(FlockingStrategy flockingStrategy : fittestIndividual)
+		//{
+		//	System.out.println(flockingStrategy.toString());
+		//}
 
 		System.out.println("Score: " + fittestIndividualScore + "\n");
 
@@ -400,10 +400,10 @@ public class GeneticAlgorithm {
 		for(Controller<MOVE> pacManController : pacmanControllers)
 		{
 			//Number of games run when calculating flocking strategy scores = 1
-			double pacManScore = exec.runExperiment(pacManController, flockingStrategyGhosts, 1).getAverageScore();
+			double pacManScore = Math.pow(exec.runExperiment(pacManController, flockingStrategyGhosts, 1).getAverageScore(), 2);
 			score += pacManScore;
 		}
 
-		return score;
+		return Math.sqrt(score);
 	}
 }
