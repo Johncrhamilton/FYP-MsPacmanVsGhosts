@@ -57,6 +57,7 @@ import static pacman.game.Constants.*;
 public class Executor
 {	
 	private final static int NUM_EXPERIMENT_RUNS = 50;
+	private final static int NUM_GENETIC_ALGORITHM_RUNS = 30;
 	private final static double ALPHA = 0.05;
 
 	private static OneWayAnova oneWayAnova = new OneWayAnova();
@@ -84,7 +85,8 @@ public class Executor
 		 */
 		
 		GeneticAlgorithm GA = new GeneticAlgorithm(exec);
-		
+		System.out.println(GA.bestFlockingStrategy());
+				
 		/*
 		 */
 		//run a game in synchronous mode: game waits until controllers respond.
@@ -95,10 +97,27 @@ public class Executor
 		//exec.runGame(new StarterPacMan(), new DummyGhosts(), visual, delay);
 		//exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(), visual, delay);
 		//exec.runGame(new InfluenceMapPacMan(), new StarterGhosts(),visual,delay);
-		//exec.runGame(new StarterPacMan(), new FlockingStrategyGhosts(flockingStrategies), visual, delay);
 		
-		Long startTime = System.currentTimeMillis();
-		GA.bestFlockingStrategy().toString();
+		//Long startTime = System.currentTimeMillis();		
+		
+		/*
+		String filePath = "data/FSGhost/Homogeneous.txt";
+		//String filePath = "data/FSGhost/Heterogeneous.txt";
+		for(int i = 0; i < NUM_GENETIC_ALGORITHM_RUNS; i++)
+		{
+			String result = "Flocking Strategy " + i + "\n";
+			
+			Long startTime = System.currentTimeMillis();
+
+			GeneticAlgorithm GA = new GeneticAlgorithm(exec);
+			result += GA.bestFlockingStrategy();
+			
+			Long endTime = System.currentTimeMillis();
+			result += "\nDuration: " + (endTime - startTime);
+			result += "\nHOMOGENEOUS_GHOSTS = " + FSConstants.HOMOGENEOUS_GHOSTS + "\n";
+			
+			saveToFile(result, filePath, true);
+		}*/	
 
 		//Multiple games without visuals
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new StarterGhosts(), NUM_EXPERIMENT_RUNS).toString());
@@ -108,19 +127,10 @@ public class Executor
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
 		
-		/*
-		 * Flocking Ghosts
-		 * 1 strategy for Homogeneous ghosts and 4 strategies for Heterogeneous Ghosts
-		 */
-		//ArrayList<FlockingStrategy> flockingStrategies = new ArrayList<FlockingStrategy>() 
-		//{{
-		//	add(new FlockingStrategy(FSConstants.NEIGHBOURHOODS, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES));
-		//}};
-		//exec.runGame(new StarterPacMan(), new FlockingStrategyGhosts(flockingStrategies), visual, delay);
-		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new FlockingStrategyGhosts(flockingStrategies), NUM_EXPERIMENT_RUNS).toString());
-		
-		Long endTime = System.currentTimeMillis();
-		System.out.println("Duration: " + (endTime - startTime));
+		//exec.runGame(new StarterPacMan(), new FlockingStrategyGhosts(FSConstants.FLOCKING_STRATEGIES), visual, delay);
+		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new FlockingStrategyGhosts(FSConstants.FLOCKING_STRATEGIES), NUM_EXPERIMENT_RUNS).toString());		
+
+		//Long endTime = System.currentTimeMillis();
 		
 		///*
 		//run the game in asynchronous mode.

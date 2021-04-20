@@ -38,22 +38,12 @@ public class GeneticAlgorithm {
 	private Executor exec;
 	private Random random;
 
-	@SuppressWarnings("serial")
 	public GeneticAlgorithm(Executor exec)
 	{
 		this.exec = exec;
 
 		uniformRealDistribution = new UniformRealDistribution(0.0, FSConstants.LARGEST_NEIGHBOURHOOD_RADIUS);
 		gaussianDistribution = new NormalDistribution(0.0, ((double) 1/3));
-
-		pacmanControllers = new ArrayList<Controller<MOVE>>()
-		{{
-			add(new NearestPillPacMan());
-			add(new RandomNonRevPacMan());
-			add(new RandomPacMan());
-			add(new StarterPacMan());
-			//add(new InfluenceMapPacMan());
-		}};
 
 		if(FSConstants.HOMOGENEOUS_GHOSTS)
 		{
@@ -66,7 +56,7 @@ public class GeneticAlgorithm {
 		}
 	}
 
-	public ArrayList<FlockingStrategy> bestFlockingStrategy()
+	public String bestFlockingStrategy()
 	{
 		random = new Random();
 
@@ -76,15 +66,15 @@ public class GeneticAlgorithm {
 		//Evaluate new Individuals and save their scores
 		ArrayList<Double> populationScores = evaluatePopulation(population);
 
-		//Print the Starting fittest individual
-		System.out.print("Starting fittest individual: ");
+		//Starting fittest individual
+		String result = "Starting fittest individual: ";
 
 		//for(FlockingStrategy flockingStrategy : fittestIndividual)
 		//{
-		//	System.out.println(flockingStrategy.toString());
+		//	result += flockingStrategy.toString();
 		//}
 
-		System.out.println("Score: " + fittestIndividualScore + "\n");
+		result += "\nScore: " + fittestIndividualScore + "\n";
 
 		int generationCount = 0;
 		int fittestIndividualStreak = 0;
@@ -122,18 +112,20 @@ public class GeneticAlgorithm {
 			generationCount++;
 		}
 
-		System.out.println("Total number of Generations: " + generationCount);
-
-		//Print the fittest individual
-		System.out.println("Fittest individual: ");
+		//The fittest individual
+		result += "\nFittest individual: ";
 
 		for(FlockingStrategy flockingStrategy : fittestIndividual)
 		{
-			System.out.println(flockingStrategy.toString());
+			result += flockingStrategy.toString();
 		}
 
-		System.out.println("Score: " + fittestIndividualScore);
-		return fittestIndividual;
+		result += "\nScore: " + fittestIndividualScore;
+
+		result += "\nTotal number of Generations: " + generationCount;
+
+		return result;
+		//return fittestIndividual;
 	}
 
 	/**
@@ -392,9 +384,21 @@ public class GeneticAlgorithm {
 	 * @param Individual
 	 * @return score
 	 */
+	@SuppressWarnings("serial")
 	private double calculateScore(ArrayList<FlockingStrategy> Individual)
 	{
 		double score = 0;
+		
+		//Setup new Ms. Pacman controllers to calculate the individual's score
+		pacmanControllers = new ArrayList<Controller<MOVE>>()
+		{{
+			add(new NearestPillPacMan());
+			add(new RandomNonRevPacMan());
+			add(new RandomPacMan());
+			add(new StarterPacMan());
+			//add(new InfluenceMapPacMan());
+		}};
+		
 		FlockingStrategyGhosts flockingStrategyGhosts = new FlockingStrategyGhosts(Individual);
 
 		for(Controller<MOVE> pacManController : pacmanControllers)
