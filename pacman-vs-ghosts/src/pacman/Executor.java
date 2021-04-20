@@ -100,6 +100,7 @@ public class Executor
 		
 		//Long startTime = System.currentTimeMillis();		
 		
+		
 		/*
 		String filePath = "data/FSGhost/Homogeneous.txt";
 		//String filePath = "data/FSGhost/Heterogeneous.txt";
@@ -117,7 +118,7 @@ public class Executor
 			result += "\nHOMOGENEOUS_GHOSTS = " + FSConstants.HOMOGENEOUS_GHOSTS + "\n";
 			
 			saveToFile(result, filePath, true);
-		}*/	
+		}*/
 
 		//Multiple games without visuals
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new StarterGhosts(), NUM_EXPERIMENT_RUNS).toString());
