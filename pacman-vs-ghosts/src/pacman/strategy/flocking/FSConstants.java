@@ -76,15 +76,27 @@ public class FSConstants {
 		{
 				/*HUNTER*/
 				{
-					/*PACMAN*/{1,0,0,0},/*POWERPILL*/{0,0,0,0},/*HUNTER*/{0,0,0,0},/*HUNTED*/{0,0,0,0},/*FLASH*/{0,0,0,0}
+					/*PACMAN*/		{1,0,0,0},
+					/*POWERPILL*/	{0,0,0,0},
+					/*HUNTER*/		{0,0,0,0},
+					/*HUNTED*/		{0,0,0,0},
+					/*FLASH*/		{0,0,0,0}
 				},
 				//HUNTED
 				{
-					/*PACMAN*/{-1,0,0,0},/*POWERPILL*/{0,0,0,0},/*HUNTER*/{0,0,0,0},/*HUNTED*/{0,0,0,0},/*FLASH*/{0,0,0,0}
+					/*PACMAN*/		{-1,0,0,0},
+					/*POWERPILL*/	{0,0,0,0},
+					/*HUNTER*/		{0,0,0,0},
+					/*HUNTED*/		{0,0,0,0},
+					/*FLASH*/		{0,0,0,0}
 				},
 				//FLASH
 				{
-					/*PACMAN*/{-1,0,0,0},/*POWERPILL*/{0,0,0,0},/*HUNTER*/{0,0,0,0},/*HUNTED*/{0,0,0,0},/*FLASH*/{0,0,0,0}
+					/*PACMAN*/		{-1,0,0,0},
+					/*POWERPILL*/	{0,0,0,0},
+					/*HUNTER*/		{0,0,0,0},
+					/*HUNTED*/		{0,0,0,0},
+					/*FLASH*/		{0,0,0,0}
 				},
 		};
 	
@@ -92,15 +104,27 @@ public class FSConstants {
 		{
 				/*HUNTER*/
 				{
-					/*PACMAN*/{1,0,0,0},/*POWERPILL*/{0,0,0,0},/*HUNTER*/{0,0,0,0},/*HUNTED*/{0,0,0,0},/*FLASH*/{0,0,0,0}
+					/*PACMAN*/		{1,0,0,0},
+					/*POWERPILL*/	{0,0,0,0},
+					/*HUNTER*/		{0,0,0,0},
+					/*HUNTED*/		{0,0,0,0},
+					/*FLASH*/		{0,0,0,0}
 				},
 				//HUNTED
 				{
-					/*PACMAN*/{-1,0,0,0},/*POWERPILL*/{0,0,0,0},/*HUNTER*/{0,0,0,0},/*HUNTED*/{0,0,0,0},/*FLASH*/{0,0,0,0}
+					/*PACMAN*/		{-1,0,0,0},
+					/*POWERPILL*/	{0,0,0,0},
+					/*HUNTER*/		{0,0,0,0},
+					/*HUNTED*/		{0,0,0,0},
+					/*FLASH*/		{0,0,0,0}
 				},
 				//FLASH
 				{
-					/*PACMAN*/{-1,0,0,0},/*POWERPILL*/{0,0,0,0},/*HUNTER*/{0,0,0,0},/*HUNTED*/{0,0,0,0},/*FLASH*/{0,0,0,0}
+					/*PACMAN*/		{-1,0,0,0},
+					/*POWERPILL*/	{0,0,0,0},
+					/*HUNTER*/		{0,0,0,0},
+					/*HUNTED*/		{0,0,0,0},
+					/*FLASH*/		{0,0,0,0}
 				},
 		};
 	
@@ -108,15 +132,27 @@ public class FSConstants {
 		{
 				/*HUNTER*/
 				{
-					/*PACMAN*/{1,0,0,0},/*POWERPILL*/{0,0,0,0},/*HUNTER*/{0,0,0,0},/*HUNTED*/{0,0,0,0},/*FLASH*/{0,0,0,0}
+					/*PACMAN*/		{1,0,0,0},
+					/*POWERPILL*/	{0,0,0,0},
+					/*HUNTER*/		{0,0,0,0},
+					/*HUNTED*/		{0,0,0,0},
+					/*FLASH*/		{0,0,0,0}
 				},
 				//HUNTED
 				{
-					/*PACMAN*/{-1,0,0,0},/*POWERPILL*/{0,0,0,0},/*HUNTER*/{0,0,0,0},/*HUNTED*/{0,0,0,0},/*FLASH*/{0,0,0,0}
+					/*PACMAN*/		{-1,0,0,0},
+					/*POWERPILL*/	{0,0,0,0},
+					/*HUNTER*/		{0,0,0,0},
+					/*HUNTED*/		{0,0,0,0},
+					/*FLASH*/		{0,0,0,0}
 				},
 				//FLASH
 				{
-					/*PACMAN*/{-1,0,0,0},/*POWERPILL*/{0,0,0,0},/*HUNTER*/{0,0,0,0},/*HUNTED*/{0,0,0,0},/*FLASH*/{0,0,0,0}
+					/*PACMAN*/		{-1,0,0,0},
+					/*POWERPILL*/	{0,0,0,0},
+					/*HUNTER*/		{0,0,0,0},
+					/*HUNTED*/		{0,0,0,0},
+					/*FLASH*/		{0,0,0,0}
 				},
 		};
 	
@@ -124,15 +160,27 @@ public class FSConstants {
 		{
 				/*HUNTER*/
 				{
-					/*PACMAN*/{1,0,0,0},/*POWERPILL*/{0,0,0,0},/*HUNTER*/{0,0,0,0},/*HUNTED*/{0,0,0,0},/*FLASH*/{0,0,0,0}
+					/*PACMAN*/		{1,0,0,0},
+					/*POWERPILL*/	{0,0,0,0},
+					/*HUNTER*/		{0,0,0,0},
+					/*HUNTED*/		{0,0,0,0},
+					/*FLASH*/		{0,0,0,0}
 				},
 				//HUNTED
 				{
-					/*PACMAN*/{-1,0,0,0},/*POWERPILL*/{0,0,0,0},/*HUNTER*/{0,0,0,0},/*HUNTED*/{0,0,0,0},/*FLASH*/{0,0,0,0}
+					/*PACMAN*/		{-1,0,0,0},
+					/*POWERPILL*/	{0,0,0,0},
+					/*HUNTER*/		{0,0,0,0},
+					/*HUNTED*/		{0,0,0,0},
+					/*FLASH*/		{0,0,0,0}
 				},
 				//FLASH
 				{
-					/*PACMAN*/{-1,0,0,0},/*POWERPILL*/{0,0,0,0},/*HUNTER*/{0,0,0,0},/*HUNTED*/{0,0,0,0},/*FLASH*/{0,0,0,0}
+					/*PACMAN*/		{-1,0,0,0},
+					/*POWERPILL*/	{0,0,0,0},
+					/*HUNTER*/		{0,0,0,0},
+					/*HUNTED*/		{0,0,0,0},
+					/*FLASH*/		{0,0,0,0}
 				},
 		};
 

@@ -84,8 +84,8 @@ public class Executor
 		exec.runExperiment(new RandomPacMan(),new RandomGhosts(),numTrials);
 		 */
 		
-		GeneticAlgorithm GA = new GeneticAlgorithm(exec);
-		System.out.println(GA.bestFlockingStrategy());
+		//GeneticAlgorithm GA = new GeneticAlgorithm(exec);
+		//System.out.println(GA.bestFlockingStrategy());
 				
 		/*
 		 */
@@ -97,11 +97,13 @@ public class Executor
 		//exec.runGame(new StarterPacMan(), new DummyGhosts(), visual, delay);
 		//exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(), visual, delay);
 		//exec.runGame(new InfluenceMapPacMan(), new StarterGhosts(),visual,delay);
+		//exec.runGame(new StarterPacMan(), new FlockingStrategyGhosts(FSConstants.FLOCKING_STRATEGIES), visual, delay);
 		
 		//Long startTime = System.currentTimeMillis();		
 		
 		
 		/*
+		//Run the Genetic Algorithm multiple times and save the resulting solutions to file
 		String filePath = "data/FSGhost/Homogeneous.txt";
 		//String filePath = "data/FSGhost/Heterogeneous.txt";
 		for(int i = 0; i < NUM_GENETIC_ALGORITHM_RUNS; i++)
@@ -126,9 +128,7 @@ public class Executor
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
-		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
-		
-		//exec.runGame(new StarterPacMan(), new FlockingStrategyGhosts(FSConstants.FLOCKING_STRATEGIES), visual, delay);
+		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());		
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new FlockingStrategyGhosts(FSConstants.FLOCKING_STRATEGIES), NUM_EXPERIMENT_RUNS).toString());		
 
 		//Long endTime = System.currentTimeMillis();
