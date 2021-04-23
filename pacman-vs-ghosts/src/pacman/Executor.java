@@ -72,20 +72,17 @@ public class Executor
 	{
 		Executor exec = new Executor();
 
-		//Tune parameters for IMAP Based MsPacman
-		//tuneIMPacmanParameters(exec);
-
-		//Tune parameters for IMAP Based Ghosts
-		//tuneIMGhostParameters(exec);
-
 		/*
 		//run multiple games in batch mode - good for testing.
 		int numTrials=10;
 		exec.runExperiment(new RandomPacMan(),new RandomGhosts(),numTrials);
 		 */
-		
-		//GeneticAlgorithm GA = new GeneticAlgorithm(exec);
-		//System.out.println(GA.bestFlockingStrategy());
+
+		//Tune parameters for IMAP Based MsPacman
+		//tuneIMPacmanParameters(exec);
+
+		//Tune parameters for IMAP Based Ghosts
+		//tuneIMGhostParameters(exec);
 				
 		/*
 		 */
@@ -101,11 +98,16 @@ public class Executor
 		
 		//Long startTime = System.currentTimeMillis();		
 		
+		/*
+		 * Run the Genetic Algorithm a single time
+		 */
+		//GeneticAlgorithm GA = new GeneticAlgorithm(exec);
+		//System.out.println(GA.bestFlockingStrategy());
 		
 		/*
 		//Run the Genetic Algorithm multiple times and save the resulting solutions to file
-		String filePath = "data/FSGhost/Homogeneous.txt";
-		//String filePath = "data/FSGhost/Heterogeneous.txt";
+		//String filePath = "data/FSGhost/Homogeneous.txt";
+		String filePath = "data/FSGhost/Heterogeneous.txt";
 		for(int i = 0; i < NUM_GENETIC_ALGORITHM_RUNS; i++)
 		{
 			String result = "Flocking Strategy " + i + "\n";
@@ -120,7 +122,8 @@ public class Executor
 			result += "\nHOMOGENEOUS_GHOSTS = " + FSConstants.HOMOGENEOUS_GHOSTS + "\n";
 			
 			saveToFile(result, filePath, true);
-		}*/
+		}
+		*/
 
 		//Multiple games without visuals
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new StarterGhosts(), NUM_EXPERIMENT_RUNS).toString());
@@ -128,8 +131,28 @@ public class Executor
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
-		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());		
-		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new FlockingStrategyGhosts(FSConstants.FLOCKING_STRATEGIES), NUM_EXPERIMENT_RUNS).toString());		
+		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
+				
+		/*
+		 * Flocking Ghosts
+		 * Requires: 1 strategy for Homogeneous ghosts and 4 strategies for Heterogeneous Ghosts
+		 */
+		/*
+		@SuppressWarnings("serial")
+		ArrayList<FlockingStrategy> FLOCKING_STRATEGIES = new ArrayList<FlockingStrategy>() 
+		{{
+			//Homogeneous
+			add(new FlockingStrategy(FSConstants.NEIGHBOURHOODS_0, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES_0));
+			//Heterogeneous
+			//add(new FlockingStrategy(FSConstants.NEIGHBOURHOODS_1, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES_1));
+			//add(new FlockingStrategy(FSConstants.NEIGHBOURHOODS_2, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES_2));
+			//add(new FlockingStrategy(FSConstants.NEIGHBOURHOODS_3, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES_3));
+			//add(new FlockingStrategy(FSConstants.NEIGHBOURHOODS_4, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES_4));			
+		}};
+		*/
+		
+		//System.out.print(exec.runExperiment(new StarterPacMan(), new FlockingStrategyGhosts(FLOCKING_STRATEGIES), NUM_EXPERIMENT_RUNS).toString());		
+		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new FlockingStrategyGhosts(FLOCKING_STRATEGIES), NUM_EXPERIMENT_RUNS).toString());	
 
 		//Long endTime = System.currentTimeMillis();
 		

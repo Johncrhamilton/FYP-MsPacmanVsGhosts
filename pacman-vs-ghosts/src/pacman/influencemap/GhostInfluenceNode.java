@@ -8,6 +8,11 @@ import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.internal.Node;
 
+/**
+ * @author John
+ * Specialised influence node for Ms. Pacman that calculates the values of influences based on their specific formula and
+ * propagates the influence values to other Ms. Pacman influence nodes using recursion.
+ */
 public class GhostInfluenceNode {
 
 	private Node mazeNode;

@@ -9,7 +9,11 @@ import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 
-/*
+/** 
+ * @author John
+ * 
+ * Basic ghosts that I made to experiment with the framework and game.
+ * 
  * This is the class you need to modify for your entry. In particular, you need to
  * fill in the getActions() method. Any additional classes you write should either
  * be placed in this package or sub-packages (e.g., game.entries.ghosts.mypackage).

@@ -7,6 +7,10 @@ import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.internal.Node;
 
+/**
+ * @author John
+ * Mapping of Node Indices to their respective influence nodes. 
+ */
 public class InfluenceMap {
 
 	private static InfluenceMap INSTANCE;

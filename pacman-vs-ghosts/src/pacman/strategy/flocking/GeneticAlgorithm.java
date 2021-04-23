@@ -20,6 +20,11 @@ import pacman.strategy.flocking.FSConstants.GHOST_STATE;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 
+/**
+ * @author John
+ * A simple genetic algorithm with distributive initialisation (Using both a uniform real and normal distribution) for flocking strategies,
+ * uniform crossover and tournament selection for parents.
+ */
 public class GeneticAlgorithm {
 
 	//Pacman Controllers
@@ -32,6 +37,9 @@ public class GeneticAlgorithm {
 	//Genetic Algorithm parameters
 	private ArrayList<FlockingStrategy> fittestIndividual = null;
 	private double fittestIndividualScore = Double.MAX_VALUE;
+
+	//Number of games run when calculating flocking strategy scores = 5
+	private int NUM_SCORE_EXPERIMENT_RUNS = 5;
 
 	private int individualFlockingStrategySize;
 
@@ -67,14 +75,14 @@ public class GeneticAlgorithm {
 		ArrayList<Double> populationScores = evaluatePopulation(population);
 
 		//Starting fittest individual
-		String result = "Starting fittest individual: ";
+		String result = "STARTING FITTEST INDIVIDUAL: ";
 
 		//for(FlockingStrategy flockingStrategy : fittestIndividual)
 		//{
 		//	result += flockingStrategy.toString();
 		//}
 
-		result += "\nScore: " + fittestIndividualScore + "\n";
+		result += "\nSCORE: " + fittestIndividualScore + "\n";
 
 		int generationCount = 0;
 		int fittestIndividualStreak = 0;
@@ -113,14 +121,14 @@ public class GeneticAlgorithm {
 		}
 
 		//The fittest individual
-		result += "\nFittest individual: ";
+		result += "\nFITTEST INDIVIDUAL: ";
 
 		for(FlockingStrategy flockingStrategy : fittestIndividual)
 		{
 			result += flockingStrategy.toString();
 		}
 
-		result += "\nScore: " + fittestIndividualScore;
+		result += "\nSCORE: " + fittestIndividualScore;
 
 		result += "\nTotal number of Generations: " + generationCount;
 
@@ -378,7 +386,7 @@ public class GeneticAlgorithm {
 
 		return populationScores;
 	}
-
+	
 	/**
 	 * An individual's objective score is the sum of squared average performances against the set of pacman controllers
 	 * @param Individual
@@ -403,8 +411,7 @@ public class GeneticAlgorithm {
 
 		for(Controller<MOVE> pacManController : pacmanControllers)
 		{
-			//Number of games run when calculating flocking strategy scores = 1
-			double pacManScore = Math.pow(exec.runExperiment(pacManController, flockingStrategyGhosts, 1).getAverageScore(), 2);
+			double pacManScore = Math.pow(exec.runExperiment(pacManController, flockingStrategyGhosts, NUM_SCORE_EXPERIMENT_RUNS).getAverageScore(), 2);
 			score += pacManScore;
 		}
 

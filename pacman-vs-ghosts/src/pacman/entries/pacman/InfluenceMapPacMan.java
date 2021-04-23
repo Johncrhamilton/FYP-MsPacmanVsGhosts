@@ -9,7 +9,8 @@ import pacman.game.internal.Node;
 import pacman.influencemap.IMConstants;
 import pacman.influencemap.InfluenceMap;
 
-/*
+/** 
+ * @author John
  * InfluenceMapPacMan, is a Ms. Pacman Controller that follows an Influence Map-based approach where game entities propagate their influences through the maze and
  * pacman can then choose directions that have the best influence.
  */

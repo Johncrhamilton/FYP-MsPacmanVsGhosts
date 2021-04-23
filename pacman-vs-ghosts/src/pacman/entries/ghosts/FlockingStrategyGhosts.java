@@ -11,6 +11,11 @@ import pacman.strategy.flocking.FSConstants.GHOST_STATE;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 
+/** 
+ * @author John
+ * FlockingStrategyGhosts use a predefined flocking strategy that models the behaviour of the ghost team
+ * akin to that of a flock by having the ghosts follow simple behaviours (separation, alignment and cohesion)
+ */
 public class FlockingStrategyGhosts extends Controller<EnumMap<GHOST,MOVE>> {
 
 	private EnumMap<GHOST, MOVE> myMoves = new EnumMap<GHOST, MOVE>(GHOST.class);
@@ -18,7 +23,7 @@ public class FlockingStrategyGhosts extends Controller<EnumMap<GHOST,MOVE>> {
 
 	public FlockingStrategyGhosts(ArrayList<FlockingStrategy> flockingStrategies)
 	{
-		super();
+		super();		
 		this.flockingStrategies = flockingStrategies;
 	}
 

@@ -12,6 +12,10 @@ import pacman.game.internal.Node;
 import pacman.strategy.flocking.FSConstants.ACTOR;
 import pacman.strategy.flocking.FSConstants.GHOST_STATE;
 
+/**
+ * @author John
+ * Implementation of a Flocking Strategy and its representation.
+ */
 public class FlockingStrategy {
 
 	private ArrayList<Double> neighbourhoods;
@@ -250,13 +254,13 @@ public class FlockingStrategy {
 		sb.append("\n\nActor Context Matrix Magnitudes\n");
 		for(GHOST_STATE ghostState : GHOST_STATE.values())
 		{
-			sb.append("\n" + ghostState);
+			sb.append("\n" + ghostState + ":");
 			for(ACTOR actor : ACTOR.values())
 			{
-				sb.append("\n" + actor + " ");
+				sb.append("\n" + actor + "\n");
 				for(int n = 0; n < neighbourhoods.size(); n++)
 				{
-					sb.append(actorContextMatrixMagnitudes[ghostState.ordinal()][actor.ordinal()][n] + " ");
+					sb.append(actorContextMatrixMagnitudes[ghostState.ordinal()][actor.ordinal()][n] + ", ");
 				}
 			}
 			sb.append("\n");
