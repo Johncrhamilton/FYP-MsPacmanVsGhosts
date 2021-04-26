@@ -42,7 +42,7 @@ Influence Map-Based Pacman (IMP) and Ghosts (IMGO):
   </li>
 </ul>
 
-# Setup and project execution instructions
+# Project setup and execution instructions
 Please do note that the application must be executed within a java IDE due to the nature of the competition being a hands-on coding challenge to make Ms. Pacman and Ghost controllers. The following set of instructions assume that Eclipse is the used java IDE.
 <br/>
 Setup:
