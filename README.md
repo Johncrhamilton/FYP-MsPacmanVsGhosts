@@ -59,29 +59,25 @@ Setup:
 
 Project execution options:
 <ul>
-  <li>The Ms Pac-Man vs Ghosts Competition can be executed in the /pacman-vs-ghosts/src/pacman/Executor.java class. 
-    <br/>The class's main function has the game's execution functions commented out so if you would like to run a single game with visuals uncomment an already setup exec.runGame method or add "exec.runGame(new PacmanControllerName(), new GhostControllerName(), visual (True or false), delay (integer));" and fill in the parameters appropriately. 
-    <br/>You can find all the controllers that came with the competition framework in the /pacman-vs-ghosts/src/pacman/controllers/examples/ package.
+  <li>The Ms Pac-Man vs Ghosts Competition can be executed in the Executor.java class. The class's main function has all the game's execution functions commented out so if you would like to run a single game with visuals uncomment the already setup exec runGame function or add a new exec runGame and fill in the parameters with a PacmanControllerName(), GhostControllerName(), visual (True or false) and a delay time. You can also find all the controllers that came with the competition framework in the /controllers/examples/ package.
   </li>
-  <li>To run multiple games at once without visuals uncomment a exec.runExperiment() method or add "System.out.print(exec.runExperiment(new PacmanControllerName(), new GhostControllerName(), NUM_EXPERIMENT_RUNS (integer)).toString());" in the executor's main function.
+  <li>To run multiple games at once without visuals uncomment the already setup exec runExperiment function or add a new exec runExperiment and fill in the parameters with a PacmanControllerName(), GhostControllerName() and the number of experiment runs. You will probably also want to print the output from the function to the console to see the results using "System.out.println(exec.runExperiment(...))".
   </li>
-  <li>To run games with the project's FLIGHT Ghosts replace the "GhostControllerName()" with "new FlockingStrategyGhosts(FLOCKING_STRATEGIES)" in the exec.runGame. 
-    <br/>The FLOCKING_STRATEGIES parameter is a collection of flocking strategies (1 strategy required for Homogeneous Ghosts and 4 strategies for Heterogeneous Ghosts) and is uncommented in the executor's main function. 
-    <br/>You will need to change the Flocking Ghosts HOMOGENEOUS_GHOSTS (True or false) "mode" to false for Heterogeneous Ghosts in the /pacman-vs-ghosts/src/pacman/strategy/flocking/FSConstants.java class.
+  <li>To run games with the project's FLIGHT Ghosts replace the "GhostControllerName()" with "FlockingStrategyGhosts(...)" in the exec.runGame, pass a FLOCKING_STRATEGIES variable to the flocking strategy ghosts and uncomment the FLOCKING_STRATEGIES setup.
+    The FLOCKING_STRATEGIES parameter is a collection of flocking strategies (1 strategy required for Homogeneous Ghosts and 4 strategies for Heterogeneous Ghosts) and is already setup and commented out in the executor's main function.
+    You will need to change the Flocking Ghosts "mode" called HOMOGENEOUS_GHOSTS to false (True by default for homogeneous ghosts) in the FSConstants.java class if you want to switch to Heterogeneous Ghosts.
   </li>
-  <li>You can also produce and optimise your own flocking strategies using the FLIGHT Ghosts Genetic Algorithm by uncommenting or adding "GeneticAlgorithm GA = new GeneticAlgorithm(exec);" and "System.out.println(GA.bestFlockingStrategy());" in the executor's main function. 
-    <br/>The Genetic Algorithm's parameters are in the FSConstants.java class and the Pacman Controllers used for optimisation can be adjusted in the /pacman-vs-ghosts/src/pacman/strategy/flocking/GeneticAlgorithm.java calculateScore method.
+  <li>You can also use the FLIGHT Ghosts Genetic Algorithm to generate and optimise your own flocking strategies by uncommenting the genetic algorithm functions in the executor's main function.
+    The Genetic Algorithm's parameters are in the FSConstants.java class and the Pacman Controllers used for optimisation can be changed in the GeneticAlgorithm.java calculateScore function.
   </li>
-  <li>To run games with the project's IMP Pacman and IMGO Ghosts replace the "PacmanControllerName()" and "GhostControllerName()" with "InfluenceMapPacMan()" and "InfluenceMapGhosts()" in the exec.runGame respectively. 
-    <br/>You can adjust the influence values and propagation of influences by changing constants in the /pacman-vs-ghosts/src/pacman/influencemap/IMConstants.java.
+  <li>To run games with the project's IMP Pacman and IMGO Ghosts replace the "PacmanControllerName()" and "GhostControllerName()" with "InfluenceMapPacMan()" and "InfluenceMapGhosts()" in the exec.runGame respectively.
+    You can adjust the influence values and propagation of influences by changing constants in the IMConstants.java.
   </li>
 </ul>
 
 # Third Party Resources
 <ul>
-  <li> This project makes use of the Ms Pac-Man vs Ghosts Competition code written by Philipp Rohlfshagen based on earlier implementations of the game by Simon Lucas 
-and David Robles as part of the competition held by the University of Essex. <br/>
-    Please see copyright file: /pacman-vs-ghosts/copyright.txt.
+  <li> This project makes use of the Ms Pac-Man vs Ghosts Competition code written by Philipp Rohlfshagen based on earlier implementations of the game by Simon Lucas and David Robles as part of the competition held by the University of Essex. See copyright file: /pacman-vs-ghosts/copyright.txt.
   </li> 
   <li>This project also incorporates the Apache Commons Math 3.6.1 java library for statistical testing and mathematical distribution generation within the Eclipse IDE. http://commons.apache.org/proper/commons-math/download_math.cgi
   </li>
