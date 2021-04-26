@@ -14,7 +14,7 @@ The software will seek to find satisfactory solutions by teaching both Homogeneo
 Heterogeneous agents as well as compare and contrast the solutions between the types of
 agents drawing conclusions in the final year report.
 
-# What controllers have been added in project?
+# What controllers have been added in this project?
 <ul>
   <li>The project proposed Flocking Strategy Ghosts (FLIGHT) for the Ms. Pacman vs Ghost framework is based on the work done by Federico Liberatore, Antonio M. Mora, Pedro A. Castillo, and Juan J. Merelo with their GALR ghosts in their article "Comparing Heterogeneous and Homogeneous Flocking Strategies for the Ghost Team in the Game of Ms. Pac-Man" https://doi.org/10.1109/TCIAIG.2015.2425795.
   </li>
