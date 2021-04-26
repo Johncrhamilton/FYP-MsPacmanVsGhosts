@@ -77,7 +77,7 @@ Project execution options:
   </li>
 </ul>
 
-# Project Third Party Resources
+# Third Party Resources
 <ul>
   <li> This project makes use of the Ms Pac-Man vs Ghosts Competition code written by Philipp Rohlfshagen based on earlier implementations of the game by Simon Lucas 
 and David Robles as part of the competition held by the University of Essex. <br/>
