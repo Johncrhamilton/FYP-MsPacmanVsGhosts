@@ -107,7 +107,7 @@ public class Executor
 		/*
 		//Run the Genetic Algorithm multiple times and save the resulting solutions to file
 		//String filePath = "data/FSGhost/Homogeneous.txt";
-		String filePath = "data/FSGhost/Heterogeneous.txt";
+		//String filePath = "data/FSGhost/Heterogeneous.txt";
 		for(int i = 0; i < NUM_GENETIC_ALGORITHM_RUNS; i++)
 		{
 			String result = "Flocking Strategy " + i + "\n";
@@ -124,11 +124,11 @@ public class Executor
 			saveToFile(result, filePath, true);
 		}
 		*/
-
+		
 		//Multiple games without visuals
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new StarterGhosts(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new StarterGhosts(), NUM_EXPERIMENT_RUNS).toString());
-		//System.out.print(exec.runExperiment(new StarterPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS).toString());
+	    //System.out.print(exec.runExperiment(new StarterPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
