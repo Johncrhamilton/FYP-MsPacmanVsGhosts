@@ -71,38 +71,50 @@ public class Executor
 	public static void main(String[] args)
 	{
 		Executor exec = new Executor();
-
+		
 		/*
-		//run multiple games in batch mode - good for testing.
-		int numTrials=10;
-		exec.runExperiment(new RandomPacMan(),new RandomGhosts(),numTrials);
+		 * Methods to Automatically Tune the Influence Map Based Ghosts and Pacman
 		 */
-
 		//Tune parameters for IMAP Based MsPacman
 		//tuneIMPacmanParameters(exec);
-
 		//Tune parameters for IMAP Based Ghosts
 		//tuneIMGhostParameters(exec);
-				
+		
 		/*
+		 * Flocking Ghosts
+		 * Requires: 1 strategy for Homogeneous ghosts and 4 strategies for Heterogeneous Ghosts
 		 */
+		/*
+		*/
+		@SuppressWarnings("serial")
+		ArrayList<FlockingStrategy> FLOCKING_STRATEGIES = new ArrayList<FlockingStrategy>() 
+		{{
+			//Homogeneous
+			add(new FlockingStrategy(FSConstants.NEIGHBOURHOODS_0, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES_0));
+			//Heterogeneous
+			//add(new FlockingStrategy(FSConstants.NEIGHBOURHOODS_1, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES_1));
+			//add(new FlockingStrategy(FSConstants.NEIGHBOURHOODS_2, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES_2));
+			//add(new FlockingStrategy(FSConstants.NEIGHBOURHOODS_3, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES_3));
+			//add(new FlockingStrategy(FSConstants.NEIGHBOURHOODS_4, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES_4));			
+		}};
+		
 		//run a game in synchronous mode: game waits until controllers respond.
-		//int delay = 20;
-		//boolean visual=true;
+		int delay = 20;
+		boolean visual=true;
 		
 		//Single games with visuals
 		//exec.runGame(new StarterPacMan(), new DummyGhosts(), visual, delay);
 		//exec.runGame(new StarterPacMan(), new InfluenceMapGhosts(), visual, delay);
 		//exec.runGame(new InfluenceMapPacMan(), new StarterGhosts(),visual,delay);
-		//exec.runGame(new StarterPacMan(), new FlockingStrategyGhosts(FSConstants.FLOCKING_STRATEGIES), visual, delay);
-		
-		//Long startTime = System.currentTimeMillis();		
-		
+		exec.runGame(new StarterPacMan(), new FlockingStrategyGhosts(FLOCKING_STRATEGIES), visual, delay);
+						
 		/*
 		 * Run the Genetic Algorithm a single time
 		 */
+		//Long startTime = System.currentTimeMillis();
 		//GeneticAlgorithm GA = new GeneticAlgorithm(exec);
 		//System.out.println(GA.bestFlockingStrategy());
+		//Long endTime = System.currentTimeMillis();
 		
 		/*
 		//Run the Genetic Algorithm multiple times and save the resulting solutions to file
@@ -132,37 +144,16 @@ public class Executor
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new InfluenceMapGhosts(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new Legacy2TheReckoning(), NUM_EXPERIMENT_RUNS).toString());
-				
-		/*
-		 * Flocking Ghosts
-		 * Requires: 1 strategy for Homogeneous ghosts and 4 strategies for Heterogeneous Ghosts
-		 */
-		/*
-		@SuppressWarnings("serial")
-		ArrayList<FlockingStrategy> FLOCKING_STRATEGIES = new ArrayList<FlockingStrategy>() 
-		{{
-			//Homogeneous
-			add(new FlockingStrategy(FSConstants.NEIGHBOURHOODS_0, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES_0));
-			//Heterogeneous
-			//add(new FlockingStrategy(FSConstants.NEIGHBOURHOODS_1, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES_1));
-			//add(new FlockingStrategy(FSConstants.NEIGHBOURHOODS_2, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES_2));
-			//add(new FlockingStrategy(FSConstants.NEIGHBOURHOODS_3, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES_3));
-			//add(new FlockingStrategy(FSConstants.NEIGHBOURHOODS_4, FSConstants.ACTOR_CONTEXT_MATRIX_MAGNITUDES_4));			
-		}};
-		*/
 		
 		//System.out.print(exec.runExperiment(new StarterPacMan(), new FlockingStrategyGhosts(FLOCKING_STRATEGIES), NUM_EXPERIMENT_RUNS).toString());		
 		//System.out.print(exec.runExperiment(new InfluenceMapPacMan(), new FlockingStrategyGhosts(FLOCKING_STRATEGIES), NUM_EXPERIMENT_RUNS).toString());	
 
-		//Long endTime = System.currentTimeMillis();
 		
 		///*
 		//run the game in asynchronous mode.
 		//boolean visual=true;
 		//		exec.runGameTimed(new NearestPillPacMan(),new AggressiveGhosts(),visual);
 		//		exec.runGameTimed(new StarterPacMan(),new StarterGhosts(),visual);
-		//		exec.runGameTimed(new StarterPacMan(),new DummyGhosts(),visual);
-		//		exec.runGameTimed(new InfluenceMapPacman(),new DummyGhosts(),visual);
 		//		exec.runGameTimed(new HumanController(new KeyBoardInput()),new StarterGhosts(),visual);	
 		//*/
 
